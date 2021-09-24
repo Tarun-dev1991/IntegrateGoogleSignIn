@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="14f934e2abf34ba2a7ea16128fcb1eb0" Name="Diagram1" ZoomLevel="72">
+        <EntityTypeShape EntityType="Model.Account" Width="1.5" PointX="5.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Model.AdminDomain" Width="1.5" PointX="5.75" PointY="3.75" />
+        <EntityTypeShape EntityType="Model.AuditLog" Width="1.5" PointX="5.75" PointY="6.75" />
+        <EntityTypeShape EntityType="Model.ExtraUser" Width="1.5" PointX="7.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Model.ExtraUserAgreementCollection" Width="1.5" PointX="0.75" PointY="7.75" />
+        <EntityTypeShape EntityType="Model.ExtraUserSubscriptionPlan" Width="1.5" PointX="2.75" PointY="7.75" />
+        <EntityTypeShape EntityType="Model.GoogleAgreementCollection" Width="1.5" PointX="7.75" PointY="4.75" />
+        <EntityTypeShape EntityType="Model.GoogleSubscribePlan" Width="1.5" PointX="7.75" PointY="7.75" />
+        <EntityTypeShape EntityType="Model.GoogleUser" Width="1.5" PointX="9.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Model.loginhistory" Width="1.5" PointX="9.75" PointY="3.75" />
+        <EntityTypeShape EntityType="Model.paymentdetail" Width="1.5" PointX="4.75" PointY="9.75" />
+        <EntityTypeShape EntityType="Model.ProAgreementCollection" Width="1.5" PointX="9.75" PointY="6.75" />
+        <EntityTypeShape EntityType="Model.Profile" Width="1.5" PointX="9.75" PointY="9.75" />
+        <EntityTypeShape EntityType="Model.propackageuser" Width="1.5" PointX="11.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Model.ProSubscriptionPlan" Width="1.5" PointX="0.75" PointY="11.75" />
+        <EntityTypeShape EntityType="Model.searchdomainMaster" Width="1.5" PointX="11.75" PointY="4.75" />
+        <EntityTypeShape EntityType="Model.searchMaster" Width="1.5" PointX="6.75" PointY="11.75" />
+        <EntityTypeShape EntityType="Model.UserDetail" Width="1.5" PointX="3" PointY="1.125" />
+        <EntityTypeShape EntityType="Model.User" Width="1.5" PointX="0.75" PointY="2.25" />
+        <EntityTypeShape EntityType="Model.UserTable" Width="1.5" PointX="2.75" PointY="12.75" />
+        <EntityTypeShape EntityType="Model.VisitorData" Width="1.5" PointX="8.75" PointY="12.75" />
+        <EntityTypeShape EntityType="Model.WebProperty" Width="1.5" PointX="13.75" PointY="0.75" />
+        <AssociationConnector Association="Model.FK_UserDetail_Users" />
+        <EntityTypeShape EntityType="Model.specialuser" Width="1.5" PointX="12.375" PointY="7.75" />
+        <EntityTypeShape EntityType="Model.UserSession" Width="1.5" PointX="3" PointY="4.75" />
+        <AssociationConnector Association="Model.FK_UserSession_Users" />
+        <EntityTypeShape EntityType="Model.dailycolourcollection" Width="1.5" PointX="14.375" PointY="3.75" />
+        <EntityTypeShape EntityType="Model.Dailycollection_source" Width="1.5" PointX="5.375" PointY="14.75" />
+        <EntityTypeShape EntityType="Model.sourceReportData" Width="1.5" PointX="14.375" PointY="7.75" />
+        <EntityTypeShape EntityType="Model.TagReportData" Width="1.5" PointX="14.375" PointY="11.75" />
+        <EntityTypeShape EntityType="Model.UserDailyAnalytic" Width="1.5" PointX="11.375" PointY="12.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
