@@ -1,0 +1,172 @@
+﻿@*@model IntegrateGoogle.Core.Models.UserProfile*@
+@*@model IntegrateGoogle.Core.Models.UserProfile*@
+@model List<Google.Apis.Analytics.v3.Data.AccountSummary>
+@{
+    ViewBag.Title = "Dashboard";
+}
+<script>
+    var openAnalytics = function () {
+        window.location = "/Dashboard/GetReports?viewId=" + document.getElementById('viewId').value;
+    }
+
+    function ChangeUser(combo) {
+        window.location = "/Dashboard/Index?userName=" + combo.value;
+    }
+</script>
+@{
+    string isChecked(string v)
+    {
+        string chkeced = "";
+        if (!string.IsNullOrEmpty(ViewBag.SelectedUser) && ViewBag.SelectedUser.Equals(v))
+        {
+            chkeced = "Selected";
+        }
+
+        return chkeced;
+    }
+
+    var message = string.Empty;
+    var swalErrorMessage = string.Empty;
+    var swalSuccessMessage = string.Empty;
+    if (TempData["Message"] != null)
+    {
+        message = TempData["Message"].ToString();
+        TempData["Message"] = "";
+    }
+
+    if (TempData["SwalErrorMessage"] != null)
+    {
+        swalErrorMessage = TempData["SwalErrorMessage"].ToString();
+        TempData["SwalErrorMessage"] = "";
+    }
+
+    if (TempData["SwalSuccessMessage"] != null)
+    {
+        swalSuccessMessage = TempData["SwalSuccessMessage"].ToString();
+        TempData["SwalSuccessMessage"] = "";
+    }
+
+    var isAdmin = false;
+    if (Session["AdminUser"] != null)
+    {
+        isAdmin = true;
+    }
+
+    var currentUserEmail = string.Empty;
+    var dataFound = false;
+}
+<link href="~/Content/sweetalert.min.css" rel="stylesheet" />
+
+<style>
+    .blockdisabled {
+        pointer-events: none;
+    }
+</style>
+<form method="post" action="@Url.Action("SubscribeGooglePlan","Googlepackage")">
+    <div class="container" style="margin-top: 3%;">
+        @if (ViewBag.Users != null)
+        {
+            <div class="panel panel-default">
+                <div class="alert alert-info"><b>Select a user to load list of profiles.</b></div>
+                <select style="height: 30px; margin: 5px 5px; background: #222222; color: #ffffff; border-radius: 12px;" onchange="ChangeUser(this)">
+
+                    @foreach (var usr in ViewBag.Users)
+                    {
+                        if (string.IsNullOrEmpty(currentUserEmail))
+                        {
+                            currentUserEmail = usr.UserName;
+                        }
+                        <option value="@usr.UserName" @isChecked(usr.UserName)>@usr.UserName <span>(@usr.Name)</span></option>
+                    }
+                </select>
+            </div>
+        }
+
+        <div class="row" style="margin-bottom: 10px">
+            <div class="col-md-12">
+                <h3 style="color: red;" id="displayMessage">@message</h3>
+                <input type="hidden" id="displaySwalErrorMessage" value="@swalErrorMessage" />
+                <input type="hidden" id="displaySwalSuccessMessage" value="@swalSuccessMessage" />
+            </div>
+        </div>
+
+        <table class="table">
+            @if (Model.Any())
+            {
+                foreach (var client in Model.Where(m => !string.IsNullOrEmpty(m.ETag)))
+                {
+                    dataFound = true;
+                    <tr>
+                        <td>
+                            <p>
+                                <label>@client.Name</label>
+                                <label>(@client.Id)</label>
+                                @if (Session["AdminUser"] == null && !string.IsNullOrEmpty(client.ETag))
+                                {
+                                    <a class="btn btn-danger btn-xs" href="@Url.Action("UnsubscribeGooglePlan", "Googlepackage", new {id = client.ETag})">Cancel</a>
+                                }
+                                else if (!string.IsNullOrEmpty(client.ETag))
+                                {
+                                    <a class="btn btn-danger btn-xs" href="@Url.Action("SuspendGooglePlan", "Googlepackage", new {id = client.ETag, userEmail = currentUserEmail})">Suspend</a>
+                                }
+                            </p>
+                            <ul>
+                                @if (client.WebProperties != null)
+                                {
+                                    foreach (var project in client.WebProperties)
+                                    {
+                                        <li>
+                                            <p style="display: inline-block">
+                                                <span>@project.Name</span>
+                                                <span>(@project.Id)</span>
+                                            </p>
+                                        </li>
+                                        <ul>
+                                            @if (project.Profiles != null)
+                                            {
+                                                foreach (var profile in project.Profiles)
+                                                {
+                                                    <li>
+                                                        <a style="display: inline-block" href="/Dashboard/GetReports?viewId=@profile.Id">
+                                                            <p>
+                                                                <span>@profile.Name</span>
+                                                                <span>(@profile.Id)</span>
+                                                            </p>
+                                                        </a>
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    }
+                                }
+                            </ul>
+                        </td>
+                    </tr>
+                }
+
+                if (!dataFound)
+                {
+                    <tr><h2 class="text">No plan subscribed.</h2></tr>
+                }
+            }
+        </table>
+    </div>
+</form>
+<script src="~/Content/sweetalert.min.js"></script>
+<script>
+    $(document).ready(function () {
+        setTimeout(function () {
+            $('#displayMessage').fadeOut('slow');
+        }, 2000);
+
+        var swalSuccessMessage = $("#displaySwalSuccessMessage").val();
+        if (swalSuccessMessage.length > 0) {
+            swal("", swalSuccessMessage, "success");
+        }
+
+        var swalErrorMessage = $("#displaySwalErrorMessage").val();
+        if (swalErrorMessage.length > 0) {
+            swal("", swalErrorMessage, "error");
+        }
+    });
+</script>

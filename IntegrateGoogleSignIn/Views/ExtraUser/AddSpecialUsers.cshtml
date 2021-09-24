@@ -1,0 +1,52 @@
+﻿@using IntegrateGoogleSignIn.Helpers
+@model IntegrateGoogleSignIn.Models.specialuser
+@{
+    ViewBag.Title = "Add Special Users";
+    Layout = "~/Views/Shared/_LayoutExtraUser.cshtml";
+    string prepackageEmail = Session["user"].ToString();
+    var drpCollection = CommonFunctions.GetDomainListForExtraUser(prepackageEmail, string.Empty);
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css" type="text/css">
+
+<div class="container-fluid" style="font-family:Roboto !important;">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-4">
+            <form method="post" action="@Url.Action("AddSpecialUsers","ExtraUser")" id="frnDomain">
+                <div class="row">
+                    <h3>Add Special User</h3>
+                </div>
+                <div class="row form-group" style="padding-top: 15px;">
+                    <input style="min-width: 60%" name="email" placeholder="Enter email" type="email" required="" class="form-control" />
+                </div>
+                <div class="row form-group" style="padding-top: 15px;">
+                    <input style="min-width: 60%" name="username" placeholder="Enter user name" type="text" required="" class="form-control" />
+                </div>
+                <div class="row form-group" style="padding-top: 15px;">
+                    <select name="domain" id="multi-select-demo" required="required" multiple="multiple">
+                        @foreach (var item in drpCollection)
+                        {
+                            <option value="@item">@item</option>
+                        }
+                    </select>
+                </div>
+                <div class="row form-group" style="padding-top: 15px;">
+                    <input style="min-width: 60%" name="password" placeholder="Enter password" type="password" required="" class="form-control" />
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-2 "></div>
+                    <div class="col-md-3 "></div>
+                    <div class="col-4 ">
+                        <button style="background-color: #ffa937; width: 112px; border-color: #edb415" type="submit" class="btn btn-success">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#multi-select-demo').multiselect();
+    });
+</script>

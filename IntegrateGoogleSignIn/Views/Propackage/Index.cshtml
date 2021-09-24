@@ -1,0 +1,710 @@
+@using System.Globalization
+@using IntegrateGoogleSignIn.Helpers
+@model List<IntegrateGoogleSignIn.Models.PropackageUserVm>
+@{
+    Layout = "~/Views/Shared/_LayoutProPackage.cshtml";
+    var message = string.Empty;
+    var swalErrorMessage = string.Empty;
+    var swalSuccessMessage = string.Empty;
+    var swalSubscribeSuccessMessage = string.Empty;
+    if (TempData["Message"] != null)
+    {
+        message = TempData["Message"].ToString();
+    }
+
+    if (TempData["SwalErrorMessage"] != null)
+    {
+        swalErrorMessage = TempData["SwalErrorMessage"].ToString();
+    }
+
+    if (TempData["SwalSuccessMessage"] != null)
+    {
+        swalSuccessMessage = TempData["SwalSuccessMessage"].ToString();
+    }
+
+    if (TempData["SwalSubscribeSuccessMessage"] != null)
+    {
+        swalSubscribeSuccessMessage = TempData["SwalSubscribeSuccessMessage"].ToString();
+    }
+    var clone = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+    clone.NumberFormat.NumberDecimalSeparator = ",";
+
+    var timeZone = string.Empty;
+    if (TempData["TimeZone"] != null)
+    {
+        timeZone = TempData["TimeZone"].ToString();
+        TempData["TimeZone"] = null;
+    }
+    var currentDate = DateTime.UtcNow.AddDays(-1);
+}
+
+<link href="~/Content/sweetalert.min.css" rel="stylesheet" />
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<link href="~/Content/roboto.css" rel="stylesheet" />
+	<link href="~/Content/dc.css" rel="stylesheet" type="text/css">
+	
+	
+	<link href="~/Content/sidebar.css" rel="stylesheet" type="text/css">
+
+<link
+			rel="stylesheet"
+			href="https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.min.css"
+		/>
+	
+	
+<style>
+    #divLoading {
+        display: none;
+    }
+
+    .highcharts-button-symbol {
+        display: none;
+    }
+	
+	body {
+    font-family: 'Roboto';
+    background-color: #f8f9fa;
+    
+}
+
+    #divLoading.show {
+        display: block;
+        position: fixed;
+        z-index: 100;
+        background-image: url('../../../../Content/3.gif');
+        background-color: #666;
+        opacity: 0.4;
+        background-repeat: no-repeat;
+        background-position: center;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        top: 0;
+    }
+
+    #loadinggif.show {
+        left: 50%;
+        top: 50%;
+        position: absolute;
+        z-index: 101;
+        width: 32px;
+        height: 32px;
+        margin-left: -16px;
+        margin-top: -16px;
+    }
+
+    div.content {
+        width: 1000px;
+        height: 1000px;
+    }
+
+    .lnkcustom:hover {
+        cursor: pointer;
+    }
+
+    .highcharts-series-label > text > tspan {
+        display: none;
+    }
+</style>
+
+@Html.Hidden("customURL", @Url.Action("ReportAll", "Propackage"))
+<div id="divLoading"></div>
+<div class="container-fluid" style="font-family:Roboto !important;">
+    <div class="row">
+        <div class="col-md-2 "></div>
+        <div class="col-md-6">
+            <div class="row">
+                <p class="mediumtext charcoal" style="padding-top:46px;padding-left:14px;">Your Dashboard</p>
+                <h5 style="color: red;" id="displayMessage">@message</h5>
+                <input type="hidden" id="displaySwalErrorMessage" value="@swalErrorMessage" />
+                <input type="hidden" id="displaySubscribeSwalSuccessMessage" value="@swalSubscribeSuccessMessage" />
+                <input type="hidden" id="displaySwalSuccessMessage" value="@swalSuccessMessage" />
+            </div>
+
+            @if (Model.Any())
+            {
+                var i = 0;
+                @Html.Hidden("totalCount", Model.Count)
+                <ul class="list-group">
+                    @foreach (var item in Model)
+                    {
+                        i = i + 1;
+                    <li class="list-group-item">
+					    <br>
+                        <span class="standardtext charcoal" >@item.domainname</span>
+                        <div class="row">
+                            <div class="dashcolumn">
+
+     <br>
+                                <span>
+                                    <a style="line-height: 20px;" href="@Url.Action("ReportSpecific", "ProPackage", new { domainName = item.domainname })" class="btn btn-success btn-xs dashboxes yellowbg dashtext whitefont aligncenter radius dashmarginleft paddingtbl">CAMPAIGNS <i class="mdi mdi-arrow-right-box"></i></a>
+                                </span>
+                                <br />
+                                <input style="height: 30px; color:black ;margin-left:-70px; border:0px;padding-left: 15px; background-color:#e3e3e3;-webkit-border-radius:30px;" id="StartDate_@i" type="hidden"  value="@currentDate.ToString("yyyy-MM-dd")"><br />
+                                <div class="d-inline bg-success dashboxes lgreybg regulartext whitefont aligncenter radius dashmarginleft" >
+                                    <span class="mediumtext blackfont"> @item.totalVisitors.ToString("#,##0.###")</span>
+                                    <br />
+                                    <div class="blackfont standardtext">
+                                        Visitors in the last 30 days
+                                        </div>
+									                 </div>
+							
+
+                                <br />
+
+                                
+                                </div>
+                             <div class="dashcolumn">
+<br>
+                                <div>
+                                    <button style="line-height: 20px;" onclick="ApplyFilter(@i,'@item.domainname')" type="button" class="btn btn-success dashboxes yellowbg dashtext whitefont aligncenter paddingtbl">REPORT <i class="mdi mdi-arrow-right-box"></i></button>
+                                </div>
+                                <div class="d-inline bg-success dashboxes lgreybg regulartext whitefont aligncenter radius" >
+                                    <span class="mediumtext blackfont"> @item.totalVisitors1.ToString("#,##0.###")</span>
+                                    <br />
+                                    <div class="blackfont standardtext">
+                                        Visitors yesterday
+                                    </div>
+                                </div>
+                                <br />
+                               
+
+                            </div>
+                            <div class="dashright">
+                             
+                                    @if (item.isSpecialPlan)
+                                    {
+                                        <span onclick="UnSubscribePlan('@Url.Action("UnsubscribeSpecialPlan", "ProPackage", new { id = item.packageId})');" class="btn btn-danger btn-xs raduis paddings charcoalbg standardtext">Remove site</span>
+                                    }
+                                    else
+                                    {
+                                        <span onclick="UnSubscribePlan('@Url.Action("Unsubscribe", "ProPackage", new { id = item.packageId , domain = item.domainname })');" class="btn btn-danger btn-xs raduis paddings charcoalbg standardtext dashbuttons">Remove site</span>
+                                    }
+                                    <a href="@Url.Action("Dcscript", "ProPackage", new { id = item.packageId})" class="btn btn-success btn-xs raduis paddings yellowbg standardtext dashbuttons">Get code</a>
+                                    <span class="pointer plus hidemobile hidedesktop charcoal" data-toggle="modal" data-target="#videomodel">&#9658;</span>
+
+                                       
+                                
+                            </div>
+                            <div>
+
+                            </div>
+
+                            <div class="col-md-3 " style="text-align:left;">
+
+                                @*<button onclick="openReport('@Url.Action("Report", "ProPackage", new {domainName = item.domainname })')" class="btn btn-info btn-lg" style="background-color: #ffa937;border-color: #edb415">Continue <b>></b> </button>*@
+                                
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            @*<div class="col-md-8 col-xs-8 col-lg-8" style="font-size:14pt;"><span style="color:#ffa937;">Visitors-last 30 days</span> : @item.totalVisitors.ToString("#,##0.###") </div>*@
+                            @*<div class="col-md-8 col-xs-8 col-lg-8" style="font-size:14pt;"><span style="color:#ffa937;">Visitors-last 30 days</span> : @item.multipagevisitor.ToString("#,##0.###")</div>*@
+                            @*<div class="col-md-8 col-xs-8 col-lg-8" style="font-size:14pt;"><span style="color:#ffa937;">Visitors-yesterdays</span> : @item.totalVisitors1.ToString("#,##0.###") </div>
+                            <div class="col-md-8 col-xs-8 col-lg-8" style="font-size:14pt;"><span style="color:#ffa937;">Visitors-yesterdays</span> : @item.multipagevisitor1.ToString("#,##0.###")</div>*@
+
+                           
+                        </div>
+                        <br />
+                        @*<div class="row">
+                            <div class="col-md-12 col-xs-12 col-lg-12">
+                                <div id="monthlyGraph_@i" style="height:250px; width: 100%;  margin-top:1px;overflow:hidden;border-radius:2px;padding-top:20px;background-color:white;"></div>
+                                @Html.Hidden("graphdata_" + i, item.monthlyReportData)
+                            </div>
+
+                        </div>*@
+
+
+                    </li>
+
+                    }
+                </ul>
+            }
+        </div>
+		
+		
+
+
+        <div class="dashcright" >
+            <form action="@Url.Action("Index")">
+                <div class="">
+                   <p class="mediumtext charcoal">Change your timezone</p>
+                </div>
+                <div class="form-group" >
+
+                    <select id="timezoneOption" onchange="changeTimezone()" class="form-control" name="timezone" value="@timeZone">
+                        <optgroup label="UK" class="standardtext">
+                            <option value="@string.Empty" class="standardtext">Greenwich mean time</option>
+                        </optgroup>
+                        <optgroup label="USA" class="standardtext">
+                            @if (timeZone == "Eastern Standard Time")
+                            {
+                                <option value="Eastern Standard Time" selected>Eastern Time</option>
+                            }
+                            else
+                            {
+                                <option value="Eastern Standard Time">Eastern Time</option>}
+                            @if (timeZone == "Central America Standard Time")
+                            {
+                                <option value="Central America Standard Time" selected>Central America</option>
+                            }
+                            else
+                            {
+                                <option value="Central America Standard Time">Central America</option>}
+                            @if (timeZone == "Mountain Standard Time")
+                            {
+                                <option value="Mountain Standard Time" selected>Mountain Time</option>
+                            }
+                            else
+                            {
+                                <option value="Mountain Standard Time">Mountain Time</option>}
+                            @if (timeZone == "Pacific Standard Time")
+                            {
+                                <option value="Pacific Standard Time" selected>Pacific Time</option>
+                            }
+                            else
+                            {
+                                <option value="Pacific Standard Time">Pacific Time</option>}
+                        </optgroup>
+                        <optgroup label="Australia" class="standardtext">
+                            @if (timeZone == "W. Australia Standard Time")
+                            {
+                                <option value="W. Australia Standard Time" selected>Perth</option>
+                            }
+                            else
+                            {
+                                <option value="W. Australia Standard Time">Perth</option>}
+                            @if (timeZone == "Cen. Australia Standard Time")
+                            {
+                                <option value="Cen. Australia Standard Time" selected>Adelaide</option>
+                            }
+                            else
+                            {
+                                <option value="Cen. Australia Standard Time">Adelaide</option>}
+                            @if (timeZone == "AUS Central Standard Time")
+                            {
+                                <option value="AUS Central Standard Time" selected>Darwin</option>
+                            }
+                            else
+                            {
+                                <option value="AUS Central Standard Time">Darwin</option>}
+                            @if (timeZone == "E. Australia Standard Time")
+                            {
+                                <option value="E. Australia Standard Time" selected>Brisbane</option>
+                            }
+                            else
+                            {
+                                <option value="E. Australia Standard Time">Brisbane</option>}
+                            @if (timeZone == "AUS Eastern Standard Time")
+                            {
+                                <option value="AUS Eastern Standard Time" selected>Canberra, Melbourne, Sydney</option>
+                            }
+                            else
+                            {
+                                <option value="AUS Eastern Standard Time">Canberra, Melbourne, Sydney</option>}
+                        </optgroup>
+                        <optgroup label="Canada" class="standardtext">
+                            @if (timeZone == "Eastern Standard Time")
+                            {
+                                <option value="Eastern Standard Time" selected>Eastern Time</option>
+                            }
+                            else
+                            {
+                                <option value="Eastern Standard Time">Eastern Time</option>}
+                            @if (timeZone == "Central Standard Time")
+                            {
+                                <option value="Central Standard Time" selected>Central Time</option>}
+                            else
+                            {
+                                <option value="Central Standard Time">Central Time</option>}
+                            @if (timeZone == "Mountain Standard Time")
+                            {
+                                <option value="Mountain Standard Time" selected>Mountain Time (Canada)</option>}
+                            else
+                            {
+                                <option value="Mountain Standard Time">Mountain Time</option>}
+                            @if (timeZone == "Pacific Standard Time")
+                            {
+                                <option value="Pacific Standard Time" selected>Pacific Time</option>
+                            }
+                            else
+                            {
+                                <option value="Pacific Standard Time">Pacific Time</option>}
+                            @if (timeZone == "Atlantic Standard Time")
+                            {
+                                <option value="Atlantic Standard Time" selected>Atlantic Time</option>
+                            }
+                            else
+                            {
+                                <option value="Atlantic Standard Time">Atlantic Time</option>}
+                        </optgroup>
+                    </select>
+                </div>
+            </form>
+            <form method="post" action="@Url.Action("Index")" id="frnDomain">
+                <div class="">
+                    <p class="mediumtext charcoal">Add another website</p>
+                </div>
+                <div class="form-group" >
+                    <input style="min-width: 60%" id="txtDomainName" name="DomainName" placeholder="Enter your new domain" type="text" required="" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2 "></div>
+                    <div class="col-md-3 "></div>
+                    <div class="col-4">
+                        <button style="background-color: #ffa937; width: 112px; border-color: #edb415" onclick="GoValidateDomain();" type="button" class="btn btn-success standardtext">Add</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+  
+<br>
+<div class="aligncenter standardtext charcoal hidedesktop">To access your installation code or cancel your account, please view on a desktop or laptop</div>
+
+</div>
+
+
+
+
+
+
+
+<script src="~/Content/sweetalert.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
+<script>
+    $(document).ready(function () {
+        setTimeout(function () {
+            $('#displayMessage').fadeOut('slow');
+        }, 2000);
+
+        var swalSuccessMessage = $("#displaySwalSuccessMessage").val();
+        if (swalSuccessMessage.length > 0) {
+            swal("", swalSuccessMessage, "success");
+        }
+
+        var swalErrorMessage = $("#displaySwalErrorMessage").val();
+        if (swalErrorMessage.length > 0) {
+            swal("", swalErrorMessage, "error");
+        }
+
+        var swalSubscribeSuccessMessage = $("#displaySubscribeSwalSuccessMessage").val();
+        if (swalSubscribeSuccessMessage.length > 0) {
+            swal(swalSubscribeSuccessMessage);
+        }
+
+        monthGraph();
+    });
+</script>
+<div class="modal fade" id="videomodel" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+
+            </div>
+            <div class="modal-body">
+
+                <div class='embed-container'>
+                    <iframe frameborder="0" width="100%" height="800px" src="https://player.vimeo.com/video/403701673"></iframe>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+
+</div>
+	
+	
+	
+	<aside class="sidebar">
+			<nav>
+				<ul class="sidebar__nav">
+					<li>
+						<a href="/Propackage" class="sidebar__nav__link">
+							<i class="mdi mdi-monitor-dashboard"></i>
+							<span class="sidebar__nav__text">Dashboard</span>
+						</a>
+					</li>
+					<li>
+						<a href="/Propackage/SpecialUsers" class="sidebar__nav__link">
+							<i class="mdi mdi-account-plus"></i>
+							<span class="sidebar__nav__text">Add users</span>
+						</a>
+					</li>
+					<li>
+						<a href="/Propackage/ChangePassword" class="sidebar__nav__link">
+							<i class="mdi mdi-key-variant"></i>
+							<span class="sidebar__nav__text">Password</span>
+						</a>
+					</li>
+					<li>
+						<a href="/Home/FAQs" class="sidebar__nav__link">
+							<i class="mdi mdi-comment-text-outline"></i>
+							<span class="sidebar__nav__text">FAQs</span>
+						</a>
+					</li>
+					<li>
+						<a href="/Home/ContactUs" class="sidebar__nav__link">
+							<i class="mdi mdi-email-outline"></i>
+							<span class="sidebar__nav__text">Contact us</span>
+						</a>
+					</li>
+					<li>
+						<a href="/Auth/ProSignOut" class="sidebar__nav__link">
+							<i class="mdi mdi-power"></i>
+							<span class="sidebar__nav__text">Logout</span>
+						</a>
+					</li>
+				</ul>
+			</nav>
+		</aside>
+
+<script>
+
+    var UnSubscribePlan = function (linkUrl) {
+        swal({
+            title: "Remove website",
+            text: "Are you sure want to remove this site from your account?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Yes, change plan!",
+            cancelButtonText: "No, go back!",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        },
+            function (isConfirm) {
+                if (isConfirm) {
+                    location.href = linkUrl;
+                }
+            });
+    }
+
+    var openModal = function (id, domainName) {
+        $("#myModalSpecialPlan").modal('show');
+        $("#frmSpecialPlan")[0].reset();
+        $("#myModalSpecialPlan").find("#txtCurrentPackage").val(id);
+        $("#myModalSpecialPlan").find("#txtDomainName").val(domainName);
+    }
+
+    var GoSpecialPlan = function () {
+        $("#myModalSpecialPlan").modal('hide');
+        $("#frmSpecialPlan").submit();
+    }
+
+    var changeTimezone = function () {
+        var timezone = $("#timezoneOption").val();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("ChangeTimeZone", "Propackage")",
+            data: { timezone: timezone},
+            success: function(data){
+                if (data.status) {
+                    swal("", data.Message, "success");
+                } else
+                {
+                    swal("", data.Message, "error");
+                }}
+            });
+    }
+
+    var GoValidateDomain = function () {    
+        var domainNm = $.trim($("#txtDomainName").val());
+        if (domainNm.length === 0) {
+            swal("", "Please enter domain name!", "error");
+        }
+        else {
+            var isAvailable = false;
+            $.each($(".list-group").find("li"),
+                function () {
+                    var linkName = $.trim($(this).find(".lnkcustom").text());
+                    if (linkName === domainNm) {
+                        isAvailable = true;
+                    }
+                });
+
+            if (isAvailable) {
+                swal("Try Other", "Domain already available!", "error");
+            } else {
+                
+                    var planAmount = ($(".list-group").find("li").length + 1) * 4;
+                    swal({
+                        title: "Add a new website",
+                        text: "If you want to add another website to your account simply click yes, accept!",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Yes, accepted!",
+                        cancelButtonText: "No, cancel!",
+                        closeOnConfirm: true,
+                        closeOnCancel: true
+                    },
+                        function (isConfirm) {
+                            if (isConfirm) {
+                                $("#frnDomain").submit();
+                            } else {
+                                $("#txtDomainName").val("");
+                            }
+                        });
+                
+            }
+        }
+    }
+
+    var openReport = function (url) {
+        $("div#divLoading").addClass('show');
+        location.href = url;
+    }
+
+    function monthGraph() {
+        var totalCount = parseInt($("#totalCount").val());
+        for (var i = 1; i <= totalCount; i++) {
+            var graphData = $("#graphdata_" + i).val();
+            if (graphData.length > 0) {
+                var data = JSON.parse(graphData);
+
+                var xAxisJson = [];
+                var yAxisJson = [];
+                var blueAxisJson = [];
+                var redAxisJson = [];
+                var greenAxisJson = [];
+                var multipageAxisJson = [];
+
+                $.each(data,
+                    function () {
+                        yAxisJson.push(parseInt(this.y));
+                        blueAxisJson.push(parseInt(this.bluetik));
+                        redAxisJson.push(parseInt(this.redtik));
+                        greenAxisJson.push(parseInt(this.greentik));
+                        multipageAxisJson.push(parseInt(this.multipage));
+                        xAxisJson.push(moment(this.xDate).format('DD-MMM'));
+                    });
+
+                var title = {
+                    text: ''
+                };
+                var xAxis = {
+                    tickInterval: 2,
+                    categories: xAxisJson
+                };
+                var yAxis = {
+                    min: 0,
+                    title: {
+                        text: null
+                    },
+                    plotLines: [{
+                        value: 0,
+                        width: 1,
+                        color: '#808080'
+                    }]
+                };
+                var tooltip = {
+                    shared: true,
+                    formatter: function () {
+                        return '' +
+                            ' <b>' + this.x + " " + new Date().getFullYear() + '</b> <br/>'
+                            + this.points[0].series.name + ': <b>' + this.points[0].y + '<br/>'
+                            + this.points[1].series.name + ': <b>' + this.points[1].y + '<br/>'
+                            + this.points[2].series.name + ': <b>' + this.points[2].y + '<br/>'
+                            + this.points[3].series.name + ': <b>' + this.points[3].y + '<br/>'
+                            + this.points[4].series.name + ': <b>' + this.points[4].y + '<br/>'
+                    }
+                }
+                var legend = {
+                    verticalAlign: 'bottom',
+                    borderWidth: 0
+                };
+
+                var plotOptions = {
+                    series: {
+                        events: {
+                            legendItemClick: function () {
+                                return false;
+                            }
+                        }
+                    }
+                };
+                var series = [
+                    {
+                        color: '#ffa937',
+                        name: 'visitors',
+                        data: yAxisJson,
+                        marker: {
+                            symbol: 'circle'
+                        }
+                    },
+                    {
+                        color: '#3c3c3c',
+                        name: 'Multi page visitors',
+                        data: multipageAxisJson,
+                        marker: {
+                            symbol: 'circle'
+                        }
+                    },
+                    {
+                        color: '#00b7ee',
+                        name: 'Blue visitors',
+                        data: blueAxisJson,
+                        marker: {
+                            symbol: 'circle'
+                        }
+                    },
+                    {
+                        color: '#df0044',
+                        name: 'Red visitors',
+                        data: redAxisJson,
+                        marker: {
+                            symbol: 'circle'
+                        }
+                    },
+                    {
+                        color: '#b3cd01',
+                        name: 'Green visitors',
+                        data: greenAxisJson,
+                        marker: {
+                            symbol: 'circle'
+                        }
+                    }
+                ];
+
+                var json = {};
+                json.title = title;
+                json.xAxis = xAxis;
+                json.yAxis = yAxis;
+                json.tooltip = tooltip;
+                json.legend = legend;
+                json.series = series;
+                json.plotOptions = plotOptions;
+                $('#monthlyGraph_' + i).highcharts(json);
+                $('.highcharts-xaxis-labels').children().find("tspan").html("0:00");
+                $('.highcharts-contextbutton').remove();
+                $('.highcharts-credits').remove();
+                $('.highcharts-button-box').remove();
+                $('.highcharts-label').find("text").html("");
+            }
+
+        }
+    }
+</script>
+
+<script>
+    function ApplyFilter(id, domainName) {
+        $("div#divLoading").addClass('show');
+        var customURL = $("#customURL").val();
+        var startDate = document.getElementById("StartDate_" + id).value;
+        if (startDate !== null) {
+            document.location = customURL + "?domainName=" + domainName + "&date=" + startDate;
+        } else {
+            document.location = customURL + "?domainName=" + domainName;
+        }
+    }
+</script>

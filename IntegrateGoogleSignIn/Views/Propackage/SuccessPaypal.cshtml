@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "SuccessPaypal";
+    TempData["SwalErrorMessage"] = string.Empty;
+    TempData["Message"] = string.Empty;
+    TempData["SwalSubscribeSuccessMessage"] = TempData["SwalSubscribeSuccessMessage"];
+}
+
+<style>
+    div.outer-div {
+        height: 90vh;
+        width: 100%;
+        text-align: center;
+        overflow: hidden !important;
+    }
+
+    div.middle-div {
+        position: relative;
+        top: 50%;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+        overflow: hidden !important;
+    }
+
+    img {
+        max-width: 400px;
+        width: 100%;
+    }
+</style>
+<div class='outer-div'>
+    <div class='middle-div'>
+        <div class="row">
+            <div class="col-md-12">
+                <img src="~/Content/success.png" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        setTimeout(function () {
+            location.href = "/ProPackage/Index";
+        }, 2000);
+    });
+</script>

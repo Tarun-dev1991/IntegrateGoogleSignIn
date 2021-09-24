@@ -1,0 +1,47 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutOrange.cshtml";
+}
+<style>
+    #cUlli {
+        padding-left: 2rem;
+        list-style-type: none;
+    }
+
+    #cUlli > li {
+        padding-left: 2rem;
+        background-image: url(../../Content/Orange_check.svg);
+        background-position: 0 0;
+        background-size: 1.6rem 1.6rem;
+        background-repeat: no-repeat;
+        margin-bottom: 5px;
+    }
+</style>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <form action="/examples/actions/confirmation.php" method="post" style="background-color: white;padding: 10%;padding-bottom: 2%;padding-top: 2%; border-radius: 20px; margin-top: 5%;">
+            <h3 class="text-center" style="color: #f77408"><b>Pro package</b></h3>
+            <h5 class="text-center" style="color: #f77408"><b>$14 a month</b></h5>
+            <p style="color: #f77408;margin-bottom: 0px" class="text-center"><small>Monthly pageviews: upto 45,0000</small></p><br>
+            <p style="margin: 0px;padding-left: 5%"><small>Once signed up you can click to upgrade:</small></p>
+            <p style="color: #f77408;margin:0px;padding-left: 5%"><small>Monthly pageviews: 75,000</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$24</p>
+            <p style="color: #f77408;margin:0px;padding-left: 5%"><small>Monthly pageviews: 300,000</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$44</p>
+            <p style="color: #f77408;margin:0px;padding-left: 5%"><small>Monthly pageviews: 1,500,000</small>&nbsp;&nbsp;&nbsp;$74</p>
+            <p style="color: #f77408;margin:0px;padding-left: 5%"><small>Monthly pageviews: 3,000,000</small>&nbsp;&nbsp;&nbsp;$144</p>
+            <p style="margin-top: 5px;margin-bottom: 0px;padding-left: 5%;right: 4%;text-align: left;"><small>One line of code to add to your Google Analytics code</small></p><br>
+            <ul id="cUlli">
+                <li>User report</li>
+                <li>Daily reports</li>
+                <li>30 Day reports</li>
+                <li>Funnel reports: Unlimited</li>
+                <li>Highlight tool</li>
+                <li>Customer Service(24hrs response)</li>
+            </ul>
+            <div class="form-group">
+                <button onclick="window.location.href='@Url.Action("ProSignUp","Auth")';" style="font-size: 15px;border-radius: 20px;background-color: #f77408; border-color: #f77408" type="button" class="btn btn-primary btn-block">30 DAY FREE TRIAL</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+

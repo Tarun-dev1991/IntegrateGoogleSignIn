@@ -1,0 +1,220 @@
+﻿@*@model IntegrateGoogle.Core.Models.UserProfile*@
+@model List<Google.Apis.Analytics.v3.Data.AccountSummary>
+@{
+    ViewBag.Title = "Add Domain";
+}
+<script>
+    var openAnalytics = function () {
+        window.location = "/Dashboard/GetReports?viewId=" + document.getElementById('viewId').value;
+    }
+
+    function ChangeUser(combo) {
+        window.location = "/Dashboard/Index?userName=" + combo.value;
+    }
+</script>
+@{
+    string isChecked(string v)
+    {
+        string chkeced = "";
+        if (!string.IsNullOrEmpty(ViewBag.SelectedUser) && ViewBag.SelectedUser.Equals(v))
+        {
+            chkeced = "Selected";
+        }
+
+        return chkeced;
+    }
+
+    var message = string.Empty;
+    if (TempData["Message"] != null)
+    {
+        message = TempData["Message"].ToString();
+    }
+
+    var swalErrorMessage = string.Empty;
+    var swalSuccessMessage = string.Empty;
+    if (TempData["SwalErrorMessage"] != null)
+    {
+        swalErrorMessage = TempData["SwalErrorMessage"].ToString();
+        TempData["SwalErrorMessage"] = "";
+    }
+
+    if (TempData["SwalSuccessMessage"] != null)
+    {
+        swalSuccessMessage = TempData["SwalSuccessMessage"].ToString();
+        TempData["SwalSuccessMessage"] = "";
+    }
+
+    var isDefault = string.Empty;
+    var isAdmin = false;
+    if (Session["AdminUser"] != null)
+    {
+        isAdmin = true;
+    }
+    else
+    {
+        if (Session["Email"] != null)
+        {
+            var userEmail = Session["Email"].ToString();
+            isDefault = IntegrateGoogleSignIn.Helpers.PayPalFunction.GetSubscribeStatus(userEmail);
+        }
+    }
+
+    var currentUserEmail = string.Empty;
+}
+
+<style>
+    .blockdisabled {
+        pointer-events: none;
+    }
+</style>
+
+<link href="~/Content/sweetalert.min.css" rel="stylesheet" />
+<input type="hidden" id="displaySwalErrorMessage" value="@swalErrorMessage" />
+<input type="hidden" id="displaySwalSuccessMessage" value="@swalSuccessMessage" />
+<form id="frnDomainSubscription" method="post" action="@Url.Action("SubscribeGooglePlan","Googlepackage")">
+    <div class="container" style="margin-top: 3%;">
+        @if (ViewBag.Users != null)
+        {
+            <div class="panel panel-default">
+                <div class="alert alert-info"><b>Select a user to load list of profiles.</b></div>
+                <select style="height: 30px; margin: 5px 5px; background: #222222; color: #ffffff; border-radius: 12px;" onchange="ChangeUser(this)">
+
+                    @foreach (var usr in ViewBag.Users)
+                    {
+                        if (string.IsNullOrEmpty(currentUserEmail))
+                        {
+                            currentUserEmail = usr.UserName;
+                        }
+                        <option value="@usr.UserName" @isChecked(usr.UserName)>@usr.UserName <span>(@usr.Name)</span></option>
+                    }
+                </select>
+            </div>
+        }
+        @if (Session["AdminUser"] == null)
+        {
+            <div class="row" style="margin-bottom: 10px">
+                <div class="col-md-6">
+                    <h3>Select website for subscribe</h3>
+                </div>
+                <div class="col-md-6 text-right">
+                    <button type="button" onclick="SubscribeDomains()" class="btn btn-success">Subscribe</button>
+                </div>
+                <div class="col-md-12">
+                    <h3 style="color: red;" id="displayMessage">@message</h3>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row" style="margin-bottom: 10px">
+                <div class="col-md-12">
+                    <h3 style="color: red;" id="displayMessage">@message</h3>
+                </div>
+            </div>
+        }
+        <table class="table">
+            @foreach (var client in Model)
+            {
+                <tr>
+                    <td>
+                        <p>
+                            <label>@client.Name</label>
+                            <label>(@client.Id)</label>
+                            @if (Session["AdminUser"] == null && !string.IsNullOrEmpty(client.ETag))
+                            {
+                                <span class="btn btn-success btn-xs">Subscribe</span>
+                            }
+                            else if (!string.IsNullOrEmpty(client.ETag))
+                            {
+                                <a class="btn btn-danger btn-xs" href="@Url.Action("SuspendGooglePlan", "Googlepackage", new {id = client.ETag, userEmail = currentUserEmail})">Suspend</a>
+                            }
+                        </p>
+                        <ul>
+                            @if (client.WebProperties != null)
+                            {
+                                foreach (var project in client.WebProperties)
+                                {
+                                    <li>
+                                        <p style="display: inline-block">
+                                            <input class="checkboxes" value="@project.Id" type="checkbox" name="googleIds" />
+                                            <span>@project.Name</span>
+                                            <span>(@project.Id)</span>
+                                        </p>
+                                    </li>
+                                    <ul>
+                                        @if (project.Profiles != null)
+                                        {
+                                            foreach (var profile in project.Profiles)
+                                            {
+                                                // Profiles with in that web property.
+                                                <li>
+                                                    <a class="@(string.IsNullOrEmpty(client.ETag) && !isAdmin ? "blockdisabled" : string.Empty)" style="display: inline-block" href="/Dashboard/GetReports?viewId=@profile.Id">
+                                                        <p>
+                                                            <span>@profile.Name</span>
+                                                            <span>(@profile.Id)</span>
+                                                        </p>
+                                                    </a>
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                }
+                            }
+                        </ul>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</form>
+
+<input id="isDefault" type="hidden" value="@isDefault" />
+
+<script src="~/Content/sweetalert.min.js"></script>
+<script>
+    $(document).ready(function () {
+        setTimeout(function () {
+            $('#displayMessage').fadeOut('slow');
+        }, 2000);
+
+        var swalSuccessMessage = $("#displaySwalSuccessMessage").val();
+        if (swalSuccessMessage.length > 0) {
+            swal("", swalSuccessMessage, "success");
+        }
+
+        var swalErrorMessage = $("#displaySwalErrorMessage").val();
+        if (swalErrorMessage.length > 0) {
+            swal("", swalErrorMessage, "error");
+        }
+
+        $('input[type=checkbox]').click(function () {
+            if ($("#isDefault").val() === "false") {
+                $(".checkboxes").prop("checked", false);
+                $(this).prop("checked", true);
+            }
+        });
+    });
+
+    function SubscribeDomains() {
+        if ($(".checkboxes").is(":checked")) {
+            swal({
+                    title: "Are you sure?",
+                    text: "You will be charge 19$ for each selected domain, shall we proceed?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "Yes, accepted!",
+                    cancelButtonText: "No, cancel!",
+                    closeOnConfirm: true,
+                    closeOnCancel: true
+                },
+                function(isConfirm) {
+                    if (isConfirm) {
+                        $("#frnDomainSubscription").submit();
+                    }
+                });
+        } else {
+            swal("", "Please select domain to subscribe.", "error");
+        }
+    }
+</script>

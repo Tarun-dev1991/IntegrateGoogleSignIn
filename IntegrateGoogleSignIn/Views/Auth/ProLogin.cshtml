@@ -1,0 +1,30 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutOrange.cshtml";
+}
+	<link href="~/Content/dc.css" rel="stylesheet" type="text/css">
+<div class="row" style="font-family:Roboto !important;margin-top:70px;">
+    <div class="col-md-2"></div>
+    <div class="fullm">
+        <form action="@Url.Action("ProLogin", "Auth")" method="post" style="background-color: white; padding: 10%; padding-top: 5%;margin-top: 10%;border-radius:3px;">
+            <h3 class="aligncenter dashsub"><b>Sign in</b></h3>
+            <p class="aligncenter standardtext">Need a digital-crumbs account? <button onclick="window.location.href = '@Url.Action("ProSignUp", "Auth")';" type="button" class="yellowfont whitebg bordernone">Sign up</button></p><br>
+            <div class="form-group">
+                <input name="email" style="font-size: 12px; background-color: #f9f9f9;" type="text" class="form-control" placeholder="Enter your email address" required="required">
+            </div>
+            <div class="form-group">
+                <input name="password" style="font-size: 12px; background-color: #f9f9f9;" type="password" class="form-control" placeholder="Enter your password" required="required">
+            </div>
+            <div class="form-group">
+                <button style="font-size: 15px; border-color: #f77408; background-color: #f77408;" type="submit" class="btn btn-primary btn-block">Login</button>
+            </div>
+            <div class="clearfix">
+
+                <small><a href="@Url.Action("ForgotPassword", "Auth")" class="pull-right standardtext yellowfont">Forgot Password?</a></small>
+            </div>
+        </form>
+        <br />
+        <p class="aligncenter standardtext whitefont"><span>Not got an account yet? <a href="@Url.Action("ProSignUp", "Auth")" style="color: #FFF; text-decoration: underline">Sign up to our 14 day free trial</a></span></p>
+        
+    </div>
+    
+</div>

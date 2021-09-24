@@ -1,0 +1,295 @@
+﻿@{
+    ViewBag.Title = "digital-crumbs";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    @*<meta content="width=640, initial-scale=0.47, maximum-scale=1.0, user-scalable=1" name="viewport">*@
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="~/Content/pleaserotate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <style>
+        #pleaserotate-graphic {
+            fill: #fff;
+        }
+
+        #pleaserotate-backdrop {
+            color: #fff;
+            background-color: #000;
+        }
+    </style>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-148152662-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-148152662-1');
+    </script>
+    <!-- Google Tag Manager -->
+    <script>
+    (function (w, d, s, l, i) {
+        w[l] = w[l] || []; w[l].push({
+            'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+        }); var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-TTPFDWV');</script>
+    <!-- End Google Tag Manager -->
+
+    <script type="text/javascript">
+        const _baseAPIUrl = 'https://touristcentre.co.uk';
+        $(document).ready(function () {
+
+            $.get("https://pro.ip-api.com/json/?fields=126975&key=Yz9NF1n7w2KydqB", function (response) {
+                var userAgent = window.navigator.userAgent,
+                    platform = window.navigator.platform,
+                    macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'],
+                    windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'],
+                    iosPlatforms = ['iPhone', 'iPad', 'iPod'],
+                    os = "";
+                if (macosPlatforms.indexOf(platform) !== -1) {
+                    os = 'Mac OS';
+                } else if (iosPlatforms.indexOf(platform) !== -1) {
+                    os = 'iOS';
+                } else if (windowsPlatforms.indexOf(platform) !== -1) {
+                    os = 'Windows';
+                } else if (/Android/.test(userAgent)) {
+                    os = 'Android';
+                } else if (!os && /Linux/.test(platform)) {
+                    os = 'Linux';
+                }
+                var _user = {};
+                _user.UserIP = response.query;
+                _user.DomainName = window.location.hostname;
+                _user.Location = response.country + ', ' + response.regionName + ', ' + response.city;
+                _user.Source = document.referrer;
+                _user.mobile = response.mobile;
+                _user.os = os;
+                _user.browser = window.navigator.userAgent;
+                var checkCookie = getCookie("UserSessionStatus");
+                if (checkCookie == null || checkCookie == "") {
+                    insertUser(_user)
+                }
+                else {
+                    var UserIdSessionId = checkCookie.split(',');
+                    UserDetail(UserIdSessionId[0], UserIdSessionId[1]);
+                }
+            }, "jsonp");
+
+            function insertUser(_user) {
+                $.ajax({
+                    type: "POST",
+                    url: _baseAPIUrl + "/api/AjaxAPI/InsertUser",
+                    data: JSON.stringify(_user),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (r) {
+                        if (r.id != null || r.id != '') {
+                            var _userSession = {};
+                            _userSession.UserId = r.Id
+                            _userSession.SessionVistTime = new Date();
+                            InsertUserSession(_userSession)
+                        }
+                    }
+                });
+            }
+            function InsertUserSession(_userSession) {
+                $.ajax({
+                    type: "POST",
+                    url: _baseAPIUrl + "/api/AjaxAPI/InsertUserSession",
+                    data: JSON.stringify(_userSession),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (r) {
+                        if (r.id != null || r.UserId != '') {
+                            setCookie("UserSessionStatus", r.UserId + ',' + r.Id, 1);
+                            UserDetail(r.UserId, r.Id);
+                        }
+                    }
+                });
+            }
+
+            function UserDetail(userId, UserSessionId) {
+                var _userDetail = {};
+                _userDetail.StartUrl = window.location.href;
+                _userDetail.EndUrl = document.referrer;
+                _userDetail.UserId = userId;
+                _userDetail.PageTitle = document.title;
+                _userDetail.SessionDateTime = new Date();
+
+                _userDetail.UserSessionId = UserSessionId;
+                $.ajax({
+                    type: "POST",
+                    url: _baseAPIUrl + "/api/AjaxAPI/InsertUserDetail",
+                    data: JSON.stringify(_userDetail),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (r) {
+                    }
+                });
+            }
+            function setCookie(cname, cvalue, exdays) {
+                var d = new Date();
+                d.setTime(d.getTime() + (2 * 60 * 1000)); //exdays * 24 * 60 * 60 * 1000
+                var expires = "expires=" + d.toUTCString();
+                document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+            }
+            function getCookie(cname) {
+                var name = cname + "=";
+                var decodedCookie = decodeURIComponent(document.cookie);
+                var ca = decodedCookie.split(';');
+                for (var i = 0; i < ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') {
+                        c = c.substring(1);
+                    }
+                    if (c.indexOf(name) == 0) {
+                        return c.substring(name.length, c.length);
+                    }
+                }
+                return "";
+            }
+        });
+
+    </script>
+    <style>
+        body {
+            background: #FFF;
+            font-family: Roboto Light !important;
+        }
+
+        .navbar {
+            box-shadow: 0px 1px white;
+            border-radius: 0px;
+            background: linear-gradient(to left,#f77408, #ffbe00);
+        }
+
+        .navbar-brand {
+            color: #FFF;
+        }
+
+        .navbar-toggle {
+            background-color: white;
+        }
+
+        button.navbar-toggle > .icon-bar {
+            background-color: black;
+        }
+
+        #myNavbar.in {
+            background-color: black !important;
+        }
+
+        #mailUL > li::after {
+            content:;
+            background: #fff;
+            width: 1px;
+            height: 10px;
+            display: inline-block;
+            position: relative;
+            content: '';
+            top: 0;
+            right: 0;
+        }
+
+        #mailUL > li > a {
+            font-size: 13px;
+            color: white;
+            display: inline-block;
+        }
+
+            #mailUL > li > a:hover, #mailUL > li > a:focus {
+                background-color: transparent;
+                color: white !important;
+            }
+
+        #mailUL > li:nth-child(4)::after {
+            display: none;
+        }
+
+        #mailUL > li:nth-child(5)::after {
+            display: none;
+        }
+
+
+        #footerUi {
+            margin: 0 !important;
+        }
+
+            #footerUi > li > a {
+                color: #FFF !important;
+            }
+
+        #ChnagedFont, #ChnagedFont > p, #ChnagedFont > label, #ChnagedFont > h3, #ChnagedFont > h2, #ChnagedFont > h1 {
+            font-family: 'q_serif', Georgia, Times, "Times New Roman", "Hiragino Kaku Gothic Pro", "Meiryo", serif;
+        }
+
+        .sweet-alert > p.text-muted {
+            font-size: 12pt;
+        }
+
+        .sweet-alert > h2 {
+            font-size: 14pt;
+        }
+
+        button.cancel, button.confirm {
+            padding: 10px 16px;
+            font-size: 14pt;
+        }
+    </style>
+</head>
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TTPFDWV"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <nav class="navbar">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a style="padding-left: 65px;" class="navbar-brand" href="@Url.Action("index", "Home")"><img src="~/Content/logo.png" /></a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul id="mailUL" class="nav navbar-nav navbar-right">
+                    <li><a href="@Url.Action("ContactUs", "Home")">CONTACT US</a></li>
+                    <li><a href="@Url.Action("FAQs", "Home")">FAQs</a></li>
+                    @*<li><a href="@Url.Action("Pricing", "Home")">PRICING</a></li>*@
+                    <li><a href="@Url.Action("ProLogin", "Auth")">LOGIN</a></li>
+                    <li><a href="@Url.Action("ExtraUserLogin", "Auth")">PRO LOGIN</a></li>
+                    <li>
+                        <button onclick="window.location.href = '@Url.Action("ProSignUp", "Auth")';" type="button" class="btn btn-default navbar-btn" style="border-color: #FFF; margin-left: 10px; background-color: #fefdff; color: #fe0606; border-radius: 20px;"><b>TRY US FOR FREE</b></button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        @RenderBody()
+    </div>
+    <footer class="page-footer font-small" style="background-color: black; padding: 20px;bottom: 0;width: 100%">
+        <div class="row" style="color: #FFF">
+            <div class="col-md-12">
+                <ul id="footerUi" class="list-inline">
+                    <li>© 2018 Copyright </li>
+                    <li class="pull-right">@Html.ActionLink("TermsAndCondition", "TermsAndCondition", "Home")</li>
+                    <li class="pull-right">|</li>
+                    <li class="pull-right">@Html.ActionLink("PrivacyPolicy", "PrivacyPolicy", "Home")</li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

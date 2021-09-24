@@ -1,0 +1,728 @@
+﻿@model IntegrateGoogleSignIn.Models.ReportPageVm
+@using IntegrateGoogleSignIn.Helpers
+
+@{
+    Layout = "~/Views/Shared/_LayoutProPackage.cshtml";
+    var timeZone = string.Empty;
+    if (TempData["TimeZone"] != null)
+    {
+        timeZone = TempData["TimeZone"].ToString();
+        TempData["TimeZone"] = null;
+    }
+    var reconvert = CommonFunctions.ConvertTimeZone(StaticValues.TzUk, timeZone, Model.reportCurrentDate);
+    var currentDateString = reconvert.ToString("yyyy-MM-dd");
+
+    var countryStr = string.Empty;
+    var locationArray = Model.location.Split(',').Select(p => p.Trim()).ToArray();
+    if (locationArray.Length > 0)
+    {
+        countryStr = locationArray[0].Trim();
+    }
+
+    var cityStr = string.Empty;
+    if (locationArray.Length > 1)
+    {
+        cityStr = locationArray[1].Trim();
+    }
+
+    var city1 = string.Empty;
+    if (locationArray.Length > 2)
+    {
+        city1 = locationArray[2].Trim();
+    }
+}
+@{
+    Layout = "~/Views/Shared/_LayoutProPackage.cshtml";
+
+}
+
+<link rel="stylesheet" href="~/Content/rotate.css" />
+
+<title>Visitor History</title>
+<style>
+    li button.btnDisable:hover {
+        cursor: none !important;
+        pointer-events: none !important;
+    }
+
+    li button {
+        height: 46px;
+        font-size: 19px;
+        background: #3c3c3c;
+        color: white;
+    }
+
+    .target {
+        display: inline;
+    }
+
+    .bootstrap-tagsinput {
+        width: 100%;
+        text-align: left;
+        height: 50px;
+    }
+
+    .main-wrap ul li a {
+        display: contents;
+    }
+
+    ul {
+        list-style: none;
+    }
+
+    .btn_popup_close {
+        margin-right: 7px;
+        padding: 2px;
+        background-color: white;
+        color: black;
+        border-radius: 50%;
+        font-size: 10px;
+        width: 22px;
+        border: 1px solid black;
+    }
+
+    #blueList, #redList, #greenList {
+        margin-top: 5px;
+    }
+
+        #blueList li, #redList li, #greenList li {
+            margin-right: 1%;
+        }
+
+        #blueList i:hover, #redList i:hover, #greenList i:hover {
+            cursor: pointer;
+        }
+
+    #search ul li, #search ul {
+        border: 0px none red;
+        float: none;
+        padding: 0px;
+        margin: 0px;
+        display: block;
+    }
+
+    .redBack {
+        background-color: red;
+        color: white;
+        font-weight: bolder;
+    }
+
+    .blueBack {
+        background-color: blue;
+        color: white;
+        font-weight: bolder;
+    }
+
+    .greenBack {
+        background-color: green;
+        color: white;
+        font-weight: bolder;
+    }
+
+    .hideCollection, .hideEarlierCollection, .earlierVisitor {
+        display: none;
+    }
+
+        .hideCollection.active, .hideEarlierCollection.active, .earlierVisitor.active {
+            display: block;
+        }
+
+    .cli.active {
+        background: green !important;
+        color: white !important;
+    }
+
+    .filterKeywords.activated {
+        border: 3px solid #b3b3b3;
+    }
+
+    .all {
+        border: 3px solid #005873;
+    }
+
+    .all2 {
+        border: 3px solid #bc476b;
+    }
+
+    .all3 {
+        border: 3px solid #8b9f00;
+    }
+
+    .cli {
+        background: black !important;
+        color: white !important;
+    }
+
+        .cli > a {
+            border: none !important;
+            background: none !important;
+            color: white !important;
+        }
+
+    .ckeywordstatus > .visitor_image:hover, .btnALLKeyword:hover {
+        cursor: pointer;
+    }
+
+
+
+    .ckeywordstatus.active {
+        border-bottom: 4px solid red;
+        text-align: center;
+    }
+
+    .ckeywordstatus {
+        border: none;
+    }
+
+    .panelVisitors.diactivate {
+        display: none;
+    }
+
+    .panelVisitors {
+        display: flex;
+    }
+
+    #divLoading {
+        display: none;
+    }
+
+        #divLoading.show {
+            display: block;
+            position: fixed;
+            z-index: 100;
+            background-image: url('../../../../Content/3.gif');
+            background-color: #666;
+            opacity: 0.4;
+            background-repeat: no-repeat;
+            background-position: center;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            top: 0;
+        }
+
+    #loadinggif.show {
+        left: 50%;
+        top: 50%;
+        position: absolute;
+        z-index: 101;
+        width: 32px;
+        height: 32px;
+        margin-left: -16px;
+        margin-top: -16px;
+    }
+
+    div.content {
+        width: 1000px;
+        height: 1000px;
+    }
+
+    body {
+    }
+
+    .target, .commonSize12 {
+        font-size: 12px;
+    }
+
+    .commonSize13 {
+        font-size: 13px;
+    }
+
+    .pathText {
+        font-size: 11px;
+    }
+
+    .bootstrap-tagsinput {
+        max-width: 100% !important;
+        line-height: 38px;
+    }
+
+    .label {
+        padding: .4em .9em .5em;
+        font-size: 100%;
+        font-weight: 300;
+    }
+
+    .left-col {
+        padding-right: 0 !important;
+    }
+
+        .left-col .col {
+            border-radius: 0px !important;
+        }
+
+    .right-col .col {
+        background: #3c3c3c !important;
+        border-radius: 0px !important;
+    }
+
+    .panel-body {
+        background-color: #FFF !important;
+    }
+
+    .dot_2, .dot_blue, .dot_red, .dot_green {
+        border-radius: 4px !important;
+    }
+
+    .cshare {
+        background-color: #eaeaea !important;
+        padding: 4px !important;
+    }
+
+        .cshare .glyphicon {
+            font-size: 9px !important;
+        }
+
+    .btnLoad, .btnEarlier {
+        margin-left: 17px !important;
+        background-color: #ffa937 !important;
+        border-radius: 3px !important;
+        color: #FFF !important;
+    }
+
+    .btnEarlier {
+        float: right !important;
+    }
+
+    .dot_2 {
+        background-color: #3c3c3c !important;
+    }
+
+    .dot_blue {
+        background-color: #00b7ee !important;
+    }
+
+    .dot_red {
+        background-color: #df0044 !important;
+    }
+
+    .dot_green {
+        background-color: #b3cd01 !important;
+    }
+
+
+    .col {
+        background-color: #f8f9fb !important;
+    }
+
+    .visitorcollection {
+        margin-left: 20px;
+    }
+
+    .panel-heading {
+        background: linear-gradient(to left, #ffffff 0%,#ffffff 20%,#ffffff 70%,#3c3c3c 50%,#3c3c3c 100%)
+    }
+
+    .pointer, .filterKeywords {
+        cursor: pointer;
+    }
+
+    i:hover {
+        cursor: pointer;
+    }
+
+    .bootstrap-tagsinput > input {
+        height: 100%;
+    }
+
+    .btnBack:hover {
+        cursor: pointer !important;
+        pointer-events: all !important;
+        color: white;
+    }
+
+    .btnBack a {
+        color: white;
+    }
+
+    li button.btnDisable:hover {
+        cursor: none !important;
+        pointer-events: none !important;
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="/Content/visitor_comparison/style.css" rel="stylesheet" type="text/css" />
+<div id="divLoading"></div>
+<div class="filter-selector navbar-inverse" style="height:85px; background:#f8f9fa;">
+    <div class="container">
+        <ul style="justify-content:flex-start;width: 100%;display: inline-block;margin-top: 30px;">
+            <li style="color: black;display: inline;"><button class="btn btnBack"><a href="@Url.Action("Report","Propackage", new { domainName = Model.domainName })"><i class="fa fa-arrow-left"> Back</i></a></button></li>
+            <li style="color: black;display: inline;"><button class="btn btnDisable"><i class="fa fa-chrome"> @Model.domainName</i></button></li>
+            <li style="color: black;display: inline;"><button class="btn btnDisable"><i class="fa fa-user"> Visitor @Model.userId</i></button></li>
+            <li style="color: black;display: inline;"><button class="btn btnDisable"><i class="fa fa-map-marker"> Location @Model.location</i></button></li>
+            <li style="color: black;display: inline;"><button class="btn btnDisable"><i class="fa fa-bookmark-o"> Source @Model.source</i></button></li>
+        </ul>
+    </div>
+</div>
+
+@{
+    var actualUserCollections = Model.userListing.ToList();
+}
+
+<div class="container body-content" style="margin-top:2.3%;">
+    @if (Model.userListing.Any())
+    {
+        var dynamicNumber = 0;
+        var item_counter = 0;
+        foreach (var user in actualUserCollections.OrderByDescending(m => m.visitDate))
+        {
+            item_counter++;
+            <div class="filter-search panelVisitors">
+                <div class="left-col">
+
+                    <div class="panel col ulData shadow">
+                        <div class="panel-heading pnl_heading">
+                            <div class="row">
+                                <div class="col-md-6 col-xs-6 col-lg-6">
+                                    <div class="visitor">
+                                        <span class="visitor-total" style="color:#FFF"><i class="fa fa-clock-o"></i>  @user.visitDate.ToString("dd-MM-yyyy")</span>
+                                        <div class="visitorcollection" style="width: 100%;display: initial;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-xs-2 col-lg-2">
+                                    &nbsp;
+                                </div>
+                                <div class="col-md-4 col-xs-4 col-lg-4" style="float: right; text-align: right;">
+                                    @{
+                                        var totalMinDuration = Math.Floor(user.duration);
+                                        var duration = string.Empty;
+                                        if (totalMinDuration < 60)
+                                        {
+                                            duration = "under 1 min";
+                                        }
+                                        else if (totalMinDuration < 120)
+                                        {
+                                            duration = "over " + 1 + " min";
+                                        }
+                                        else if (totalMinDuration < 180)
+                                        {
+                                            duration = "over " + 2 + " min";
+                                        }
+                                        else if (totalMinDuration < 240)
+                                        {
+                                            duration = "over " + 3 + " min";
+                                        }
+                                        else if (totalMinDuration < 300)
+                                        {
+                                            duration = "over " + 4 + " min";
+                                        }
+                                        else
+                                        {
+                                            duration = "over " + 5 + " min";
+                                        }
+                                    }
+                                    @{
+                                        var mobileOption = (!string.IsNullOrEmpty(user.mobile) && user.mobile == "True") ? "(Mobile Data)" : "(Wifi)";
+                                    }
+                                    <div class="target txtmobile">
+                                        <span style="color: #3c3c3c;" class="commonSize13">@mobileOption Duration </span> <span class="text-danger commonSize12" style="color: #ffa937;font-weight: bold">@duration</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body" id="panelBody_@user.id">
+                            @{
+                                var userCollectionLoop = user.userInteractions.ToList();
+                                var loop = userCollectionLoop.Count;
+                                var counterLoop = 0;
+                                var needToHide = false;
+                            }
+                            @foreach (var sessionCollection in userCollectionLoop)
+                            {
+                                dynamicNumber++;
+                                var hasData = false;
+                                counterLoop++;
+                                if (loop != counterLoop)
+                                {
+                                    hasData = true;
+                                }
+
+                                var e = 0;
+                                var totalCollection = sessionCollection.Visits.Count;
+                                foreach (var item in sessionCollection.Visits)
+                                {
+                                    e++;
+
+                                    <div class="row @((counterLoop > 1) ? "earlierVisitor earlierVisitor_" + dynamicNumber + "" : string.Empty) @((e > 2) || (needToHide) ? "hideCollection hideCollection_" + dynamicNumber + "" : string.Empty)" style="margin-bottom: 5px;">
+                                        <div class="col-md-2 col-xs-2 col-lg-2">
+                                            @if (e == 1 && item.sessionDatetime.HasValue)
+                                            {
+                                                if (e == 1)
+                                                {
+                                                    <span class="commonSize13"><b>Session Start</b></span>
+                                                    <br />
+                                                    <span class="commonSize12" style="color: #ffa937;font-weight:bold">@item.sessionDatetime.Value.ToString("hh:mm tt")</span>
+                                                    <span class="sessionStartTime" style="display: none">@item.sessionDatetime.Value.ToString("HH:mm")</span>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (totalCollection == e)
+                                                {
+                                                    <span class="commonSize12">Session End</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>&nbsp;</span>
+                                                }
+                                            }
+                                        </div>
+                                        <div class="col-md-7 col-xs-7 col-lg-7">
+                                            <div class="col-md-1 col-xs-1 col-lg-1">
+                                                <span class="countColor dot_2" cust-data="ii_@item_counter"></span>
+                                            </div>
+                                            <div class="col-md-11 col-xs-11 col-lg-11">
+                                                <div class="target row" style="margin: 0px;">@item.title</div>
+                                                <div style="margin: 0%; color: #ffa937;font-weight:bold" class="pathText target row">
+                                                    @{
+                                                        var splitURL = item.url.Split('/');
+                                                        var totallength = splitURL.Length;
+                                                        var urlToDisplay = "Home Page";
+                                                        if (totallength == 4)
+                                                        {
+                                                            if (!string.IsNullOrEmpty(splitURL[totallength - 1]))
+                                                            {
+                                                                urlToDisplay = splitURL[totallength - 1];
+                                                            }
+                                                        }
+                                                        else if (totallength > 4)
+                                                        {
+                                                            if (!string.IsNullOrEmpty(splitURL[totallength - 1]))
+                                                            {
+                                                                urlToDisplay = splitURL[totallength - 1];
+                                                            }
+                                                            else
+                                                            {
+                                                                urlToDisplay = splitURL[totallength - 2];
+                                                            }
+                                                        }
+                                                    }
+                                                    @if (urlToDisplay.Length > 29)
+                                                    {
+                                                        urlToDisplay = string.Concat("/", urlToDisplay.Substring(0, 30));
+                                                    }
+                                                    else
+                                                    {
+                                                        urlToDisplay = string.Concat("/", urlToDisplay);
+                                                    }
+                                                    @urlToDisplay
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1 col-xs-1 col-lg-1">
+                                            <a class="cshare" style="font-size: x-small;" target="_blank" href="@item.url"><span class="glyphicon glyphicon-share">URL</span></a>
+                                        </div>
+                                        <div class="col-md-2 col-xs-2 col-lg-1">
+                                            <div style="width: 100%">
+                                                <div class="target" style="margin-left: -32px;">
+                                                    @{
+                                                        var convertedSpan = new TimeSpan(0, 0, (int)item.durationTime);
+                                                        var durationString = string.Empty;
+                                                        if (convertedSpan.Minutes > 0)
+                                                        {
+                                                            if (convertedSpan.Seconds > 0)
+                                                            {
+                                                                durationString = convertedSpan.Minutes + " min " + convertedSpan.Seconds + " sec";
+                                                            }
+                                                            else
+                                                            {
+                                                                durationString = convertedSpan.Minutes + " min ";
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            if (convertedSpan.Seconds > 0)
+                                                            {
+                                                                durationString = convertedSpan.Seconds + " sec";
+                                                            }
+                                                        }
+                                                    }
+                                                    @durationString
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    if (totalCollection == e)
+                                    {
+
+                                        <div class="row @(counterLoop > 1 ? "earlierVisitor earlierVisitor_" + dynamicNumber + "" : string.Empty)" style="margin-top: 10px; margin-bottom: 10px;">
+                                            <div class="col-md-2 col-xs-2 col-lg-2">
+                                                &nbsp;
+                                            </div>
+                                            <div class="col-md-10 col-xs-10 col-lg-10">
+                                                @if (totalCollection > 2)
+                                                {
+                                                    <button type="button" class="btn btn-xs btn_css_footer btn_c_load_more btnLoad" onclick="LoadMore(@dynamicNumber, this)">Load More</button>
+                                                }
+                                                @if (hasData)
+                                                {
+                                                    var newDynamic = dynamicNumber + 2;
+                                                    <button onclick="EarlierVisits(@newDynamic, this)" type="button" class="btn btn-xs btn_css_footer btn_c_load_more btnEarlier">More sessions: Show</button>
+                                                }
+                                            </div>
+                                        </div>
+
+                                        dynamicNumber++;
+                                    }
+
+                                    if (e > 2)
+                                    {
+                                        if (loop != counterLoop)
+                                        {
+                                            hasData = true;
+                                        }
+                                        else
+                                        {
+                                            needToHide = false;
+                                        }
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="right-col">
+                    <div class="panel col shadow">
+                        <div style="padding-top: 10px; padding-right: 15px; padding-left: 15px;">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 col-lg-12" style="padding-top: 12px;">
+                                    <div>
+                                        @if (user.location.Contains("google"))
+                                        {
+                                            <img src="~/Content/google.png" alt="" title="" />
+                                        }
+                                        else if (user.location.Contains("facebook"))
+                                        {
+                                            <img src="~/Content/facebook.png" alt="" title="" />
+                                        }
+                                        else if (user.location.Contains("bing"))
+                                        {
+                                            <img src="~/Content/bing.png" alt="" title="" />
+                                        }
+                                        else if (user.location.Contains("instagram"))
+                                        {
+                                            <img src="~/Content/instagram.png" alt="" title="" />
+                                        }
+                                        else if (user.location.Contains("yahoo"))
+                                        {
+                                            <img src="~/Content/yahoo.png" alt="" title="" />
+
+                                        }
+                                        else if (@user.location.Contains("https://t.co") || @user.location.Contains("l.t.co/"))
+                                        {
+                                            <img src="~/Content/twitter.png" alt="" title="" />
+                                        }
+                                    </div>
+                                    <br>
+                                    <div class="target" style="color: #FFF; padding-left: 3px;">
+                                        @if (!string.IsNullOrEmpty(user.location))
+                                        {
+                                            if (user.location.Contains("google"))
+                                            {
+                                                <label class="commonSize12 txtSource">Google</label>
+                                            }
+                                            else if (@user.location.Contains("m.facebook.com") || @user.location.Contains("l.facebook.com") || @user.source.Contains("facebook.com"))
+                                            {
+                                                <label class="commonSize12 txtSource">FaceBook</label>
+                                            }
+                                            else if (@user.location.Contains(Model.domainName))
+                                            {
+                                                <label class="commonSize12 txtSource">Direct</label>
+                                            }
+                                            else if (@user.location.Contains("http://www.phileasfoggs.co.uk/") || @user.location.Contains("https://www.phileasfoggsworldofadventures.co.uk/"))
+                                            {
+                                                <label class="commonSize12 txtSource">Direct</label>
+                                            }
+                                            else if (@user.location.Contains("bing"))
+                                            {
+                                                <label class="commonSize12 txtSource">Bing</label>
+                                            }
+                                            else if (@user.location.Contains("l.instagram.com"))
+                                            {
+                                                <label class="commonSize12 txtSource">Instagram</label>
+                                            }
+                                            else if (@user.location.Contains("yahoo"))
+                                            {
+                                                <label class="commonSize12 txtSource">Yahoo</label>
+                                            }
+                                            else if (@user.location.Contains("https://t.co") || @user.location.Contains("l.t.co/"))
+                                            {
+                                                <label class="commonSize12 txtSource">Twitter</label>
+                                            }
+                                            else
+                                            {
+                                                if (user.location.Length > 41)
+                                                {
+                                                    <label class="commonSize12 txtSource">@user.location.Substring(0, 40)</label>
+                                                }
+                                                else
+                                                {
+                                                    <label class="commonSize12 txtSource">@user.location</label>
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <label class="commonSize12 txtSource">Direct</label>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("div#divLoading").addClass('show');
+        setTimeout(function () {
+            $("div#divLoading").removeClass('show');
+        }, 2000);
+    });
+
+</script>
+
+<script>
+    function EarlierVisits(id, obj) {
+        var textValue = $(obj).text();
+        if (textValue === "More sessions: Show") {
+            $.each($(".earlierVisitor_" + id),
+                function () {
+                    if (!$(this).hasClass("hideCollection")) {
+                        $(this).addClass("active");
+                    }
+                });
+            $(obj).text("More sessions: Hide");
+        } else {
+            //btnEarlier//btnLoad
+            $(".earlierVisitor_" + id).nextAll().each(function () {
+                $(this).find(".btnEarlier").text("More sessions: Show");
+                $(this).find(".btnLoad").text("Load More");
+            });
+            $(".earlierVisitor_" + id).nextAll(".hideCollection").removeClass("active");
+            $(".earlierVisitor_" + id).nextAll().removeClass("active");
+            $(".earlierVisitor_" + id).removeClass("active");
+            $(obj).text("More sessions: Show");
+        }
+    }
+
+    function LoadMore(id, obj) {
+        var textValue = $(obj).text();
+        if (textValue === "Load More") {
+            $(".hideCollection_" + id).addClass("active");
+            $(obj).text("Show Less");
+        } else {
+            $(".hideCollection_" + id).removeClass("active");
+            $(obj).text("Load More");
+        }
+    }
+</script>

@@ -1,0 +1,48 @@
+﻿@{
+
+    Layout = "~/Views/Shared/_LayoutOrange.cshtml";
+}
+
+<h2 style="text-align:center;">Please select which website reports you wish to view</h2>
+<div class="row" style="margin-top:3%;">
+    <span style="text-align:center;margin-left:22%;margin-top:2%;">You have more than one type of account, each type of account will have different website listed under each.</span>
+    </div>
+<div class="row" style="margin-top:3%;background-color:white;height:219px;">
+
+    <div class="col-md-6" style="text-align:center;padding-top:2%;">
+        <div>
+            <span style="font-size:21px;"> Standard account</span>
+        </div><br />
+
+        <div style="text-align:center;">
+            <span>
+                This account would have been setup by yourself and will give you <br /> access to your own website reports.You are given <span>FULL</span> access.
+            </span><br />
+
+        </div>
+        <div>
+
+            <a style="border-color: #edb415;margin-top:5%;" href="@Url.Action("Index", "ProPackage")" class="btn btn-success btn-lg">Continue</a>
+        </div>
+
+    </div>
+    <div class="col-md-6" style="text-align:center;padding-top:2%;">
+        <div>
+            <span style="font-size:21px;"> Additional user account </span>
+        </div><br />
+
+        <div style="text-align:center;">
+            <span>
+                This account would have been setup by someone else and will give you <br /> access to their website reports.You are given <span>LIMITED</span> access.
+            </span><br />
+
+        </div>
+        <div>
+            
+            <a style="border-color: #edb415;margin-top:5%;" href="@Url.Action("Username", "Auth")" class="btn btn-success btn-lg">Continue</a>
+        </div>
+
+    </div>
+
+</div>
+

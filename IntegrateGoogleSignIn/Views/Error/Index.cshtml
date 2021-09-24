@@ -1,0 +1,41 @@
+﻿@model string
+@{
+    ViewBag.Title = "Error";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>404 - Page not found</title>
+
+    <!-- Google font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,900" rel="stylesheet">
+    <!-- Custom stlylesheet -->
+    <link href="~/Content/error/css/style.css" rel="stylesheet" />
+</head>
+<body>
+
+<div id="notfound">
+    <div class="notfound">
+        <div class="notfound-404">
+            <h1>Oops!</h1>
+        </div>
+        <h2>404 - Page not found</h2>
+        <p>@Model</p>
+        <a href="/Home/SignOut">Go To Homepage</a>
+    </div>
+</div>
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        setTimeout(function () {
+            location.href = "/Home/SignOut";
+        }, 5000);
+    });
+</script>

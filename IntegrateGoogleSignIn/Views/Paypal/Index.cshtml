@@ -1,0 +1,179 @@
+﻿@model List<IntegrateGoogleSignIn.Models.PaypalSubscriptionVm>
+@{
+    ViewBag.Title = "Subscription Plans";
+}
+<style>
+    #cul > li.active {
+        width: 50%;
+    }
+
+    #cul > li {
+        font-size: 16px;
+        text-align: center;
+        width: 50%;
+    }
+
+        #cul > li > a {
+            background-color: gray;
+            color: white;
+        }
+
+        #cul > li.active > a {
+            background-color: #f0bd14;
+            color: white;
+        }
+
+    #cul {
+        border: none;
+    }
+</style>
+<div class="container">
+    @*<ul id="cul" class="nav nav-tabs" style="margin-top: 10px;">
+        <li class="active"><a data-toggle="tab" href="#propackage">ProPackage Subscription Plans</a></li>
+        @*<li><a data-toggle="tab" href="#google">Google Subscription Plans</a></li>
+    </ul>*@
+    <div class="tab-content" style="padding: 10px; border: 7px solid lightgray;margin-right: 2px; margin-top: 10px;">
+        <div id="propackage" class="tab-pane fade in active">
+            @if (Model.Any())
+            {
+                if (Model.Count(m => !m.isGoogle) > 0)
+                {
+                    <div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Plan Id</th>
+                                    <th>Plan Name</th>
+                                    <th>Users</th>
+                                    <th width="180px">Amount</th>
+                                </tr>
+                            </thead>
+
+                            @foreach (var subscription in Model.Where(m => !m.isGoogle))
+                            {
+                                <tr>
+                                    <td>
+                                        @subscription.planId
+                                        @if (subscription.isSpecialPlan)
+                                        {
+                                            <button class="btn btn-warning btn-xs">Upgrade Plan</button>
+                                        }
+                                    </td>
+                                    @if (subscription.planTitle == "0$ plan")
+                                    {
+                                        <td>FREE TRAIL</td>
+                                    }
+                                    else
+                                    {
+                                        <td>@subscription.planTitle</td>
+                                    }
+                                    @if (subscription.users.Any())
+                                    {
+                                        <td>
+                                            @foreach (var user in subscription.users)
+                                            {
+                                                <p>
+                                                    @user
+                                                </p>
+                                            }
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>No user subscribed for this plan</td>
+                                    }
+                                    @if (subscription.planTitle == "0$ plan")
+                                    {
+                                        <td>1 MONTH FREE <br /> 10$ FOR MONTH </td>
+                                    }
+                                    else
+                                    {
+                                        <td>@subscription.planAmount</td>
+                                    }
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <h3>No Plan added.</h3>
+                }
+            }
+            else
+            {
+                <h3>No Plan added.</h3>
+            }
+        </div>
+        @*<div id="google" class="tab-pane fade">
+            @if (Model.Any())
+            {
+                if (Model.Count(m => m.isGoogle) > 0)
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Plan Id</th>
+                                <th>Plan Name</th>
+                                <th>Users</th>
+                                <th width="180px">Amount</th>
+                            </tr>
+                        </thead>
+                        @foreach (var subscription in Model.Where(m => m.isGoogle))
+                        {
+                            <tr>
+                                <td>
+                                    @subscription.planId
+                                    @if (subscription.isSpecialPlan)
+                                    {
+                                        <button class="btn btn-warning btn-xs">Upgrade Plan</button>
+                                    }
+                                </td>
+                                @if (subscription.planTitle == "0$ plan")
+                                {
+                                    <td>FREE TRAIL</td>
+                                }
+                                else
+                                {
+                                    <td>@subscription.planTitle</td>
+                                }
+                                @if (subscription.users.Any())
+                                {
+                                    <td>
+                                        @foreach (var user in subscription.users)
+                                        {
+                                            <p>
+                                                @user
+                                            </p>
+                                        }
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>No user subscribed for this plan</td>
+                                }
+                                @if (subscription.planTitle == "0$ plan")
+                                {
+                                    <td>1 MONTH FREE <br /> 10$ FOR MONTH </td>
+                                }
+                                else
+                                {
+                                    <td>@subscription.planAmount</td>
+                                }
+                            </tr>
+                        }
+                    </table>
+                }
+                else
+                {
+                    <h3>No Plan added.</h3>
+                }
+            }
+            else
+            {
+                <h3>No Plan added.</h3>
+            }
+        </div>*@
+
+    </div>
+</div>

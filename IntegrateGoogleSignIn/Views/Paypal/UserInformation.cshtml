@@ -1,0 +1,66 @@
+﻿@model List<IntegrateGoogleSignIn.Models.UserInformationVm>
+@{
+    ViewBag.Title = "User Information";
+}
+<style>
+    #cul > li.active {
+        width: 50%;
+    }
+
+    #cul > li {
+        font-size: 16px;
+        text-align: center;
+        width: 50%;
+    }
+
+        #cul > li > a {
+            background-color: gray;
+            color: white;
+        }
+
+        #cul > li.active > a {
+            background-color: #f0bd14;
+            color: white;
+        }
+
+    #cul {
+        border: none;
+    }
+</style>
+<div class="container">
+    <div class="tab-content" style="padding: 10px; border: 7px solid lightgray;margin-right: 2px; margin-top: 10px;">
+        <div id="propackage" class="tab-pane fade in active">
+            @if (Model.Any())
+            {
+                <div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>UserName</th>
+                                <th>Domain List</th>
+                                <th width="180px">Payment</th>
+                            </tr>
+                        </thead>
+                        @foreach (var userDetails in Model)
+                        {
+                        <tr>
+                            <td>@userDetails.email</td>
+                            <td>
+                                @foreach (var domain in userDetails.domainList)
+                                {
+                                    @domain <br />
+                                }
+                            </td>
+                            <td>@userDetails.price</td>
+                        </tr>
+                        }
+                    </table>
+                </div>
+            }
+            else
+            {
+                <h3>No User Found.</h3>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,130 @@
+﻿@model List<IntegrateGoogleSignIn.Models.specialuser>
+@{
+    ViewBag.Title = "Special Users";
+    Layout = "~/Views/Shared/_LayoutProPackage.cshtml";
+    var swalErrorMessage = string.Empty;
+    var swalSuccessMessage = string.Empty;
+    if (TempData["SwalErrorMessage"] != null)
+    {
+        swalErrorMessage = TempData["SwalErrorMessage"].ToString();
+    }
+
+    if (TempData["SwalSuccessMessage"] != null)
+    {
+        swalSuccessMessage = TempData["SwalSuccessMessage"].ToString();
+    }
+}
+	
+	<link href="~/Content/sidebar.css" rel="stylesheet" type="text/css">
+
+<link
+			rel="stylesheet"
+			href="https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.min.css"
+		/>
+	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+
+<link href="~/Content/sweetalert.min.css" rel="stylesheet" />
+<input type="hidden" id="displaySwalErrorMessage" value="@swalErrorMessage" />
+<input type="hidden" id="displaySwalSuccessMessage" value="@swalSuccessMessage" />
+
+<div class="container">
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <a href="@Url.Action("AddSpecialUsers", "Propackage")" class="btn btn-success pull-right">Add User</a>
+            <br />
+            <br />
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Domain</th>
+                        <th class="text-center" width="15%">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        foreach (var data in Model)
+                        {
+                            var domainCollection = data.domainname.Split(',');
+
+                            <tr>
+                                <td>@data.name</td>
+                                <td>@data.email</td>
+                                <td>
+                                    @foreach (var domainName in domainCollection)
+                                    {
+                                        <label>@domainName</label><br />
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group">
+                                        <a href="@Url.Action("UpdateSpecialUsers", "Propackage", new {id = data.Id})" class="btn btn-primary">Edit</a>
+                                        <a href="@Url.Action("DeleteSpecialUsers", "Propackage", new {id = data.Id})" class="btn btn-primary">Delete</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr><td colspan="4" class="text-center">No Data Found!</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+	
+	<aside class="sidebar">
+			<nav>
+				<ul class="sidebar__nav">
+		
+					<li>
+						<a href="/Propackage/SpecialUsers" class="sidebar__nav__link">
+							<i class="mdi mdi-account-plus"></i>
+							<span class="sidebar__nav__text">Add users</span>
+						</a>
+					</li>
+			
+					<li>
+						<a href="/Home/FAQs" class="sidebar__nav__link">
+							<i class="mdi mdi-comment-text-outline"></i>
+							<span class="sidebar__nav__text">FAQs</span>
+						</a>
+					</li>
+					<li>
+						<a href="/Home/ContactUs" class="sidebar__nav__link">
+							<i class="mdi mdi-email-outline"></i>
+							<span class="sidebar__nav__text">Contact us</span>
+						</a>
+					</li>
+					<li>
+						<a href="/Auth/ProSignOut" class="sidebar__nav__link">
+							<i class="mdi mdi-power"></i>
+							<span class="sidebar__nav__text">Logout</span>
+						</a>
+					</li>
+				</ul>
+			</nav>
+		</aside>
+
+
+<script src="~/Content/sweetalert.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var swalSuccessMessage = $("#displaySwalSuccessMessage").val();
+        if (swalSuccessMessage.length > 0) {
+            swal("", swalSuccessMessage, "success");
+        }
+
+        var swalErrorMessage = $("#displaySwalErrorMessage").val();
+        if (swalErrorMessage.length > 0) {
+            swal("", swalErrorMessage, "error");
+        }
+    });
+</script>

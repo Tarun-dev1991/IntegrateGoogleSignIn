@@ -1,0 +1,116 @@
+﻿@model List<IntegrateGoogleSignIn.Models.AdminDomain>
+@{
+    ViewBag.Title = "Domain List";
+    var errorMessage = string.Empty;
+    if (TempData["SwalErrorMessage"] != null)
+    {
+        errorMessage = TempData["SwalErrorMessage"].ToString();
+        TempData["SwalErrorMessage"] = "";
+    }
+
+    var successMessage = string.Empty;
+    if (TempData["SwalSuccessMessage"] != null)
+    {
+        successMessage = TempData["SwalSuccessMessage"].ToString();
+        TempData["SwalSuccessMessage"] = "";
+    }
+}
+
+<link href="~/Content/sweetalert.min.css" rel="stylesheet" />
+<style>
+    #cul > li.active {
+        width: 50%;
+    }
+
+    #cul > li {
+        font-size: 16px;
+        text-align: center;
+        width: 50%;
+    }
+
+        #cul > li > a {
+            background-color: gray;
+            color: white;
+        }
+
+        #cul > li.active > a {
+            background-color: #f0bd14;
+            color: white;
+        }
+
+    #cul {
+        border: none;
+    }
+</style>
+<div class="container">
+    <input type="hidden" id="displaySwalErrorMessage" value="@errorMessage" />
+    <input type="hidden" id="displaySwalSuccessMessage" value="@successMessage" />
+    <div class="row">
+        <div class="col-md-8">
+            <div class="tab-content" style="padding: 10px; border: 7px solid lightgray; margin-right: 2px; margin-top: 50px;">
+                <div id="propackage" class="tab-pane fade in active">
+                    @if (Model.Any())
+                    {
+                        <div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Domain Name</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                @foreach (var domainDetails in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a href="@Url.Action("Report", "Propackage", new {domainName = domainDetails.domainname, date = DateTime.Now.ToString("yyyy-MM-dd")})">@domainDetails.domainname</a>
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("DeleteDomain", "Dashboard", new { id = domainDetails.domainId })" style="background-color: #ffa937; width: 112px; border-color: #edb415" class="btn btn-success btn-xs">DELETE</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <h3>No User Found.</h3>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 " style="padding-top: 30px; padding-left: 41px;">
+            <form method="post" action="@Url.Action("DomainList")">
+                <div class="row">
+                    <h3>Add another website</h3>
+                </div>
+                <div class="row form-group" style="padding-top: 15px;">
+                    <input style="min-width: 60%" id="txtDomainName" name="domainName" placeholder="Enter domain name" type="text" required="" class="form-control" />
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-2 "></div>
+                    <div class="col-md-3 "></div>
+                    <div class="col-4 ">
+                        <button style="background-color: #ffa937; width: 112px; border-color: #edb415" type="submit" class="btn btn-success">Add</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="~/Content/sweetalert.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var swalSuccessMessage = $("#displaySwalSuccessMessage").val();
+        if (swalSuccessMessage.length > 0) {
+            swal("", swalSuccessMessage, "success");
+        }
+
+        var swalErrorMessage = $("#displaySwalErrorMessage").val();
+        if (swalErrorMessage.length > 0) {
+            swal("", swalErrorMessage, "error");
+        }
+    });
+</script>

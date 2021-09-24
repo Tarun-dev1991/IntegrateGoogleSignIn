@@ -1,0 +1,89 @@
+﻿@model IntegrateGoogleSignIn.Models.propackageuser
+@{
+    ViewBag.Title = "Dc Script";
+    ViewBag.Color = "#00a2f3";
+    Layout = "~/Views/Shared/_LayoutProPackage.cshtml";
+}
+
+	<link href="~/Content/sidebar.css" rel="stylesheet" type="text/css">
+
+<link
+			rel="stylesheet"
+			href="https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.min.css"
+		/>
+
+<div class="container">
+    <div class="row">
+        <div style="margin-top: 5%">
+            <p> <b>Copy and paste this code within the HEAD of every page you want to track.</b></p> <br />
+            <p>Please note it may take 24 hours for data to appear in your reports.</p>
+        </div>
+        <div class="row">
+            <div class="col-md-12" style="margin-top: 5%">
+
+                @if (string.IsNullOrEmpty(Model.script))
+                {
+
+				<pre>&lt;!-- Analytics (user.js) - Digital Crumbs -->
+<code>&lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"&gt;&lt;/script&gt;</code>
+<code>&lt;script type="text/javascript" src="https://digital-crumbs.com/js/user.js"&gt;&lt;/script&gt;</code></pre>
+				
+                }
+                else
+                {
+                    <pre>@Model.script</pre>
+                }
+            </div>
+            
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                
+                <a style="background-color: #ffa937;height: 41px;padding-top:7px;text-align:center;font-size:17px; border-color: #edb415"  href="@Url.Action("Index", "Propackage")" class="btn btn-success btn-xs">Return to  dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<aside class="sidebar">
+			<nav>
+				<ul class="sidebar__nav">
+					<li>
+						<a href="/Propackage" class="sidebar__nav__link">
+							<i class="mdi mdi-monitor-dashboard"></i>
+							<span class="sidebar__nav__text">Dashboard</span>
+						</a>
+					</li>
+					<li>
+						<a href="/Propackage/SpecialUsers" class="sidebar__nav__link">
+							<i class="mdi mdi-account-plus"></i>
+							<span class="sidebar__nav__text">Add users</span>
+						</a>
+					</li>
+					<li>
+						<a href="/Propackage/ChangePassword" class="sidebar__nav__link">
+							<i class="mdi mdi-key-variant"></i>
+							<span class="sidebar__nav__text">Password</span>
+						</a>
+					</li>
+					<li>
+						<a href="/Home/FAQs" class="sidebar__nav__link">
+							<i class="mdi mdi-comment-text-outline"></i>
+							<span class="sidebar__nav__text">FAQs</span>
+						</a>
+					</li>
+					<li>
+						<a href="/Home/ContactUs" class="sidebar__nav__link">
+							<i class="mdi mdi-email-outline"></i>
+							<span class="sidebar__nav__text">Contact us</span>
+						</a>
+					</li>
+					<li>
+						<a href="/Auth/ProSignOut" class="sidebar__nav__link">
+							<i class="mdi mdi-power"></i>
+							<span class="sidebar__nav__text">Logout</span>
+						</a>
+					</li>
+				</ul>
+			</nav>
+		</aside>

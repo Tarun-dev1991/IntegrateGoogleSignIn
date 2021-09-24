@@ -1,0 +1,138 @@
+﻿@{
+    ViewBag.Title = "Admin Login";
+    Layout = null;
+    var swalErrorMessage = string.Empty;
+    var swalSuccessMessage = string.Empty;
+    if (TempData["SwalErrorMessage"] != null)
+    {
+        swalErrorMessage = TempData["SwalErrorMessage"].ToString();
+        TempData["SwalErrorMessage"] = "";
+    }
+
+    if (TempData["SwalSuccessMessage"] != null)
+    {
+        swalSuccessMessage = TempData["SwalSuccessMessage"].ToString();
+        TempData["SwalSuccessMessage"] = "";
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=640, initial-scale=0.47, maximum-scale=1.0, user-scalable=1" name="viewport">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="~/Content/sweetalert.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background: #007bff;
+            background: linear-gradient(to right, #0062E6, #33AEFF);
+        }
+
+        .navbar {
+            box-shadow: 0px 1px white;
+            border-radius: 0px;
+        }
+
+        .navbar-brand {
+            color: white;
+        }
+
+        .navbar-toggle {
+            background-color: white;
+        }
+
+        button.navbar-toggle > .icon-bar {
+            background-color: black;
+        }
+
+        #myNavbar.in {
+            background-color: black !important;
+        }
+
+        li::after {
+            content:;
+            background: #fff;
+            width: 1px;
+            height: 10px;
+            display: inline-block;
+            position: relative;
+            content: '';
+            top: 0;
+            right: 0;
+        }
+
+        .navbar-nav > li > a {
+            font-size: 13px;
+            color: white;
+            display: inline-block;
+        }
+
+            .navbar-nav > li > a:hover {
+                background-color: transparent;
+                color: white !important;
+            }
+
+        li:nth-child(1)::after {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <input type="hidden" id="displaySwalErrorMessage" value="@swalErrorMessage" />
+    <input type="hidden" id="displaySwalSuccessMessage" value="@swalSuccessMessage" />
+    <nav class="navbar">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a style="padding-left: 65px;" class="navbar-brand" href="@Url.Action("index", "Home")"><img src="~/Content/logo.png" /></a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav navbar-right">
+                    @*<li><a href="@Url.Action("GoogleSignIn", "Auth")">STANDARD LOGIN</a></li>*@
+                    <li><a href="@Url.Action("ProLogin", "Auth")">PRO LOGIN</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <form action="@Url.Action("crumbs80", "Auth")" method="post" style="background-color: white; padding: 10%; padding-top: 5%; border-radius: 20px; margin-top: 10%;">
+                    <h3 class="text-center" style="color: #48aee6"><b>Admin Login</b></h3>
+                    <p class="text-center"><small>Please enter your email and password</small></p><br>
+                    <div class="form-group">
+                        <input name="username" style="font-size: 12px; border-radius: 20px; background-color: #f9f9f9;" type="text" class="form-control" placeholder="Enter your email address" required="required">
+                    </div>
+                    <div class="form-group">
+                        <input name="Password" style="font-size: 12px; border-radius: 20px; background-color: #f9f9f9;" type="password" class="form-control" placeholder="Enter your password" required="required">
+                    </div>
+                    <div class="form-group">
+                        <button style="font-size: 15px; border-radius: 20px; background-color: #00a1f2;" type="submit" class="btn btn-primary btn-block">Log in</button>
+                    </div>
+                </form>
+                <br />
+            </div>
+        </div>
+    </div>
+    <script src="~/Content/sweetalert.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var swalSuccessMessage = $("#displaySwalSuccessMessage").val();
+            if (swalSuccessMessage.length > 0) {
+                swal("", swalSuccessMessage, "success");
+            }
+
+            var swalErrorMessage = $("#displaySwalErrorMessage").val();
+            if (swalErrorMessage.length > 0) {
+                swal("", swalErrorMessage, "error");
+            }
+        });
+    </script>
+</body>
+</html>

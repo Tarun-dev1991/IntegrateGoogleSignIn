@@ -1,0 +1,2085 @@
+﻿@model IntegrateGoogleSignIn.Models.ReportPageVm
+@using IntegrateGoogleSignIn.Helpers
+@{
+    Layout = "~/Views/Shared/_LayoutProPackage.cshtml";
+    var domainName = Model.domainName;
+    var startDate = Model.reportStartDate;
+    var endDate = Model.reportEndDate;
+}
+
+<link rel="stylesheet" href="~/Content/rotate.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link href="/Content/dc.css" rel="stylesheet" type="text/css">
+<link href="~/Content/styles.css" rel="stylesheet" type="text/css">
+<link href="~/Content/sidebar.css" rel="stylesheet" type="text/css">
+
+<link rel="stylesheet"
+      href="https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+<script src="~/Scripts/highcharts.js"></script>
+<title>Report Of @Model.reportStartDate.ToString("d") To  @Model.reportEndDate.AddDays(6).ToString("d")</title>
+
+<style>
+    .target {
+        display: inline;
+    }
+
+    .bootstrap-tagsinput {
+        width: 100%;
+        text-align: left;
+        height: 50px;
+    }
+
+    .main-wrap ul li a {
+        display: contents;
+    }
+
+    ul {
+        list-style: none;
+    }
+
+    .btn_popup_close {
+        margin-right: 7px;
+        padding: 2px;
+        background-color: white;
+        color: black;
+        border-radius: 50%;
+        font-size: 10px;
+        width: 22px;
+        border: 1px solid black;
+    }
+
+    #blueList, #redList, #greenList, #pinkList {
+        margin-top: 5px;
+    }
+
+        #blueList li, #redList li, #greenList li, #pinkList li {
+            margin-right: 1%;
+        }
+
+        #blueList i:hover, #redList i:hover, #greenList i:hover, #pinkList i:hover {
+            cursor: pointer;
+        }
+
+    #search ul li, #search ul {
+        border: 0px none red;
+        float: none;
+        padding: 0px;
+        margin: 0px;
+        display: block;
+    }
+
+    .redBack {
+        background-color: red;
+        color: white;
+        font-weight: bolder;
+    }
+
+    .blueBack {
+        background-color: blue;
+        color: white;
+        font-weight: bolder;
+    }
+
+    .greenBack {
+        background-color: green;
+        color: white;
+        font-weight: bolder;
+    }
+
+    .pinkBack {
+        background-color: pink;
+        color: white;
+        font-weight: bolder;
+    }
+
+    .badge-pink {
+        background-color: pink !important;
+        color: white !important;
+    }
+
+    .hideCollection, .hideEarlierCollection, .earlierVisitor {
+        display: none;
+    }
+
+        .hideCollection.active, .hideEarlierCollection.active, .earlierVisitor.active {
+            display: block;
+        }
+
+    .cli.active {
+        background: green !important;
+        color: white !important;
+    }
+
+    .filterKeywords.activated {
+        border: 3px solid #b3b3b3;
+    }
+
+    .all {
+        border: 3px solid #005873;
+    }
+
+    .all2 {
+        border: 3px solid #bc476b;
+    }
+
+    .all3 {
+        border: 3px solid #8b9f00;
+    }
+
+    .all4 {
+        border: 3px solid black;
+    }
+
+    .all5 {
+        border: 3px solid #e75480;
+    }
+
+    .cli {
+        background: black !important;
+        color: white !important;
+    }
+
+        .cli > a {
+            border: none !important;
+            background: none !important;
+            color: white !important;
+        }
+
+    .ckeywordstatus > .visitor_image:hover, .btnALLKeyword:hover {
+        cursor: pointer;
+    }
+
+
+
+    .ckeywordstatus.active {
+        border-bottom: 4px solid red;
+        text-align: center;
+    }
+
+    .ckeywordstatus {
+        border: none;
+    }
+
+    .panelVisitors.diactivate {
+        display: none;
+    }
+
+    .panelVisitors {
+        display: flex;
+    }
+
+    #divLoading {
+        display: none;
+    }
+
+        #divLoading.show {
+            display: block;
+            position: fixed;
+            z-index: 100;
+            background-image: url('../../../../Content/3.gif');
+            background-color: #666;
+            opacity: 0.4;
+            background-repeat: no-repeat;
+            background-position: center;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            top: 0;
+        }
+
+    #loadinggif.show {
+        left: 50%;
+        top: 50%;
+        position: absolute;
+        z-index: 101;
+        width: 32px;
+        height: 32px;
+        margin-left: -16px;
+        margin-top: -16px;
+    }
+
+    div.content {
+        width: 1000px;
+        height: 1000px;
+    }
+
+    body {
+    }
+
+    .target, .commonSize12 {
+        font-size: 12px;
+    }
+
+    .commonSize13 {
+        font-size: 13px;
+    }
+
+    .pathText {
+        font-size: 11px;
+    }
+
+    .bootstrap-tagsinput {
+        max-width: 100% !important;
+        line-height: 38px;
+    }
+
+    .label {
+        padding: .4em .9em .5em;
+        font-size: 100%;
+        font-weight: 300;
+    }
+
+    .left-col {
+        padding-right: 0 !important;
+    }
+
+        .left-col .col {
+            border-radius: 0px !important;
+        }
+
+    .right-col .col {
+        background: #3c3c3c !important;
+        border-radius: 0px !important;
+    }
+
+    .panel-body {
+        background-color: #FFF !important;
+    }
+
+    .dot_2, .dot_blue, .dot_red, .dot_green {
+        border-radius: 4px !important;
+    }
+
+    .cshare {
+        background-color: #eaeaea !important;
+        padding: 4px !important;
+    }
+
+        .cshare .glyphicon {
+            font-size: 9px !important;
+        }
+
+    .btnLoad, .btnEarlier {
+        margin-left: 17px !important;
+        background-color: #ffa937 !important;
+        border-radius: 3px !important;
+        color: #FFF !important;
+    }
+
+    .btnEarlier {
+        float: right !important;
+    }
+
+    .dot_2 {
+        background-color: #3c3c3c !important;
+    }
+
+    .dot_blue {
+        background-color: #00b7ee !important;
+    }
+
+    .dot_red {
+        background-color: #df0044 !important;
+    }
+
+    .dot_green {
+        background-color: #b3cd01 !important;
+    }
+
+    .dot_pink {
+        background-color: pink !important;
+    }
+
+
+    .col {
+        background-color: #f8f9fb !important;
+    }
+
+    .visitorcollection {
+        margin-left: 20px;
+    }
+
+    .panel-heading {
+        background: linear-gradient(to left, #ffffff 0%,#ffffff 20%,#ffffff 70%,#3c3c3c 50%,#3c3c3c 100%)
+    }
+
+    .pointer, .filterKeywords {
+        cursor: pointer;
+    }
+
+    i:hover {
+        cursor: pointer;
+    }
+
+    .dot_acc {
+        background-color: #00b7f0 !important;
+        height: 10px;
+        width: 10px;
+        display: inline-block;
+    }
+
+    .dot_multi {
+        background-color: #006a8b;
+        height: 10px;
+        width: 10px;
+        display: inline-block;
+    }
+
+    .bootstrap-tagsinput > input {
+        height: 100%;
+    }
+</style>
+<style>
+    #greenSocial, #greenTagsCount, .tblTagCount {
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+        #greenSocial td, #greenSocial th, #greenTagsCount td, #greenTagsCount th, .tblTagCount td, .tblTagCount th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #greenSocial tr:nth-child(even), #greenTagsCount tr:nth-child(even), .tblTagCount tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #greenSocial tr:hover, #greenTagsCount tr:hover, .tblTagCount tr:hover {
+            background-color: #ddd;
+        }
+
+        #greenSocial th, #greenTagsCount th, .tblTagCount th {
+            text-align: left;
+            background-color: #4CAF50;
+            color: white;
+        }
+
+    #newTags li {
+        background-color: #3c3c3c;
+        color: white;
+        padding: 5px;
+        margin-left: 5px;
+    }
+
+    #tagcollection, #sourceCollection {
+        background-color: white;
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link href="/Content/visitor_comparison/style.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/bootstrap-tagsinput.css" rel="stylesheet" />
+<div id="divLoading"></div>
+<div class="filter-selector navbar-inverse" style="height:142px; background:#f8f9fa;">
+    <div class="container paddingleftt">
+
+        <ul style="justify-content:flex-start;width: 113%;display: inline-block;margin-top:5%;">
+
+
+
+
+
+
+            <aside class="sidebar">
+                <nav>
+                    <ul class="sidebar__nav">
+                        <li>
+                            <a href="/Propackage" class="sidebar__nav__link">
+                                <i class="mdi mdi-monitor-dashboard"></i>
+                                <span class="sidebar__nav__text">Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/Propackage/SpecialUsers" class="sidebar__nav__link">
+                                <i class="mdi mdi-account-plus"></i>
+                                <span class="sidebar__nav__text">Add users</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/Propackage/ChangePassword" class="sidebar__nav__link">
+                                <i class="mdi mdi-key-variant"></i>
+                                <span class="sidebar__nav__text">Password</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/Home/FAQs" class="sidebar__nav__link">
+                                <i class="mdi mdi-comment-text-outline"></i>
+                                <span class="sidebar__nav__text">FAQs</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/Home/ContactUs" class="sidebar__nav__link">
+                                <i class="mdi mdi-email-outline"></i>
+                                <span class="sidebar__nav__text">Contact us</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="sidebar__nav__link">
+                                <i class="mdi mdi-power"></i>
+                                <span class="sidebar__nav__text">Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+
+
+
+
+
+
+            <li class="extralargetext charcoal reportmargintop">Campaigns</li>
+
+
+            <li>
+
+                <div class="whitebg border date"><span><input style="height: 40px; color: #fff;border: 0px;padding-right: 5px;background-color: #0e0d0e;border-radius: 8px;width:90%;text-align:center;" id="CustomMultiDate" value="@startDate.ToString("dd/MM/yyyy") - @endDate.ToString("dd/MM/yyyy")"> </span></div>
+                <br />
+
+            <li class="regulartext charcoal">@Model.domainName</li>
+            <br />
+
+        </ul>
+        @*<button style="background-color: #ffa937; border-color: #edb415;" class="btn btn-success" onclick="Report()">multi page visitors</button>*@
+        @*<label style="float:right;color: black;display: inline;margin-top: 30px;">@Model.domainName</label>*@
+    </div>
+
+</div>
+@Html.Hidden("currentStringDate", Model.reportCurrentDate.ToString("d"))
+
+
+<div class="container body-content">
+    <div class="main-wrap ">
+        <div class="header-top text-center">
+            <div class="row" style="background-color:#f8f9fa;">
+                <div class="row marginlefts"><hr></div>
+                <div class="col-md-9">
+                    <div>
+
+                        <h4 class="regulartext charcoal alignleft" style="margin-top:3.5%;">Number of Visitors</h4>
+                        <div id="hourly" class="ulData pagebg chartouter">
+                            <div id="monthlyGraph" style="margin-top:4%;" class="chartb whitebg border radiusl"></div>
+                        </div>
+
+                    </div>
+
+                    <div class="row" style="background-color:#f8f9fa;padding-top: 2%;">
+                        <div class="">
+                            <div class="">
+
+
+
+
+
+
+
+                            </div>
+                        </div>
+
+
+                        @*<div class="boxes marginleft">
+                                <div class="d-inline bg-success bluebg radius aligncenter">
+
+                                    <span class="largetext whitefont paddingtops" id="c_counted">@Model.allVisitor</span>
+
+                                    <div class="whitefont borderbottom standardtext">Visitors</div>
+                                    <div class="whitefont standardtext paddingbottoms" data-toggle="collapse" data-target="#Social4">from all sources&nbsp;&nbsp;<div class="glyphicon glyphicon-chevron-down pointer hidemobile"></div></div>
+                                    <div id="Social4" class="collapse bluebg standardtext whitefont paddingtops paddingbottoms bordertop overtop">
+                                        This shows the number of people from all referral sources.
+                                        <p></p>
+                                        <p></p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="boxes marginleft">
+                                <div class="d-inline bg-success darkredbg radius aligncenter">
+
+                                    <span class="largetext whitefont paddingtops" id="btnbluevisitor">0</span>
+
+                                    <br />
+                                    <div class="whitefont borderbottom standardtext">Visitors</div>
+                                    <div class="whitefont standardtext paddingbottoms" data-toggle="collapse" data-target="#Social">from links&nbsp;&nbsp;<div class="glyphicon glyphicon-chevron-down pointer hidemobile"></div></div>
+                                    <div id="Social" class="collapse darkredbg standardtext whitefont paddingtops paddingbottoms bordertop overtop">
+                                        This shows the number of people who have come via your tracking links.
+                                        <p></p>
+                                        <p></p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="boxes marginleft">
+                                <div class="d-inline bg-success redbg radius aligncenter">
+
+                                    <span class="largetext whitefont" id="btnpinkvisitor">0</span>
+
+
+                                    <br />
+                                    <div class="whitefont borderbottom standardtext">Visitors</div>
+                                    <div class="whitefont standardtext paddingbottoms" data-toggle="collapse" data-target="#Social1">viewed a product&nbsp;&nbsp;<div class="glyphicon glyphicon-chevron-down pointer hidemobile"></div></div>
+                                    <div id="Social1" class="collapse redbg standardtext whitefont paddingtops paddingbottoms bordertop overtop">
+                                        This is the number of people viewing your products.
+                                        <p></p>
+
+                                        <p></p>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="boxes marginleft">
+                                <div class="d-inline bg-success orangebg radius aligncenter">
+                                    <span class="largetext whitefont" id="btnredvisitor">0</span>
+
+
+
+                                    <br />
+                                    <div class="whitefont borderbottom standardtext">Visitors</div>
+                                    <div class="whitefont standardtext paddingbottoms" data-toggle="collapse" data-target="#Social2">reach checkout&nbsp;&nbsp;<div class="glyphicon glyphicon-chevron-down pointer hidemobile"></div></div>
+                                    <div id="Social2" class="collapse orangebg standardtext whitefont paddingtops paddingbottoms bordertop overtop">
+                                        This is the number of visitors who have reached your checkout.
+                                        <p></p>
+
+                                        <p></p>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="boxes marginleft">
+                                <div class="d-inline bg-success yellowbg radius aligncenter">
+                                    <span class="largetext whitefont" id="btngreenvisitor">0</span>
+
+
+                                    <br />
+                                    <div class="whitefont borderbottom standardtext">Visitors</div>
+                                    <div class="whitefont standardtext paddingbottoms" data-toggle="collapse" data-target="#Social3">made a transaction&nbsp;&nbsp;<div class="glyphicon glyphicon-chevron-down pointer hidemobile"></div></div>
+                                    <div id="Social3" class="collapse yellowbg standardtext whitefont paddingtops paddingbottoms bordertop overtop">
+                                        This is the number of visitors who have purchased your products.
+                                        <p></p>
+
+                                        <p></p>
+                                    </div>
+
+
+                                </div>
+                            </div>*@
+
+                    </div>
+                </div>
+
+
+                <div class="pie" style="margin-top:2%;">
+                    <div class="whitebg border radiusl standardtext alignleft">
+                        <div style="margin-top:3%;">
+                            <span class="dot_acc" style="margin-left:4%"></span>
+                            <span class="paddingl" style="padding-top:3%;">Non-explorers</span><br />
+                            <span class="dot_multi" style="margin-left:4%"></span>
+                            <span class="paddingl" style="padding-top:3%;">Explorers</span>
+                        </div>
+                        <div id="pieChart" style="min-width: 280px; height: 280px; max-width: 280px; margin: 0 auto;margin-top:6%;"></div>
+                    </div>
+                    <br />
+                    <div class="border radiusl whitebg standardtext charcoal" style="width:100%;">
+
+                        <div class="borderbottomg">
+                            <div class="btn standardtext" data-toggle="collapse" data-target="#demo"><b>Visitors</b><span style="padding-left:164%;" class="glyphicon glyphicon-chevron-down hidemobile"></span></div>
+                            <div id="demo" class="collapse">
+                                This is the number of people who visit your website.
+                                <p></p>
+
+                                <p></p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="btn standardtext" data-toggle="collapse" data-target="#demo3"><b>Explorers</b> <span style="padding-left:124%;" class="glyphicon glyphicon-chevron-down hidemobile"></span></div>
+                            <div id="demo3" class="collapse">
+                                This is the number of people who view more than one page on your site.
+                                <p></p>
+
+                                <p></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-12 text-center hidemobile hidedesktop">
+                <div>
+                    <hr />
+
+                    <br />
+                    <h4 class="regulartext charcoal alignleft"><img class="user_image visitor_image vistorpink" style="width: 20px;margin-right: 5px;border-radius: 2px;" src="/Content/visitor_comparison/user_lblue.jpg" alt="" title="">Number of visitors from sources</h4>
+                    <br />
+                    <table id="sourceCollection" class="table table-bordered" width="100%">
+                        <thead>
+                            <tr>
+                                <th class="alignleft standardtext charcoal" style="width:40%;">Source Name</th>
+                                <th class="alignleft standardtext charcoal" style="width:20%;">Visitors</th>
+                                <th class="alignleft standardtext charcoal" style="width:20%;">Genuine visitors</th>
+                                <th class="alignleft standardtext charcoal" style="width:20%;">Transactions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sourcecollectionData" class="alignleft standardtext charcoal">
+                        </tbody>
+                    </table>
+                    <br />
+                    <div id="divBtnSourceCollectionShowMore" class="text-center">
+
+                    </div>
+
+
+                </div>
+            </div>
+
+
+            <div class="col-md-12 text-center">
+                <div>
+                    <br /><br /><br />
+                    <br />
+                    <h4 class="redheading charcoal alignleft">Visitors from campaigns&nbsp;&nbsp;&nbsp;<span class="pointer plus hidemobile charcoal" data-toggle="modal" data-target="#videomode2"></h4>
+                    <br />
+                    <table id="tagcollection" class="table table-bordered" width="100%">
+                        <thead>
+                            <tr>
+                                <th class="boldtext charcoal alignleft" style="width:40%;">Campaign name</th>
+                                @*<th class="text-center">Domain</th>*@
+                                <th class="alignleft boldtext charcoal" style="width:20%;">Visitors</th>
+                                <th class="alignleft boldtext charcoal" style="width:20%;">Explorers</th>
+                                <th class="alignleft boldtext charcoal" style="width:20%;">Visitors viewed products</th>
+                                @*<th class="text-center">Created Date</th>*@
+                            </tr>
+                        </thead>
+                        <tbody id="tagcollectionData" class="standardtext charcoal alignleft">
+                        </tbody>
+                    </table>
+                    <div id="divBtnTagCollectionShowMore" class="alignleft">
+                    </div>
+
+
+                    <span class="button btn-success radius regulartext paddingms alignleft redbg hidemobile" style="cursor: pointer; float:left;" data-toggle="modal" data-target="#myModalBlue">&nbsp;&nbsp;Create a campaign&nbsp;&nbsp;</span>
+                    <br /><br /><br /><br /><br />
+                    <hr>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 text-center hidemobile hidedesktop">
+            <div>
+                <br /><br /><br />
+                <br />
+                <h4 class="regulartext charcoal alignleft"><img class="user_image visitor_image vistorpink" style="width: 20px;margin-right: 5px;border-radius: 2px;" src="~/Content/visitor_comparison/user_pink.png" alt="" title="">Number of visitors from tracking links&nbsp;&nbsp;&nbsp;<span class="pointer plus hidemobile charcoal" data-toggle="modal" data-target="#videomode2"><i class="mdi mdi-play-circle"></i></span> <span class="xsmalltext aligncenter charcoal hidemobile">How do I create a tracking link?</span></h4>
+                <br />
+                <table id="tagcollection" class="table table-bordered" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="standardtext charcoal alignleft" style="width:40%;">Tracking link</th>
+                            @*<th class="text-center">Domain</th>*@
+                            <th class="alignleft standardtext charcoal" style="width:20%;">Visitors</th>
+                            <th class="alignleft standardtext charcoal" style="width:20%;">Genuine visitors</th>
+                            <th class="alignleft standardtext charcoal" style="width:20%;">Transactions</th>
+                            @*<th class="text-center">Created Date</th>*@
+                        </tr>
+                    </thead>
+                    <tbody id="GetRedTagCollection" class="standardtext charcoal alignleft">
+                    </tbody>
+                </table>
+                <br />
+
+                <div id="divBtnTagCollectionShowMorered" class="text-center">
+
+                </div>
+
+                <span class="button btn-success" style="padding: 1%;margin-left: -90%;" data-toggle="modal" data-target="#myModalPink">Add Keywords</span>
+            </div>
+        </div>
+
+        <div class="col-md-12 text-center hidemobile hidedesktop">
+            <div>
+                <br /><br /><br />
+                <br />
+                <h4 class="regulartext charcoal alignleft"><img class="user_image visitor_image vistorpink" style="width: 20px;margin-right: 5px;border-radius: 2px;" src="/Content/visitor_comparison/user_blue.png" alt="" title="">Number of visitors from tracking links&nbsp;&nbsp;&nbsp;<span class="pointer plus hidemobile charcoal" data-toggle="modal" data-target="#videomode2"><i class="mdi mdi-play-circle"></i></span> <span class="xsmalltext aligncenter charcoal hidemobile">How do I create a tracking link?</span></h4>
+                <br />
+                <table id="tagcollection" class="table table-bordered" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="standardtext charcoal alignleft" style="width:40%;">Tracking link</th>
+                            @*<th class="text-center">Domain</th>*@
+                            <th class="alignleft standardtext charcoal" style="width:20%;">Visitors</th>
+                            <th class="alignleft standardtext charcoal" style="width:20%;">Genuine visitors</th>
+                            <th class="alignleft standardtext charcoal" style="width:20%;">Transactions</th>
+                            @*<th class="text-center">Created Date</th>*@
+                        </tr>
+                    </thead>
+                    <tbody id="GetpinkTagCollection" class="standardtext charcoal alignleft">
+                    </tbody>
+                </table>
+                <br />
+                <span class="button btn-success" style="padding: 1%;margin-left: -90%;" data-toggle="modal" data-target="#myModalRed">Add Keyword</span>
+                <div id="divBtnTagCollectionShowMorepink" class="text-center">
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 text-center">
+            <div>
+
+                <br />
+                <h4 class="yellowheading charcoal alignleft">Visitors viewed product pages&nbsp;&nbsp;&nbsp;<span class="pointer plus hidemobile charcoal" data-toggle="modal" data-target="#videomode2"></h4>
+                <br />
+                <table id="tagcollection" class="table table-bordered" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="boldtext charcoal alignleft" style="width:40%;">Product pages</th>
+                            @*<th class="text-center">Domain</th>*@
+
+                            <th class="alignleft boldtext charcoal" style="width:20%;">Visitors viewed products</th>
+                            @*<th class="text-center">Created Date</th>*@
+                        </tr>
+                    </thead>
+                    <tbody id="GetgreenTagCollection" class="standardtext charcoal alignleft">
+                    </tbody>
+                </table>
+                <div id="divBtnTagCollectionShowMoregreen" class="alignleft">
+                </div>
+
+
+
+                <span class="button btn-success radius regulartext paddingms alignleft yellowbg hidemobile marginbottomm" style="cursor: pointer; float:left;" data-toggle="modal" data-target="#myModalGreen">&nbsp;&nbsp;Add a product page&nbsp;&nbsp;</span>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+<div class="aligncenter standardtext charcoal hidedesktop">To view a full report including referral sources, please view on a desktop or laptop</div>
+
+
+
+
+<div class="modal fade" id="myModalGreen" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content" style="width:100%;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+            </div>
+            <div class="modal-body">
+                <div class="form-group ">
+                    <p class="radius yellowbg whitefont" style="width: 100%;height: 44px;padding-top: 0.7%;padding-left: 2%;">Add a product page</p><br />
+                    <p class="standardtext charcoal">Add the end part of your URL to track how many people view your product page.</p>
+                    <p>&nbsp;</p>
+                    <br>
+
+
+                    <div class="input-group" style="padding-left:0%;margin-top:-3%;">
+                        <input type="text" name="searchGreen" id="searchGreen" placeholder="Enter your page. example.html" class="form-control" />
+
+
+
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary boldtext yellowbg alignleft radius" style="border:none" id="btnGreen" type="button"> ADD</button>
+                        </span>
+
+                    </div>
+
+
+
+
+                    @*<ul id="greenList" class="yellowbg">
+
+                            <li></li>
+                        </ul>*@
+                    <br />
+                    <table class="tblTagCount greenTagsCount">
+                        @*<thead>
+                                <tr><th>TAG</th><th>ALL Visitor</th><th>MultiPage</th><th>GreenTags</th></tr>
+                            </thead>*@
+                        <tbody></tbody>
+                    </table>
+                    <br />
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
+                <button type="button" class="btn btn-default" onclick="CloseModal('myModalGreen')">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="modal fade" id="myModalRed" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content" style="width:100%;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+            </div>
+            <div class="modal-body">
+                <div class="form-group ">
+                    <p class="radius orangebg whitefont" style="width: 80%;height: 44px;padding-top: 0.7%;padding-left: 2%;font-size: 139%;">Track checkout pages</p><br />
+                    <p class="standardtext charcoal">Enter the end part of your checkout pages URL to track that page. eg.&nbsp; <label class="badge badge-danger orangebg">checkout.html</label>&nbsp;&nbsp;&nbsp;<img src="/Content/play_03.png"> <span class="xsmalltext aligncenter charcoal">Show me!</span></p>
+                    <p class="standardtext charcoal">
+                        Enter your page
+                    </p>
+
+                    <div class="input-group" style="padding-left:14%;margin-top:-3%;">
+                        <input type="text" name="searchRed" id="searchRed" placeholder="Enter your page.html" class="form-control" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary standardtext charcoalbg alignleft" id="btnRed" type="button"> ADD</button>
+                        </span>
+                    </div>
+
+
+
+                    @*<ul id="redList" class="">
+
+                            <li></li>
+                        </ul>*@
+                    <br />
+                    <table class="tblTagCount redTagsCount">
+
+                        <tbody></tbody>
+                    </table>
+                    <br />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="CloseModal('myModalRed')">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="myModalall" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content" style="width:100%;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <p class="radius regulartext whitefont bluebg" style="width: 80%;height: 44px;padding-top: 0.7%;padding-left: 2%;">Referral sources</p>
+                <p class="radius standardtext charcoal">This shows the number of visitors from each of these popular referral sources. See which one's provided genuine visitors who explored your site and completed a transaction.</p><br />
+                <table id="greenSocial">
+                    <tbody></tbody>
+                </table>
+                @*<label class="badge badge-danger">example.html</label>*@
+            </div>
+
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
+                <button type="button" class="btn btn-default" onclick="CloseModal('myModalall')">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="videomodel" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+
+            </div>
+            <div class="modal-body">
+
+                <div class='embed-container'>
+                    <iframe frameborder="0" width="100%" height="800px" src="https://player.vimeo.com/video/395208659"></iframe>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
+            <button type="button" class="btn btn-default" onclick="CloseModal('videomodel')">Close</button>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="modal fade" id="videomode2" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+
+            </div>
+            <div class="modal-body">
+
+                <div class='embed-container'>
+                    <iframe frameborder="0" width="100%" height="800px" src="https://player.vimeo.com/video/405421547"></iframe>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
+            <button type="button" class="btn btn-default" onclick="CloseModal('videomode2')">Close</button>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="modal fade" id="videomode3" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+
+            </div>
+            <div class="modal-body">
+
+                <div class='embed-container'>
+                    <iframe frameborder="0" width="100%" height="800px" src="https://player.vimeo.com/video/395208659"></iframe>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
+            <button type="button" class="btn btn-default" onclick="CloseModal('videomode3')">Close</button>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="modal fade" id="videomode4" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+
+            </div>
+            <div class="modal-body">
+
+                <div class='embed-container'>
+                    <iframe frameborder="0" width="100%" height="800px" src="https://player.vimeo.com/video/404809962"></iframe>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
+            <button type="button" class="btn btn-default" onclick="CloseModal('videomode4')">Close</button>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="modal fade" id="videomode5" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+
+            </div>
+            <div class="modal-body">
+
+                <div class='embed-container'>
+                    <iframe frameborder="0" width="100%" height="800px" src="https://player.vimeo.com/video/404805835"></iframe>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
+            <button type="button" class="btn btn-default" onclick="CloseModal('videomode5')">Close</button>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="videomode6" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+
+            </div>
+            <div class="modal-body">
+
+                <div class='embed-container'>
+                    <iframe frameborder="0" width="100%" height="800px" src="https://player.vimeo.com/video/404801060"></iframe>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
+            <button type="button" class="btn btn-default" onclick="CloseModal('videomode6')">Close</button>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="modal fade" id="videomode7" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+
+            </div>
+            <div class="modal-body">
+
+                <div class='embed-container'>
+                    <iframe frameborder="0" width="100%" height="800px" src="https://player.vimeo.com/video/404787936"></iframe>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
+            <button type="button" class="btn btn-default" onclick="CloseModal('videomode7')">Close</button>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="myModalBlue" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                @*<p style="color: white;background-color: #a20029;width: 80%;height: 44px;padding-top: 1.5%;padding-left: 2%;border-radius: 4%;font-size: 139%;">Social media campaigns</p>
+                    <p style="font-size:12px;">Track and Highlights the <span style="color:#a20029;">ALL</span> your visitors from the following social networking website. Click the check box to add them to your results</p><br />
+                    <table id="greenSocial">
+                        <tbody>
+                            <tr><td class="smalltext" style="width:12%;border: none;">Google</td><td style="width:1%;border: none;">Visitor </td><td id="g_all" style="width:0.5%;border: none;padding-left:0%;color:#a20029;">@count_google_all</td><td style="width:24%;border: none;padding-left: 6%;">Genuine views</td><td id="g_multi" style="width:0.5%;border: none;padding-left: 0%;color: red;"> @count_google_multi</td><td style="width:6%;border: none;"></td><td style="width:1%;border: none;">Transations</td><td style="border: none;padding-left: 0%;color: red;" id="g_green"> 0</td></tr>
+                            <tr style="background-color:white;"><td class="text-center" style="border: none;width:11.5%;"><input type="checkbox" class="chkfacebook" style="border: none;" /><td style="width:1%;border: none;">Facebook</td><td style="width:1%;border: none;">Visitor</td><td id="f_all" style="width:0.5%;border: none;padding-left:0%;color:#a20029;"> @count_facebook_all</td><td style="width:24%;padding-left: 6%;border: none;">Genuine views</td><td id="f_multi" style="width:0.5%;border: none;padding-left: 0%;color: red;">@count_facebook_multi</td><td style="width:6%;border: none;"></td><td style="width:1%;border: none;">Transations</td><td style="border: none;padding-left: 0%;color: red;" id="f_green">0</td></tr>
+                            <tr><td class="text-center" style="border: none;width:11.5%;"><input type="checkbox" class="chkinstagram" style="border: none;" /><td style="width:1%;border: none;">Instagram</td><td style="width:1%;border: none;">Visitor</td><td id="i_all" style="width:0.5%;border: none;padding-left:0%;color:#a20029;">@count_instagram_all</td><td style="width:24%;padding-left: 6%;border: none;">Genuine views</td><td id="i_multi" style="width:0.5%;border: none;padding-left: 0%;color: red;"> @count_instagram_mulit</td><td style="width:6%;border: none;"></td><td style="width:1%;border: none;">Transations</td><td style="border: none;padding-left: 0%;color: red;" id="i_green">0</td></tr>
+                            <tr style="background-color:white;"><td class="text-center" style="border: none;width:11.5%;"><input type="checkbox" class="chkbing" style="border: none;" /><td style="width:1%;border: none;">Bing</td><td style="width:1%;border: none;">Visitor</td><td id="b_all" style="width:0.5%;border: none;padding-left:0%;color:#a20029;">@count_bing_all</td><td style="width:24%;padding-left: 6%;border: none;">Genuine views</td><td id="b_multi" style="width:0.5%;border: none;padding-left: 0%;color: red;">@count_bing_mulit</td><td style="width:6%;border: none;"></td><td style="width:1%;border: none;">Transations</td><td style="border: none;padding-left: 0%;color: red;" id="b_green">0</td></tr>
+                            <tr><td class="text-center" style="border: none;width:11.5%;"><input type="checkbox" class="chkyahoo" style="border: none;" /><td style="width:1%;border: none;">Yahoo</td><td style="width:1%;border: none;">Visitor</td><td id="y_all" style="width:0.5%;border: none;padding-left:0%;color:#a20029;"> @count_yahoo_all</td><td style="width:24%;padding-left: 6%;border: none;">Genuine views</td><td id="y_multi" style="width:0.5%;border: none;padding-left: 0%;color: red;"> @count_yahoo_multi</td><td style="width:6%;border: none;"></td><td style="width:1%;border: none;">Transations</td><td style="border: none;padding-left: 0%;color: red;" id="y_green">0</td></tr>
+                            <tr style="background-color:white;"><td class="text-center" style="border: none;width:11.5%;"><input type="checkbox" class="chktwitter" style="border: none;" /><td style="width:1%;border: none;">Twitter</td><td style="width:1%;border: none;">Visitor</td><td id="t_all" style="width:0.5%;border: none;padding-left:0%;color:#a20029;"> @count_twitter_all</td><td style="width:24%;padding-left: 6%;border: none;">Genuine views</td><td id="y_multi" style="width:0.5%;border: none;padding-left: 0%;color: red;"> @count_twitter_multi</td><td style="width:6%;border: none;"></td><td style="width:1%;border: none;">Transations</td><td style="border: none;padding-left: 0%;color: red;" id="t_green">0</td></tr>
+                        </tbody>
+                    </table>*@
+                @*<label class="badge badge-danger">example.html</label>*@
+            </div>
+            <div class="modal-body">
+                <div class="form-group ">
+                    <p class="radius redbg whitefont boldtext" style="width: 100%;height: 44px;padding-top: 0.7%;padding-left: 2%;font-size: 139%;">Create a campaign</p><br />
+
+                    <p class="standardtext charcoal">Enter the following information. Once you click add a tracking link will be created below, which you can use in your campaigns.</p>
+                    <br />
+                    <p class="standardtext charcoal">
+
+                        <div class="input-group">
+
+                            <input type="text" name="searchBlue" id="searchBlue" placeholder="Enter your campaign name" class="form-control" />
+                    <p>&nbsp;</p>
+
+                    <input type="text" name="websiteurl" id="websiteurl" placeholder="Enter your web address" class="form-control" required />
+
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary boldtext redbg alignleft" id="btnBlue" type="button" style="border:none">ADD</button>
+                    </span>
+
+                    </p>
+                </div>
+
+
+                @*<ul id="blueList" class="">
+
+                        <li></li>
+                    </ul>*@
+
+                <br />
+                <table class="tblTagCount blueTagsCount">
+
+                    <tbody></tbody>
+                </table>
+                <br />
+                @*<table id="greenTagsCount">
+                        <thead>
+                            <tr><th>TAG</th><th>Google</th><th>Facebook</th><th>Instagram</th><th>Bing</th><th>Yahoo</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>*@
+            </div>
+        </div>
+        <div class="modal-footer">
+            @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
+            <button type="button" class="btn btn-default" onclick="CloseModal('myModalBlue')">Close</button>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="modal fade" id="myModalPink" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content" style="width:100%;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+
+            </div>
+            <div class="modal-body">
+                <div class="form-group ">
+                    <p class="radius redbg whitefont" style="width: 80%;height: 44px;padding-top: 0.7%;padding-left: 2%;font-size: 139%;">Track product pages</p><br />
+                    <p class="standardtext charcoal">Enter the end part of your pages URL to track that page. eg.&nbsp; <label class="badge badge-danger redbg">product.html</label>&nbsp;&nbsp;&nbsp;<img src="/Content/play_03.png"> <span class="xsmalltext aligncenter charcoal">Show me!</span></p>
+
+                    <p class="standardtext charcoal">
+                        Enter your page
+                    </p>
+
+                    <div class="input-group" style="padding-left:14%;margin-top:-3%;">
+                        <input type="text" name="searchPink" id="searchPink" placeholder="Enter your page.html" class="form-control" />
+
+
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary boldtext redbg alignleft" id="btnPink" type="button"> ADD</button>
+                        </span>
+
+
+
+
+
+                    </div>
+
+
+
+                    @*<ul id="pinkList" class="">
+
+                            <li></li>
+                        </ul>*@
+                    <br />
+                    <table class="tblTagCount pinkTagsCount">
+                        @*<thead>
+                                <tr><th>TAG</th><th>ALL Visitor</th><th>MultiPage</th><th>GreenTags</th></tr>
+                            </thead>*@
+                        <tbody></tbody>
+                    </table>
+                    <br />
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
+                <button type="button" class="btn btn-default" onclick="CloseModal('myModalPink')">Close</button>
+                <br />
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script type="text/javascript">
+    var visitorPJson = [];
+    var productPJson = [];
+    var checkoutPJson = [];
+    var PinkPageJson = [];
+    var paymentConfirmationPJson = [];
+
+    var lineGraphObj;
+    $(function () {
+
+
+        InitializePieChart();
+
+        $('#CustomMultiDate').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $('#CustomMultiDate').on('apply.daterangepicker', function (ev, picker) {
+            var currentUrl = document.URL.split('#')[0];
+            document.location = currentUrl.split('&')[0] + "&startdate=" + picker.startDate.format('YYYY-MM-DD') + "&enddate=" + picker.endDate.format('YYYY-MM-DD');
+        });
+
+        InitializeLineChart();
+        GetTagCollection();
+        GetSourceCollection();
+        GetRedTagCollection();
+        GetpinkTagCollection();
+        GetgreenTagCollection();
+        GetTagBlockData();
+        loadColorList();
+    });
+    $(document).ready(function () {
+        $("div#divLoading").addClass('show');
+    });
+
+    function GetTagBlockData() {
+        $("div#divLoading").addClass('show');
+         $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("GetTagDetails","Propackage")",
+                    data: { domainName: '@domainName', startdate: '@startDate', enddate: '@endDate' },
+             success: function (data) {
+                 if (data.blueCollection) {
+                     $("#btnbluevisitor").text(data.blueTagCount);
+                     $(".blueTagsCount").find("tbody").html('');
+
+                     $.each(data.blueCollection, function (t, telement) {
+                         $(".blueTagsCount").find("tbody").append('<tr style="background-color:white;" class="delete_' + telement.tagid + '"><td style="width: 10%;border: none;"> <button style="background-color: black;color: white;" class="btn" onclick="deleteId(' + telement.tagid + ')">Remove</button><td style="width: 50%;"><div class="badge badge-primary redbg"> <span> ' + telement.websiteurl + '?' + telement.tagName + '</span></div></td></tr>');
+                     });
+                 }
+
+                 if (data.pinkCollection) {
+                     $("#btnpinkvisitor").text(data.pinkTagCount);
+                     $(".pinkTagsCount").find("tbody").html('');
+                     $.each(data.pinkCollection, function (t, telement) {
+                         $(".pinkTagsCount").find("tbody").append('<tr style="background-color:white;" class="delete_' + telement.tagid +'"><td style="width: 10%;border: none;" > <button style="background-color: black;color: white;" class="btn" onclick="deleteId(' + telement.tagid + ')">Remove</button><td style="width: 50%;"><div class="badge badge-pink"> <span>' + telement.tagName + '</span></div></td><td>' + telement.allVisitor + '</td><td>' + telement.multiVisitor + '</td><td>' + telement.greenVisitor + '</td></tr>');
+                     });
+                 }
+
+                 if (data.redCollection) {
+                     $("#btnredvisitor").text(data.redTagCount);
+                     $(".redTagsCount").find("tbody").html('');
+                     $.each(data.redCollection, function (t, telement) {
+                         $(".redTagsCount").find("tbody").append('<tr style="background-color:white;" class="delete_' + telement.tagid +'"><td style="width: 10%;border: none;"> <button style="background-color: black;color: white;" class="btn" onclick="deleteId(' + telement.tagid + ')">Remove</button><td style="width: 50%;"><div class="badge badge-danger"> <span>' + telement.tagName + '</span></div></td><td>' + telement.allVisitor + '</td><td>' + telement.multiVisitor + '</td><td>' + telement.greenVisitor + '</td></tr>');
+                     });
+                 }
+
+                 if (data.greenCollection) {
+                     $("#btngreenvisitor").text(data.greenTagCount);
+                     $(".greenTagsCount").find("tbody").html('');
+                     $.each(data.greenCollection, function (t, telement) {
+                         $(".greenTagsCount").find("tbody").append('<tr style="background-color:white;" class="delete_' + telement.tagid +'"><td style="width: 10%;border: none;" > <button style="background-color: black;color: white;" class="btn" onclick="deleteId(' + telement.tagid + ')">Remove</button><td style="width: 50%;"><div class="badge badge-success yellowbg"> <span>' + telement.tagName + '</span></div></td></tr>');
+                     });
+                 }
+
+                 if (data.socialMediaCollection) {
+                     $("#greenSocial").find("tbody").html('');
+                     $.each(data.socialMediaCollection, function (t, telement) {
+                         $("#greenSocial").find("tbody").append('<tr><td>' + telement.tagName + '</td><td>' + telement.allVisitor + '</td><td>' + telement.multiVisitor + '</td><td>' + telement.greenVisitor + '</td></tr>');
+                     });
+                 }
+
+                 $("div#divLoading").removeClass('show');
+             }
+         });
+    }
+
+    function InitializePieChart() {
+         Highcharts.chart('pieChart', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: ''
+            },
+            tooltip: {
+                pointFormat: ''
+            },
+            plotOptions: {
+                pie: {
+                    all2owPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: false,
+                        format: '<b>{point.name}</b>: {point.y}'
+                    }
+                }
+            },
+            series: [{
+                name: 'All Visitors',
+                colorByPoint: true,
+                data: [{
+                    name: 'Visitors',
+
+                      color: '#00b7f0',
+                    y: @Model.allVisitor
+                }, {
+                        name: 'Genunie Visitors',
+                    color: '#006a8b',
+                    y: @Model.multipage
+                }]
+            }]
+        });
+
+        $('.highcharts-credits').remove();
+    }
+
+    function InitializeLineChart() {
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetLineChartData","Propackage")",
+            data: { domainName: '@domainName', startdate: '@startDate', enddate: '@endDate' },
+            success: function (data) {
+                if (data.lineChartData) {
+                    var xAxisJson = [];
+                    var yAxisJson = [];
+                    var blueAxisJson = [];
+                    var redAxisJson = [];
+                    var pinkAxisJson = [];
+                    var greenAxisJson = [];
+                    var multipageAxisJson = [];
+
+                    $.each(data.lineChartData,
+                        function () {
+                            yAxisJson.push(parseInt(this.y));
+                            blueAxisJson.push(parseInt(this.bluetik));
+                            redAxisJson.push(parseInt(this.redtik));
+                            pinkAxisJson.push(parseInt(this.redtik));
+                            greenAxisJson.push(parseInt(this.greentik));
+                            multipageAxisJson.push(parseInt(this.multipage));
+                            xAxisJson.push(moment(this.xDate).format('DD-MMM'));
+                        });
+
+                    var title = {
+                        text: ''
+                    };
+                    var xAxis = {
+                        tickInterval: 2,
+                        categories: xAxisJson
+                    };
+                    var yAxis = {
+                        min: 0,
+                        title: {
+                            text: null
+                        },
+                        plotLines: [{
+                            value: 0,
+                            width: 1,
+                            color: '#808080'
+                        }]
+                    };
+                    var tooltip = {
+                        shared: true,
+                        formatter: function () {
+                            return '' +
+                                ' <b>' + this.x + " " + new Date().getFullYear() + '</b> <br/>'
+                                + this.points[0].series.name + ': <b>' + this.points[0].y + '<br/>'
+                                + this.points[1].series.name + ': <b>' + this.points[1].y + '<br/>'
+                                + this.points[2].series.name + ': <b>' + this.points[2].y + '<br/>'
+                                //+ this.points[3].series.name + ': <b>' + this.points[3].y + '<br/>'
+                                //+ this.points[4].series.name + ': <b>' + this.points[4].y + '<br/>'
+                        }
+                    }
+                    var legend = {
+                        verticalAlign: 'bottom',
+                        borderWidth: 0
+                    };
+
+                    var plotOptions = {
+                        series: {
+                            events: {
+                                legendItemClick: function () {
+                                    return false;
+                                }
+                            }
+                        }
+                    };
+                    var series = [
+                        {
+                            color: '#00b7f0',
+                            name: 'Visitors',
+                            data: yAxisJson,
+                            marker: {
+                                symbol: 'circle'
+                            }
+                        },
+                        //{
+                        //    color: '#3c3c3c',
+                        //    name: 'Genunie visitors',
+                        //    data: multipageAxisJson,
+                        //    marker: {
+                        //        symbol: 'circle'
+                        //    }
+                        //},
+                        {
+                            color: '#ff0044',
+                            name: 'Visitors from campaigns',
+                            data: blueAxisJson,
+                            marker: {
+                                symbol: 'circle'
+                            }
+                        },
+                        //{
+                        //    color: '#ff0044',
+                        //    name: '',
+                        //    data: pinkAxisJson,
+                        //    marker: {
+                        //        symbol: 'circle'
+                        //    }
+                        //},
+                        //{
+                        //    color: '#ff0044',
+                        //    name: '',
+                        //    data: redAxisJson,
+                        //    marker: {
+                        //        symbol: 'circle'
+                        //    }
+                        //},
+                        {
+                            color: '#ffab25',
+                            name: 'Visitors viewed product page',
+                            data: greenAxisJson,
+                            marker: {
+                                symbol: 'circle'
+                            }
+                        }
+                    ];
+
+                    var json = {};
+                    json.title = title;
+                    json.xAxis = xAxis;
+                    json.yAxis = yAxis;
+                    json.tooltip = tooltip;
+                    json.legend = legend;
+                    json.series = series;
+                    json.plotOptions = plotOptions;
+                    $('#monthlyGraph').highcharts(json);
+                    $('.highcharts-xaxis-labels').children().find("tspan").html("0:00");
+                    $('.highcharts-contextbutton').remove();
+                    $('.highcharts-credits').remove();
+                    $('.highcharts-button-box').remove();
+                    //$('.highcharts-label').find("text").html("");
+
+                    $("div#divLoading").removeClass('show');
+                }
+            }
+        });
+    }
+
+
+
+    function GetTagCollection() {
+        $("div#divLoading").addClass('show');
+         var domainName = '@domainName';
+          $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetTagCollectionData","Propackage")",
+                data: { domainName: '@domainName', startdate: '@startDate', enddate: '@endDate' },
+                success: function (result) {
+
+                    if (result.status) {
+                        var count = result.data.length;
+
+                        if (count > 0) {
+                            var tbody = "";
+                            var className = "";
+
+                            for (var i = 0; i < count; i++) {
+
+                                if (i >= 5) {
+                                    className = "hidden";
+                                }
+
+                                tbody = tbody + '<tr class="tagCol '+ className +'"> ' +
+                                    '<td> ' + result.data[i].tagName + ' </td>' +
+                                    //'<td> ' + domainName + ' </td>' +
+                                    '<td> ' + result.data[i].allVisitor + ' </td>' +
+                                    '<td> ' + result.data[i].multiVisitor + ' </td>' +
+                                    '<td> ' + result.data[i].greenVisitor + ' </td>' +
+                                    //'<td> '+ moment(result.data[i].createdDate).format('DD-MMM') +' </td>' +
+                                    '</tr>';
+                            }
+                            if (count > 5) {
+                                 $('#divBtnTagCollectionShowMore').html('<button onclick="showMoreTagCollection()" class="btn btn-sm btn-primary mediumtext redbg noborder alignleft" style="float: left; margin-right:10px;"><i class="mdi mdi-arrow-down-box"></i></button>');
+                            }
+
+                            $('#tagcollectionData').html(tbody );
+                        }
+
+                    }
+
+                    $("div#divLoading").removeClass('show');
+                }
+          });
+    }
+
+    function showMoreTagCollection() {
+        $('.tagCol').removeClass('hidden');
+        $('#divBtnTagCollectionShowMore').html('');
+    }
+
+
+    function GetRedTagCollection() {
+        $("div#divLoading").addClass('show');
+         var domainName = '@domainName';
+          $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetRedTagCollection","Propackage")",
+                data: { domainName: '@domainName', startdate: '@startDate', enddate: '@endDate' },
+                success: function (result) {
+
+                    if (result.status) {
+                        var count = result.data.length;
+
+                        if (count > 0) {
+                            var tbody = "";
+                            var className = "";
+
+                            for (var i = 0; i < count; i++) {
+
+                                if (i >= 5) {
+                                    className = "hidden";
+                                }
+
+                                tbody = tbody + '<tr class="tagCol '+ className +'"> ' +
+                                    '<td> ' + result.data[i].tagName + ' </td>' +
+                                    //'<td> ' + domainName + ' </td>' +
+                                    '<td> ' + result.data[i].allVisitor + ' </td>' +
+                                    '<td> ' + result.data[i].multiVisitor + ' </td>' +
+                                    '<td> ' + result.data[i].greenVisitor + ' </td>' +
+                                    //'<td> '+ moment(result.data[i].createdDate).format('DD-MMM') +' </td>' +
+                                    '</tr>';
+                            }
+                            if (count > 5) {
+                                $('#divBtnTagCollectionShowMorered').html('<button onclick="showMoreTagCollection()" class="btn btn-sm btn-primary standardtext">Show more</button>');
+                            }
+
+                            $('#GetRedTagCollection').html(tbody );
+                        }
+
+                    }
+
+                    $("div#divLoading").removeClass('show');
+                }
+          });
+    }
+
+    function showMoreTagCollection() {
+        $('.tagCol').removeClass('hidden');
+       // $('#divBtnTagCollectionShowMorered').html('');
+    }
+
+      function GetpinkTagCollection() {
+        $("div#divLoading").addClass('show');
+         var domainName = '@domainName';
+          $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetpinkTagCollection","Propackage")",
+                data: { domainName: '@domainName', startdate: '@startDate', enddate: '@endDate' },
+                success: function (result) {
+
+                    if (result.status) {
+                        var count = result.data.length;
+
+                        if (count > 0) {
+                            var tbody = "";
+                            var className = "";
+
+                            for (var i = 0; i < count; i++) {
+
+                                if (i >= 5) {
+                                    className = "hidden";
+                                }
+
+                                tbody = tbody + '<tr class="tagCol '+ className +'"> ' +
+                                    '<td> ' + result.data[i].tagName + ' </td>' +
+                                    //'<td> ' + domainName + ' </td>' +
+                                    '<td> ' + result.data[i].allVisitor + ' </td>' +
+                                    '<td> ' + result.data[i].multiVisitor + ' </td>' +
+                                    '<td> ' + result.data[i].greenVisitor + ' </td>' +
+                                    //'<td> '+ moment(result.data[i].createdDate).format('DD-MMM') +' </td>' +
+                                    '</tr>';
+                            }
+                            if (count > 5) {
+                                $('#divBtnTagCollectionShowMorepink').html('<button onclick="showMoreTagCollection1()" class="btn btn-sm btn-primary standardtext">Show more</button>');
+                            }
+
+                            $('#GetpinkTagCollection').html(tbody );
+                        }
+
+                    }
+
+                    $("div#divLoading").removeClass('show');
+                }
+          });
+    }
+
+    function showMoreTagCollection1() {
+        $('.tagCol').removeClass('hidden');
+       $('#divBtnTagCollectionShowMorepink').html('');
+    }
+
+     function deleteId(id) {
+        $.get("@Url.Action("DeleteIt", "ProPackage")" + "?sid=" + id, function (res) {
+            $("tr.delete_" + id).remove();
+            loadColorList();
+            GetAllKeywords();
+        });
+    }
+
+
+      function GetgreenTagCollection() {
+        $("div#divLoading").addClass('show');
+         var domainName = '@domainName';
+          $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetgreenTagCollection","Propackage")",
+                data: { domainName: '@domainName', startdate: '@startDate', enddate: '@endDate' },
+                success: function (result) {
+
+                    if (result.status) {
+                        var count = result.data.length;
+
+                        if (count > 0) {
+                            var tbody = "";
+                            var className = "";
+
+                            for (var i = 0; i < count; i++) {
+
+                                if (i >= 5) {
+                                    className = "hidden";
+                                }
+
+                                tbody = tbody + '<tr class="tagCol1 '+ className +'"> ' +
+                                    '<td> ' + result.data[i].tagName + ' </td>' +
+                                    //'<td> ' + domainName + ' </td>' +
+
+                                    '<td> ' + result.data[i].greenVisitor + ' </td>' +
+                                    //'<td> '+ moment(result.data[i].createdDate).format('DD-MMM') +' </td>' +
+                                    '</tr>';
+                            }
+                            if (count > 5) {
+                                $('#divBtnTagCollectionShowMoregreen').html('<button onclick="showMoreTagCollection2()" class="btn btn-sm btn-primary mediumtext yellowbg noborder alignleft" style="float: left; margin-right:10px;"><i class="mdi mdi-arrow-down-box"></i></button>');
+                            }
+
+                            $('#GetgreenTagCollection').html(tbody );
+                        }
+
+                    }
+
+                    $("div#divLoading").removeClass('show');
+                }
+          });
+    }
+
+    function showMoreTagCollection2() {
+        $('.tagCol1').removeClass('hidden');
+        $('#divBtnTagCollectionShowMoregreen').html('');
+    }
+
+    function GetSourceCollection() {
+        $("div#divLoading").addClass('show');
+        var domainName = '@domainName';
+          $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetSourceCollectionData","Propackage")",
+                data: { domainName: '@domainName', startdate: '@startDate', enddate: '@endDate' },
+                success: function (result) {
+
+                    if (result.status) {
+                        var count = result.data.length;
+
+                        if (count > 0) {
+                            var tbody = "";
+                            var className = "";
+
+                            for (var i = 0; i < count; i++) {
+
+                                if (i >= 5) {
+                                    className = "hidden";
+                                }
+
+                                tbody = tbody + '<tr class="tagSource '+ className +'"> ' +
+                                    '<td> ' + result.data[i].sourceName + ' </td>' +
+                                    //'<td> ' + domainName + ' </td>' +
+                                    '<td> ' + result.data[i].allVisitor + ' </td>' +
+                                    '<td> ' + result.data[i].multipageVisitor + ' </td>' +
+                                    '<td> ' + result.data[i].greenTagVisitor + ' </td>' +
+                                    //'<td> '+ moment(result.data[i].createdDate).format('DD-MMM') +' </td>' +
+                                    '</tr>';
+                            }
+                            if (count > 5) {
+                                $('#divBtnSourceCollectionShowMore').html('<button onclick="showMoreSourceCollection()" class="btn btn-sm btn-primary standardtext">Show more</button>');
+                            }
+
+                            $('#sourcecollectionData').html(tbody );
+                        }
+
+                    }
+
+                    $("div#divLoading").removeClass('show');
+                }
+          });
+    }
+
+    function showMoreSourceCollection() {
+        $('.tagSource').removeClass('hidden');
+        $('#divBtnSourceCollectionShowMore').html('');
+    }
+
+        $('#myModalGreen').on('hidden.bs.modal',
+            function (e) {
+               location.reload();
+            //$(this)
+            //    .find("#searchGreen")
+            //    .val('')
+            //    .end();
+
+        });
+
+    $('#myModalBlue').on('hidden.bs.modal',
+        function () {
+            location.reload();
+            //$(this)
+            //    .find("#searchBlue")
+            //    .val('')
+            //    .end();
+        });
+    $('#myModalall').on('hidden.bs.modal',
+        function () {
+            location.reload();
+            //$(this)
+            //    .find("")
+            //    .val('')
+            //    .end();
+        });
+     $('#myModalPink').on('hidden.bs.modal',
+         function () {
+            location.reload();
+            //$(this)
+            //    .find("#searchPink")
+            //    .val('')
+            //    .end();
+        });
+
+    $('#myModalRed').on('hidden.bs.modal',
+        function () {
+            location.reload();
+            //$(this)
+            //    .find("#searchRed")
+            //    .val('')
+            //    .end();
+        });
+
+    $("#btnRed").click(function() {
+        $("div#divLoading").addClass('show');
+        var tableRow = $("#searchHere tr");
+        var text = $.trim($("#searchRed").val());
+        if (text.length > 0) {
+            var tr = $(".pathText:contains(" + text + ")").parent("div").children(".countColor");
+            //alert(tr.text());
+            var image = tr.parents(".filter-search").find('.visitor_image');
+            if (!tr.hasClass("redBack") && !tr.hasClass("greenBack") && !tr.hasClass("blueBack")) {
+                tr.addClass("redBack");
+                tr.css("background-color", "red");
+                tr.css("color", "red");
+            }
+            var src = image.attr("src");
+            if (src != "" && src != null) {
+                if ((src.indexOf("user_green.png") == -1) && (src.indexOf("user_blue.png") == -1)) {
+                    //image.attr("src", "/Content/visitor_comparison/user_red.png");
+                }
+            }
+            $.ajax({
+                url: "@Url.Action("RedListSearchExists", "ProPackage")",
+                method: "POST",
+                data: { v: "@Model.domainName", searchText: text },
+                success: function(res) {
+                    if (res == 1) {
+                        alert("You have already enter this keyword. Please enter the new keyword.");
+                        $("#searchRed").val("");
+                    } else {
+                        $.ajax({
+                            url: "@Url.Action("AddRed", "ProPackage")",
+                            method: "POST",
+                            data: { st: text, v: "@Model.domainName" },
+                            success: function (res) {
+                                //alert(res);-
+                                $("#searchRed").val("");
+                                loadColorList();
+                                GetTagBlockData();
+                            },
+                            error: function(err) {
+                                //alert(err);redTagsCount
+                            }
+                        });
+                    }
+                },
+                error: function(err) {
+                    //alert(err);
+                }
+            });
+        }
+    });
+
+    $("#btnGreen").click(function () {
+        debugger;
+        $("div#divLoading").addClass('show');
+        var tableRow = $("#searchHere tr");
+        var text = $.trim($("#searchGreen").val());
+        if (text.length > 0) {
+
+            var tr = $(".pathText:contains(" + text + ")").parent("div").children(".countColor");
+            //alert(tr.text());
+            var image = tr.parents(".filter-search").find('.visitor_image');
+            if (!tr.hasClass("redBack") && !tr.hasClass("greenBack") && !tr.hasClass("blueBack")) {
+                tr.addClass("greenBack");
+                tr.css("background-color", "green");
+                tr.css("color", "green");
+                //image.attr("src", "/Content/visitor_comparison/user_green.png");
+            }
+
+
+            $.ajax({
+                url: "@Url.Action("GreenListSearchExists", "ProPackage")",
+                method: "POST",
+                data: { v: "@Model.domainName", searchText: text },
+                success: function(res) {
+                    if (res == 1) {
+                        alert("You have already enter this keyword. Please enter the new keyword.");
+                        $("#searchGreen").val("");
+                    } else {
+                        $.ajax({
+                            url: "@Url.Action("AddGreen", "ProPackage")",
+                            method: "POST",
+                            data: { st: text, v: "@Model.domainName" },
+                            success: function(res) {
+                                //alert(res);
+                                $("#searchGreen").val("");
+                                loadColorList();
+                                GetTagBlockData();
+                            },
+                            error: function(err) { /* alert(err.statusText);*/ }
+                        });
+                    }
+                },
+                error: function(err) { /*alert(err.statusText);*/ }
+            });
+        }
+    });
+
+    $("#btnBlue").click(function () {
+        $("div#divLoading").addClass('show');
+        var tableRow = $("#searchHere tr");
+        var text = $.trim($("#searchBlue").val());
+
+        if (text.length > 0) {
+            var tr = $(".pathText:contains(" + text + ")").parent("div").children(".countColor");
+            //alert(tr.text());
+            var image = tr.parents(".filter-search").find('.visitor_image');
+            if (!tr.hasClass("blueBack") && !tr.hasClass("greenBack") && !tr.hasClass("redBack")) {
+                tr.addClass("redBack");
+                tr.css("background-color", "red");
+                tr.css("color", "red");
+            }
+            var src = image.attr("src");
+            if (src != "" && src != null) {
+                if (src.indexOf("user_green.png") == -1) {
+                    //image.attr("src", "/Content/visitor_comparison/user_blue.png");
+                }
+            }
+            $.ajax({
+                url: "@Url.Action("BlueListSearchExists", "ProPackage")",
+                method: "POST",
+                data: { v: "@Model.domainName", searchText: text },
+                success: function(res) {
+                    if (res == 1) {
+                        alert("You have already enter this keyword. Please enter the new keyword.");
+                        $("#searchBlue").val("");
+                    } else {
+
+                        $.ajax({
+                            url: "@Url.Action("AddBlue", "ProPackage")",
+                            method: "POST",
+                            data: { st: text, v: "@Model.domainName", websiteurl: $("#websiteurl").val() },
+
+                            success: function (res) {
+                                //alert(res);
+                                $("#searchBlue").val("");
+                                loadColorList();
+                                GetTagBlockData();
+                            },
+                            error: function (err) { /*alert(err.statusText);*/ }
+                        });
+                    }
+                },
+                error: function (err) { /*alert(err.statusText);*/ }
+            });
+        }
+
+       // window.location.reload();
+    });
+
+    $("#btnPink").click(function () {
+        $("div#divLoading").addClass('show');
+        var tableRow = $("#searchHere tr");
+        var text = $("#searchPink").val();
+
+        if (text.length > 0) {
+            var tr = $(".pathText:contains(" + text + ")").parent("div").children(".countColor");
+            //alert(tr.text());
+            var image = tr.parents(".filter-search").find('.visitor_image');
+            if (!tr.hasClass("pinkBack") && !tr.hasClass("greenBack") && !tr.hasClass("redBack")) {
+                tr.addClass("redBack");
+                tr.css("background-color", "red");
+                tr.css("color", "red");
+            }
+            var src = image.attr("src");
+            if (src != "" && src != null) {
+                if (src.indexOf("user_pink.png") == -1) {
+                    //image.attr("src", "/Content/visitor_comparison/user_blue.png");
+                }
+            }
+            $.ajax({
+                url: "@Url.Action("PinkListSearchExists", "ProPackage")",
+                method: "POST",
+                data: { v: "@Model.domainName", searchText: text },
+                success: function(res) {
+                    if (res == 1) {
+                        alert("You have already enter this keyword. Please enter the new keyword.");
+                        $("#searchPink").val("");
+                    } else {
+
+                        $.ajax({
+                            url: "@Url.Action("AddPink", "ProPackage")",
+                            method: "POST",
+                            data: { st: text, v: "@Model.domainName" },
+                            success: function (res) {
+                                //alert(res);
+                                $("#searchPink").val("");
+                                loadColorList();
+                                GetTagBlockData();
+                            },
+                            error: function (err) { /*alert(err.statusText);*/ }
+                        });
+                    }
+                },
+                error: function (err) { /*alert(err.statusText);*/ }
+            });
+        }
+    });
+
+     function loadColorList() {
+         var url = "@Url.Action("GetColorList", "ProPackage")";
+        $.ajax({
+            url: url + "?v=@Model.domainName",
+            success: function (data) {
+                $("#blueList").html("");
+                $("#redList").html("");
+                $("#greenList").html("");
+                $("#pinkList").html("");
+
+                collectionGreenTags = [];
+                if (data.greenList.length > 0) {
+                    collectionGreenTags = data.greenList;
+                }
+
+
+
+                greenTagCollections = [];
+                blueTagCollections = [];
+                redTagCollections = [];
+                pinkTagCollections = [];
+                greenSingleTagCollections = [];
+                blueSingleTagCollections = [];
+                redSingleTagCollections = [];
+                pinkSingleTagCollections = [];
+
+                var i = 0;
+
+
+
+                visitorPageJson = [];
+                productPageJson = [];
+                checkoutPageJson = [];
+                paymentConfirmationJson = [];
+                pinkPageJson = [];
+                for (var i = 0; i < 24; i++) {
+
+                    var totalNormalUser = visitorPJson.filter(m => m.time === i);
+                    visitorPJson.push(totalNormalUser.length);
+
+                    var totalBlueUser = productPJson.filter(m => m.time === i);
+                    productPageJson.push(totalBlueUser.length);
+
+                    var totalRedUser = checkoutPJson.filter(m => m.time === i);
+                    checkoutPageJson.push(totalRedUser.length);
+
+                    var totalGreenUser = paymentConfirmationPJson.filter(m => m.time === i);
+                    paymentConfirmationJson.push(totalGreenUser.length);
+
+                    var totalPinkUser = PinkPageJson.filter(m => m.time === i);
+                    pinkPageJson.push(totalPinkUser.length);
+
+                }
+
+                //lineGraphObj.series[0].update({
+                //    data: visitorJson
+                //}, true);
+
+                //lineGraphObj.series[1].update({
+                //    data: productPageJson
+                //}, true);
+
+                //lineGraphObj.series[2].update({
+                //    data: pinkPageJson
+                //}, true);
+
+                //lineGraphObj.series[3].update({
+                //    data: checkoutPageJson
+                //}, true);
+
+                //lineGraphObj.series[4].update({
+                //    data: paymentConfirmationJson
+                //}, true);
+
+                $("div#divLoading").removeClass('show');
+
+               // configuredTags();
+            },
+            error: function (xhr) {
+                //Do Something to handle error
+            }
+        });
+    }
+
+    function CloseModal(controlid) {
+        $("#" + controlid).hide();
+        window.location.reload();
+    }
+
+    //$(document).mouseup(function (e) {
+    //    debugger;
+    //    var container = $("#IconSection");
+
+    //    if (e.target.className == "modal fade in") {
+    //        window.location.reload();
+    //    }
+    //});
+</script>
+

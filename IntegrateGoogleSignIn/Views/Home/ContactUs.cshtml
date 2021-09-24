@@ -1,0 +1,26 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutOrange.cshtml";
+}
+	<link href="~/Content/dc.css" rel="stylesheet" type="text/css">
+
+<link href="~/Content/roboto.css" rel="stylesheet" />
+<div class="row" style="font-family:Roboto !important;">
+    <div class="col-md-6 col-md-offset-3">
+        <form action="@Url.Action("ContactUs", "Home")" method="post" style="background-color: white; padding: 10%; padding-top: 5%; border-radius: 3px; margin-top: 10%;">
+            <h3 class="aligncenter dashsub"><b>Contact Us</b></h3>
+            <p class="text-center"><small>If you need any help or have any questions? Give us a shout!</small></p><br>
+            <div class="form-group">
+                <input name="name" style="font-size: 12px; border-radius: 3px; background-color: #f9f9f9;" type="text" class="form-control" placeholder="Enter your name" required="required">
+            </div>
+            <div class="form-group">
+                <input name="email" style="font-size: 12px; border-radius: 3px; background-color: #f9f9f9;" type="email" class="form-control" placeholder="Enter your email address" required="required">
+            </div>
+            <div class="form-group">
+                <textarea rows="3" name="query" style="font-size: 12px; border-radius: 3px; background-color: #f9f9f9;" class="form-control" placeholder="Enter your query" required="required"></textarea>
+            </div>
+            <div class="form-group">
+                <button style="font-size: 15px; border-color: #f77408; border-radius: 3px; background-color: #f77408;" type="submit" class="btn btn-primary btn-block">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>

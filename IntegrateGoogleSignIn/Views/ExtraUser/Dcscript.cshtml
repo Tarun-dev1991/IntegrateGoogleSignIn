@@ -1,0 +1,39 @@
+﻿@model IntegrateGoogleSignIn.Models.ExtraUser
+@{
+    ViewBag.Title = "Google Script";
+    ViewBag.Color = "#00a2f3";
+    Layout = "~/Views/Shared/_LayoutExtraUser.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 5%">
+            <p> <b>Copy and paste this code within the <code>&lt;HEAD&gt;</code> of every webpage you want to track.</b></p> <br />
+            <p>Please note it may take 24 hours for data to appear in your reports.</p>
+            <p>To ensure we capture all of your data, please make sure your website uses a 301 redirect to either include or not include the www. prefix.</p>
+        </div>
+        <div class="row">
+            <div class="col-md-12" style="margin-top: 5%">
+
+                @if (string.IsNullOrEmpty(Model.script))
+                {
+
+                    <pre>&lt;!---Analytics (user.js) - Digital-crumbs&gt;<br />
+
+<code>&lt;script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js" /&gt;</code><br /><br /><code>&lt;script type="text/javascript" src="https://digital-crumbs.com/js/user.js" /&gt;</code></pre>
+                }
+                else
+                {
+                    <pre>@Model.script</pre>
+                }
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+
+                <a style="background-color: #ffa937;height: 41px;padding-top:7px;text-align:center;font-size:17px; border-color: #edb415" href="@Url.Action("Index", "ExtraUser")" class="btn btn-success btn-xs">Continue to your dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,488 @@
+﻿@{
+    ViewBag.Title = "Home";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Digital Crumbs Analytics | Visitor journey tool</title>
+    <meta name="description" content="Digital Crumbs is a user-friendly marketing tool, that provides users with analytical data about their users journey. Compare, highlight and find visitors">
+    <meta name="keywords" content="digital crumbs, analytics, online marketing tool, digital marketing, web stats, website statistics, user journey, user reports, email reports ">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+
+    <link href="~/Content/dc.css" rel="stylesheet" type="text/css">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="~/Content/pleaserotate.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet"
+          href="https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.min.css" />
+
+    <link href="~/Content/roboto.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://digital-crumbs.com/js/user.js" ></script>
+
+    <style>
+        #pleaserotate-graphic {
+            fill: #fff;
+        }
+
+        #pleaserotate-backdrop {
+            color: #fff;
+            background-color: #000;
+        }
+    </style>
+    <script>
+        /* you can pass in options here */
+        PleaseRotateOptions = {
+            forcePortrait: true // if you would prefer to force portrait mode
+        };
+    </script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-148152662-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-148152662-1');
+    </script>
+
+    <!-- Google Tag Manager -->
+    <script>
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-TTPFDWV');</script>
+    <!-- End Google Tag Manager -->
+
+
+    <style type="text/css">
+        @@media screen and (max-width: 600px) {
+            div.example {
+                font-size: 30px;
+            }
+        }
+
+        @@media screen and (min-width: 601px) {
+            div.example {
+                font-size: 80px;
+            }
+        }
+    </style>
+
+    <style>
+        .cheader, .navbar {
+            background: #1a1a1a;
+        }
+
+        body {
+            overflow-x: hidden;
+            font-family: Roboto !important;
+        }
+
+        b,
+        strong {
+            font-weight: 800;
+        }
+
+
+        .navbar {
+            border-radius: 0px;
+            margin-bottom: 0px;
+        }
+
+        #mainLi > li after {
+            content:;
+            background: #fff;
+            width: 1px;
+            height: 10px;
+            display: inline-block;
+            position: relative;
+            content: '';
+            top: 0;
+            right: 0;
+        }
+
+
+
+        #mainLi > li:nth-child(4)::after {
+            display: none;
+        }
+
+        #mainLi > li:nth-child(5)::after {
+            display: none;
+        }
+
+        #mainLi > li:nth-child(3)::after {
+            display: none;
+        }
+
+        .navbar-brand {
+            color: #FFF;
+        }
+
+        .navbar-toggle {
+            background-color: white;
+        }
+
+        button.navbar-toggle > .icon-bar {
+            background-color: black;
+        }
+
+        #myNavbar.in {
+            background-color: black !important;
+        }
+
+        .nav > li > a:focus, a:hover {
+            color: black !important;
+        }
+
+        .imgGana {
+            width: 10%;
+            margin-bottom: 2%;
+        }
+
+        .card {
+            background-color: #00b7ee;
+            color: black;
+            word-wrap: break-word;
+        }
+
+        card1 {
+            background-color: #df0044;
+            color: black;
+            word-wrap: break-word;
+        }
+
+        card2 {
+            background-color: #df0044;
+            color: black;
+            word-wrap: break-word;
+        }
+
+        .navbar {
+        }
+
+        .card-body {
+            flex: 1 1 auto;
+            padding: 1.25rem;
+        }
+
+        .card-body1 {
+            flex: 1 1 auto;
+            padding: 1.25rem;
+        }
+
+        .card-body2 {
+            flex: 1 1 auto;
+            padding: 1.25rem;
+        }
+
+
+        .cheader h1 {
+            margin-top: 5px;
+        }
+
+        .card:hover {
+            cursor: pointer;
+        }
+
+        .card1:hover {
+            cursor: pointer;
+        }
+
+        .card2:hover {
+            cursor: pointer;
+        }
+
+        .card {
+            background-color: white;
+            color: black;
+        }
+
+        .card1 {
+            background-color: white;
+            color: black;
+        }
+
+        .card2 {
+            background-color: white;
+            color: black;
+        }
+
+        .card.active {
+            background-color: #00b7ee;
+            color: white;
+            border-radius: 3px;
+        }
+
+        .card1.active1 {
+            background-color: #df0044;
+            color: white;
+        }
+
+        .card2.active2 {
+            background-color: #b3cd01;
+            color: white;
+            border-radius: 3px;
+        }
+
+        .cimg.active {
+            display: block;
+        }
+
+        .cimg1.active1 {
+            display: block;
+        }
+
+        .cimg2.active2 {
+            display: block;
+        }
+
+        .cimg {
+            display: none;
+        }
+
+        .cimg1 {
+            display: none;
+        }
+
+        .cimg2 {
+            display: none;
+        }
+
+        #footerUi {
+            margin: 0 !important;
+        }
+
+
+            #footerUi > li > a {
+                color: #FFF !important;
+            }
+    </style>
+</head>
+<body>
+
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TTPFDWV"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <nav class="navbarb borderbottomg">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a style="padding-left: 65px;" class="navbar-brand" href="@Url.Action("index", "Home")"><img src="~/Content/logo.png" alt="Digital Crumbs Analytics" /></a>
+            </div>
+            <div class="collapse navbar-collapse navbar-nav navbar-right" id="myNavbar">
+                <ul id="mainLi" class="nav navbar-nav navbar-right navbar-light">
+                    <li class="charcoal"><a href="@Url.Action("ContactUs", "Home")">CONTACT US</a></li>
+                    <li> <a href="@Url.Action("FAQs", "Home")">FAQs</a></li>
+                    <li> <a href="@Url.Action("ProSignUp", "Auth")">PRICING</a></li>
+                    @*<li><a href="@Url.Action("GoogleSignIn","Auth")">STANDARD LOGIN</a></li>*@
+                    <li><a class="navbar-link" href="@Url.Action("ProLogin", "Auth")">LOGIN</a></li>
+                    <li>
+                        <button onclick="window.location.href = '@Url.Action("ProSignUp", "Auth")';" type="button" class="btn  navbar-btn yellowbg whitefont dashfontreg" style=" margin-left: 10px;"><b>TRY US FOR FREE</b></button>
+                        
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="full">
+
+        <div class="half paddingdash dashpaddintopl">
+            <span class="dashheading blackfont">TRACK LINKS</span><br>
+            <span class="dashheading blackfont">IN SECONDS AND</span><br>
+            <span class="dashheading yellowfont">FIND CUSTOMERS</span><br>
+            <br>
+            <span class="charcoal dashfont">digital-crumbs allows the non-tech geek to see which posts, emails and banner ads convert into customers.</span><br>
+            <br>
+            <button onclick="window.location.href = '@Url.Action("ProSignUp", "Auth")';" type="button" class="btn  navbar-btn yellowbg whitefont dashfontreg"><b>TRY US FOR FREE</b></button>
+            <span class="pointer plus charcoal" data-toggle="modal" data-target="#videomodel"><i class="mdi mdi-play-circle largetext yellowfont" onmouseover="" style="cursor: pointer;"></i><span class="xsmalltext aligncenter charcoal hidemobile">&nbsp;&nbsp;Let us show you around</span></span>
+
+        </div>
+
+
+        <div class="half aligncenter dashpaddintopr"><img src="~/Content/tablet.jpg" style="width:95%;" alt="Digital Crumbs Analytics" /></div>
+
+    </div>
+
+
+
+
+    <div class="full yellowbg">
+        <div class="container">
+            <div class="half aligncenter whitefont dashpaddintopu dashpadbottom">
+                <span class="dashsub">Easily create a tracking link</span>
+
+                <hr>
+                <br>
+                <span class="dashfontreg">Type any word to create a tracking link</span>
+                <br>
+                <hr>
+                <br>
+                <img src="~/Content/diagram1.png" style="width:90%;" alt="Digital Crumbs Analytics" />
+                <br>
+            </div>
+
+
+
+
+
+
+
+            <div class="half aligncenter whitefont dashpaddintopu dashpadbottom">
+                <span class="dashsub">Who clicks on those links?</span>
+
+                <hr>
+                <br>
+                <span class="dashfontreg">See monthly, daily and individual reports</span>
+                <br>
+                <hr>
+                <br>
+                <img src="~/Content/diagram2.png" style="width:90%;" alt="Digital Crumbs Analytics" />
+                <br>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="container">
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <footer class="page-footer font-small" style="background-color: black; padding: 20px;">
+        <div class="row" style="color: #FFF">
+            <div class="col-md-12 col-xs-12 col-lg-12">
+                <ul id="footerUi" class="list-inline">
+                    <li>© 2018 Copyright </li>
+                    <li class="pull-right"><a href="@Url.Action("ExtraUserLogin", "Auth")">Partners Login</a></li>
+                    <li class="pull-right">|</li>
+                    <li class="pull-right">@Html.ActionLink("Terms and conditions", "TermsAndCondition", "Home")</li>
+                    <li class="pull-right">|</li>
+                    <li class="pull-right">@Html.ActionLink("Privacy policy", "PrivacyPolicy", "Home")</li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+    <script>
+        $(document).ready(function () {
+            $(".card").click(function () {
+                $(".card").removeClass("active");
+                $(".cimg").removeClass("active");
+                var imageId = "#img_" + $(this).attr("data-img");
+                var pId = "#img_" + $(this).attr("data-p");
+                $(imageId).addClass("active");
+                $(this).addClass("active");
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(".card1").click(function () {
+                $(".card1").removeClass("active1");
+                $(".cimg1").removeClass("active1");
+                var imageId = "#img_" + $(this).attr("data-img");
+                $(imageId).addClass("active1");
+                $(this).addClass("active1");
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(".card2").click(function () {
+                $(".card2").removeClass("active2");
+                $(".cimg2").removeClass("active2");
+                var imageId = "#img_" + $(this).attr("data-img");
+                $(imageId).addClass("active2");
+                $(this).addClass("active2");
+            });
+        });
+    </script>
+    <div class="modal fade" id="videomodel" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+
+                </div>
+                <div class="modal-body">
+
+                    <div class='embed-container'>
+                        <iframe frameborder="0" width="100%" height="800px" src="https://player.vimeo.com/video/406345856"></iframe>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutOrange.cshtml";
+}
+
+<style>
+    label.error {
+        color: red;
+        font-size: 12px !important;
+    }
+</style>
+<link href="~/Content/roboto.css" rel="stylesheet" />
+<div class="row" style="font-family:Roboto;">
+    <div class="col-md-8 col-md-offset-2">
+        <form id="formSignUp" action="@Url.Action("ExtraUserSignUp", "Auth")" method="post" style="background-color: white; padding: 10%; padding-top: 5%; border-radius: 3px; margin-top: 6%; padding-bottom: 5%; ; margin-bottom: 6%;">
+            <h3 class="text-center" style="color: #f77408; margin-top: 0px;font-family: Roboto ;font-size: 24pt;">Extra User Sign Up</h3>
+            <p class="text-center" style="font-size:18pt;"><small><b>Then $9 a month per website, unlimited visitors</b></small></p>
+            <div class="form-group">
+                <input style="font-size: 12px; border-radius: 3px; background-color: #f9f9f9;" type="text" class="form-control" placeholder="Enter your name" name="name" required="required">
+            </div>
+            <div class="form-group">
+                <input style="font-size: 12px; border-radius: 3px; background-color: #f9f9f9;" type="email" class="form-control" placeholder="Enter your email address" name="email" required="required">
+            </div>
+            <div class="form-group">
+                <input style="font-size: 12px; border-radius: 3px; background-color: #f9f9f9;" id="password" type="password" class="form-control" placeholder="Enter your password" name="password" required="required">
+            </div>
+            <div class="form-group">
+                <input style="font-size: 12px; border-radius: 3px; background-color: #f9f9f9;" id="password_confirm" type="password" class="form-control" placeholder="Enter your confirm password" name="password_confirm" oninput="check(this)"  required="required">
+            </div>
+            <div class="form-group">
+                <input style="font-size: 12px; border-radius: 3px; background-color: #f9f9f9;" type="text" class="form-control" placeholder="Enter your domain www.example.com" name="domain" required="required">
+            </div>
+            <div class="form-group">
+                <button style="font-size: 15px; border-radius: 3px; background-color: #f77408;border-color: #f77408 " type="submit" class="btn btn-primary btn-block">Register</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    function check(input) {
+        if (input.value != document.getElementById('password').value) {
+            input.setCustomValidity('Confirm password Must be Matching to password.');
+        } else {
+            // input is valid -- reset the error message
+            input.setCustomValidity('');
+        }
+    }
+</script>

@@ -1,0 +1,1968 @@
+﻿@using IntegrateGoogleSignIn.Helpers
+@model IntegrateGoogleSignIn.Models.ReportPageVm
+@{
+    Layout = "~/Views/Shared/_LayoutExtraUser.cshtml";
+    var timeZone = string.Empty;
+    if (TempData["TimeZone"] != null)
+    {
+        timeZone = TempData["TimeZone"].ToString();
+        TempData["TimeZone"] = null;
+    }
+    var reconvert = CommonFunctions.ConvertTimeZone(StaticValues.TzUk, timeZone, Model.reportCurrentDate);
+    var currentDateString = reconvert.ToString("yyyy-MM-dd");
+}
+
+<link rel="stylesheet" href="~/Content/rotate.css" />
+
+<script src="~/Scripts/highcharts.js"></script>
+<title>Report</title>
+<style>
+    .target {
+        display: inline;
+    }
+
+    .bootstrap-tagsinput {
+        width: 100%;
+        text-align: left;
+        height: 50px;
+    }
+
+    .main-wrap ul li a {
+        display: contents;
+    }
+
+    ul {
+        list-style: none;
+    }
+
+    .btn_popup_close {
+        margin-right: 7px;
+        padding: 2px;
+        background-color: white;
+        color: black;
+        border-radius: 50%;
+        font-size: 10px;
+        width: 22px;
+        border: 1px solid black;
+    }
+
+    #blueList, #redList, #greenList {
+        margin-top: 5px;
+    }
+
+        #blueList li, #redList li, #greenList li {
+            margin-right: 1%;
+        }
+
+        #blueList i:hover, #redList i:hover, #greenList i:hover {
+            cursor: pointer;
+        }
+
+    #search ul li, #search ul {
+        border: 0px none red;
+        float: none;
+        padding: 0px;
+        margin: 0px;
+        display: block;
+    }
+
+    .redBack {
+        background-color: red;
+        color: white;
+        font-weight: bolder;
+    }
+
+    .blueBack {
+        background-color: blue;
+        color: white;
+        font-weight: bolder;
+    }
+
+    .greenBack {
+        background-color: green;
+        color: white;
+        font-weight: bolder;
+    }
+
+    .hideCollection, .hideEarlierCollection, .earlierVisitor {
+        display: none;
+    }
+
+        .hideCollection.active, .hideEarlierCollection.active, .earlierVisitor.active {
+            display: block;
+        }
+
+    .cli.active {
+        background: green !important;
+        color: white !important;
+    }
+
+    .filterKeywords.activated {
+        border: 3px solid #b3b3b3;
+    }
+
+    .all {
+        border: 3px solid #005873;
+    }
+
+    .all2 {
+        border: 3px solid #bc476b;
+    }
+
+    .all3 {
+        border: 3px solid #8b9f00;
+    }
+
+    .cli {
+        background: black !important;
+        color: white !important;
+    }
+
+        .cli > a {
+            border: none !important;
+            background: none !important;
+            color: white !important;
+        }
+
+    .ckeywordstatus > .visitor_image:hover, .btnALLKeyword:hover {
+        cursor: pointer;
+    }
+
+
+
+    .ckeywordstatus.active {
+        border-bottom: 4px solid red;
+        text-align: center;
+    }
+
+    .ckeywordstatus {
+        border: none;
+    }
+
+    .panelVisitors.diactivate {
+        display: none;
+    }
+
+    .panelVisitors {
+        display: flex;
+    }
+
+    #divLoading {
+        display: none;
+    }
+
+        #divLoading.show {
+            display: block;
+            position: fixed;
+            z-index: 100;
+            background-image: url('../../../../Content/3.gif');
+            background-color: #666;
+            opacity: 0.4;
+            background-repeat: no-repeat;
+            background-position: center;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            top: 0;
+        }
+
+    #loadinggif.show {
+        left: 50%;
+        top: 50%;
+        position: absolute;
+        z-index: 101;
+        width: 32px;
+        height: 32px;
+        margin-left: -16px;
+        margin-top: -16px;
+    }
+
+    div.content {
+        width: 1000px;
+        height: 1000px;
+    }
+
+    body {
+    }
+
+    .target, .commonSize12 {
+        font-size: 12px;
+    }
+
+    .commonSize13 {
+        font-size: 13px;
+    }
+
+    .pathText {
+        font-size: 11px;
+    }
+
+    .bootstrap-tagsinput {
+        max-width: 100% !important;
+        line-height: 38px;
+    }
+
+    .label {
+        padding: .4em .9em .5em;
+        font-size: 100%;
+        font-weight: 300;
+    }
+
+    .left-col {
+        padding-right: 0 !important;
+    }
+
+        .left-col .col {
+            border-radius: 0px !important;
+        }
+
+    .right-col .col {
+        background: #3c3c3c !important;
+        border-radius: 0px !important;
+    }
+
+    .panel-body {
+        background-color: #FFF !important;
+    }
+
+    .dot_2, .dot_blue, .dot_red, .dot_green {
+        border-radius: 4px !important;
+    }
+    .dot_pink {
+
+        background-image:url(../../Content/visitor_comparison/user_pink.png);
+        height: 20px;
+    width: 20px;
+    display: inline-block;
+        background-color:#ff0044 !important;
+        border-radius:4px !important;
+    }
+    .cshare {
+        background-color: #eaeaea !important;
+        padding: 4px !important;
+    }
+
+        .cshare .glyphicon {
+            font-size: 9px !important;
+        }
+
+    .btnLoad, .btnEarlier {
+        margin-left: 17px !important;
+        background-color: #ffa937 !important;
+        border-radius: 3px !important;
+        color: #FFF !important;
+    }
+
+    .btnEarlier {
+        float: right !important;
+    }
+
+    .dot_2 {
+        background-color: #3c3c3c !important;
+    }
+
+    .dot_blue {
+        background-color: #00b7ee !important;
+    }
+
+    .dot_red {
+        background-color: #df0044 !important;
+    }
+
+    .dot_green {
+        background-color: #b3cd01 !important;
+    }
+
+
+    .col {
+        background-color: #f8f9fb !important;
+    }
+
+    .visitorcollection {
+        margin-left: 20px;
+    }
+
+    .panel-heading {
+        background: linear-gradient(to left, #ffffff 0%,#ffffff 20%,#ffffff 70%,#3c3c3c 50%,#3c3c3c 100%)
+    }
+
+    .pointer, .filterKeywords {
+        cursor: pointer;
+    }
+
+    i:hover {
+        cursor: pointer;
+    }
+
+    .bootstrap-tagsinput > input {
+        height: 100%;
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="/Content/visitor_comparison/style.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/bootstrap-tagsinput.css" rel="stylesheet" />
+<div id="divLoading"></div>
+<div class="filter-selector navbar-inverse" style="height:142px; background:#f8f9fa;">
+    <div class="container">
+        <ul style="justify-content:flex-start;width: 70%;display: inline-block;margin-top: 30px;">
+            <li style="color: black;display: inline;">@Model.domainName</li>
+            <br />
+            <li style="margin-top:2%;"><span>Select Day</span>&nbsp;<input style="height: 35px;color: #000;border: 0px;padding-left: 15px;background-color: #e3e3e3;border-radius: 30px;font-weight: bold;" onchange="ApplyFilter()" id="StartDate" type="date" value="@currentDateString"></li>
+        </ul>
+        @*<label style="float:right;color: black;display: inline;margin-top: 30px;">@Model.domainName</label>*@
+    </div>
+</div>
+
+@Html.Hidden("currentStringDate", Model.reportCurrentDate.ToString("d"))
+
+
+
+<div class="container body-content">
+    <div class="main-wrap ">
+        <div class="header-top text-center">
+            <div class="row" style="background-color:#f8f9fa;">
+                <div class="col-md-3">
+
+                    <h4 style="text-align:left;font-family:Roboto !important;font-size:20px;"><span style="color: #ffa937">Daily</span><span style="color:#929eaa;"> multi-page visitor</span><span> <i data-toggle="tooltip" data-placement="top" title="The number of people who view more than one web page during a session." class="fa fa-info-circle"></i></span></h4>
+                    @{
+                        var actualUserCollections = Model.userListing.Where(m => m.userInteractions.Any(p => p.Visits.Count > 1 && p.Visits.Any(k => k.durationTime > 0))).ToList();
+                    }
+                    <div class="d-inline bg-success" style="background-color:#3c3c3c;height:146px;border-radius:3px;">
+                        <div style="padding-top:10px;padding-left:14px;text-align:left;font-family: Roboto;">
+                            <span style="color:white;font-size:12pt;">
+                                Number of multi page visitors:<br />
+                                <p id="c_counted" style="display: inline;font-size:48pt; font-family: Roboto ;color:white;">@actualUserCollections.Count</p>
+                            </span>
+
+                        </div>
+                    </div>
+                    <br />
+                    <h4 style="text-align:left;font-family:Roboto ;font-size:20px;"><span style="color: #ffa937; font-family:Roboto ">Daily</span> <span style="color:#929eaa;">visitor highlights</span><span> <i data-toggle="tooltip" data-placement="top" title="This tool allows you to highlight the number of people that view a page or pages of your selection. " class="fa fa-info-circle"></i></span></h4>
+
+                    <div class="d-inline bg-success" style="background-color:#00b7ee;height:80px; text-align:left;margin-bottom:2px;border-radius:3px;">
+                        <div class="row">
+                            <div class="col-md-6 col-xs-6 col-lg-6">
+
+                                <div style="margin-left:26px;margin-top:30px;">
+                                    <h4><span style="background-color:#00536c;" class="label label-primary pointer" data-toggle="modal" data-target="#myModalBlue">Add/view</span></h4>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-xs-6 col-lg-6" style="margin-left: -8px;text-align: right;padding-right: 20px;">
+                                <span class="" id="btnbluevisitor" style="font-size:36pt;color:white;font-family:Roboto ;">0</span>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-inline bg-success" style="background-color:#df0044;height:80px; text-align:left;margin-bottom:2px;border-radius:3px;">
+                        <div class="row">
+                            <div class="col-md-6 col-xs-6 col-lg-6">
+                                <p class="text" style="padding-left:14px;color:white;padding-top:10px;font-size:16px;"></p>
+                                <div style="margin-left:26px;margin-top:-30px;">
+                                    <h4> <span style="background-color:#5c001c;" class="label label-danger pointer" data-toggle="modal" data-target="#myModalRed">Add/view</span></h4>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-xs-6 col-lg-6" style="margin-left: -8px;text-align: right;padding-right: 20px;">
+                                <span class="" id="btnredvisitor" style="font-size:36pt;color:white;font-family:Roboto;">0</span>
+
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+                    <div class="d-inline bg-success" style="background-color:#b3cd01;height:80px; text-align:left;margin-bottom:2px;border-radius:3px;">
+                        <div class="row">
+                            <div class="col-md-6 col-xs-6 col-lg-6">
+                                <p class="text" style="padding-left:14px;color:white;padding-top:10px;font-size:16px;"></p>
+                                <div style="margin-left:25px;margin-top:-33px;">
+                                    <h4><span style="background-color:#7a8a00;" class="label label-success pointer " data-toggle="modal" data-target="#myModalGreen">Add/view</span></h4>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-xs-6 col-lg-6" style="margin-left: -8px;text-align: right;padding-right: 20px;">
+                                <span class="" id="btngreenvisitor" style="font-size:36pt;color:white;font-family:Roboto ;">0</span>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div>
+
+                        <h4 style="text-align:left;color: #ffa937; font-family:Roboto;font-size:20px;margin-left:23px;">Hourly<span style="font-family:Roboto;color:#929eaa;font-size:20px;margin-left:7px;">visitor highlights</span></h4>
+
+                        <div id="hourly" class="panel col1 ulData shadow">
+                            <div id="lineGraph" style="width: 100%; height:452px; margin-top:1px;margin-left:0px;overflow:hidden;border-radius:2px;padding-top:20px;background-color:white;"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div style="font-size:20px;color:#929eaa;padding-top:79px;">Visitor Comparsion</div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <script>
+                        $("#img1").hide();
+                        $("#img2").hide();
+                        $("#img3").hide();
+
+                        function GetCount(str, c_counted) {
+                            $("#img" + c_counted).show();
+
+
+                            var query = '';
+
+                            var startDate = document.getElementById("StartDate").value;
+                            if (startDate != null) {
+                                query += "startDate=" + startDate + "&";
+                            }
+
+
+                            if (startDate != null) {
+                                query += "endDate=" + startDate + "&";
+                            }
+
+                            var city = document.getElementById('CityControl').value;
+
+                            if (city != null && city != "") {
+                                query += "city=" + city;
+                            }
+
+                            var path = str;//document.getElementById(str).innerText;
+
+                            //if (path != null && path != "") {
+                            //    query += "path=" + path;
+                            //}
+
+                            var tempUrlWithViewId = document.URL.split('&')[0] + "&" + query;
+                            var urlis = tempUrlWithViewId.replace("GetReports", "GetCountReports");
+                            //alert(urlis);
+                            if (query != '') {
+
+
+                                $.post(urlis, { path: path }, function (data) {
+                                    $("#loadergif").hide();
+
+
+                                    $("#_selected" + c_counted).html(data);
+                                });
+                            }
+                        }
+
+                        var count = 0;
+                    </script>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row" style="padding-top:24px;">
+        <div class="col-md-12">
+
+            <input value="@string.Empty" data-role="tagsinput" type="text" class="text-left" style="padding-top:10px;" id="Search" placeholder="Search Filter">
+
+        </div>
+        <div class="col-md-12 col-xs-12 col-lg-12" style="text-align:center;padding-top:10px;">
+            <span class="filterKeywords activated" onclick="GetAllKeywords()" style="display: inline-block;background: #3c3c3c;color: #FFF;width: 35px;text-align: center;padding: 5px 0;font-size: 16px;width:24.5%;border-radius:3px;">
+                All
+            </span>
+            <span class="filterKeywords" onclick="GetAllKeywordStatus('img.vistorblue')" style="display: inline-block;background: #00b7ee;color: #fff;width: 35px;text-align: center;padding: 5px 0;font-size: 16px;width:24.5%;border-radius:3px;">
+                &nbsp;
+            </span>
+            <span class="filterKeywords" onclick="GetAllKeywordStatus('img.vistorred')" style="display: inline-block;background: #df0044;color: #fff;width: 35px;text-align: center;padding: 5px 0;font-size: 16px;width:24.5%;border-radius:3px;">
+                &nbsp;
+            </span>
+            <span class="filterKeywords" onclick="GetAllKeywordStatus('img.vistorgreen')" style="display: inline-block;background: #b3cd01;color: #fff;width: 35px;text-align: center;padding: 5px 0;font-size: 16px;width:24.5%;border-radius:3px;">
+                &nbsp;
+            </span>
+
+        </div>
+
+        <div class="col-md-12 col-xs-12 col-lg-12" style="text-align:center;padding-top:10px;">
+            <p style="display: inline;font-size:24pt; font-family: Roboto ;color:white;text-align:center;color:#929eaa;">Total </p>
+            <p id="c_counted1" style="display: inline;font-size:24pt; font-family: Roboto ;color:white;text-align:center;color:#929eaa;">@actualUserCollections.Count</p>
+        </div>
+    </div>
+    <div style="padding-top:19px;">
+
+    </div>
+
+    @if (Model.userListing.Any())
+    {
+        var dynamicNumber = 0;
+        var item_counter = 0;
+        foreach (var user in actualUserCollections)
+        {
+            item_counter++;
+            <div class="filter-search panelVisitors">
+                <div class="left-col">
+
+                    <div class="panel col ulData shadow">
+                        <div class="panel-heading pnl_heading">
+                            <div class="row">
+                                <div class="col-md-6 col-xs-6 col-lg-6">
+                                    <div class="visitor">
+                                        <div style="width: 100%;display: initial;">
+                                            <img id="ii_@item_counter" class="user_image visitor_image" src="/Content/visitor_comparison/user.png" alt="" title="">
+                                        </div>
+                                        <span class="visitor-total" style="color:#FFF">Visitor @user.id</span>
+                                        <div class="visitorcollection" style="width: 100%;display: initial;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-xs-2 col-lg-2">
+                                    &nbsp;
+                                </div>
+                                <div class="col-md-4 col-xs-4 col-lg-4" style="float: right; text-align: right;">
+                                    @{
+                                        var totalMinDuration = Math.Floor(user.duration);
+                                        var duration = string.Empty;
+                                        if (totalMinDuration < 60)
+                                        {
+                                            duration = "under 1 min";
+                                        }
+                                        else if (totalMinDuration < 120)
+                                        {
+                                            duration = "over " + 1 + " min";
+                                        }
+                                        else if (totalMinDuration < 180)
+                                        {
+                                            duration = "over " + 2 + " min";
+                                        }
+                                        else if (totalMinDuration < 240)
+                                        {
+                                            duration = "over " + 3 + " min";
+                                        }
+                                        else if (totalMinDuration < 300)
+                                        {
+                                            duration = "over " + 4 + " min";
+                                        }
+                                        else
+                                        {
+                                            duration = "over " + 5 + " min";
+                                        }
+                                    }
+                                    @{
+                                        var mobileOption = (!string.IsNullOrEmpty(user.mobile) && user.mobile == "True") ? "(Mobile Data)" : "(Wifi)";
+                                    }
+                                    <div class="target txtmobile">
+                                        <span style="color: #3c3c3c;" class="commonSize13">@mobileOption Duration </span> <span class="text-danger commonSize12" style="color: #ffa937;font-weight: bold">@duration</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body" id="panelBody_@user.id">
+                            @{
+                                var userCollectionLoop = user.userInteractions.ToList();
+                                var loop = userCollectionLoop.Count;
+                                var counterLoop = 0;
+                                var needToHide = false;
+                            }
+                            @foreach (var sessionCollection in userCollectionLoop)
+                            {
+                                dynamicNumber++;
+                                var hasData = false;
+                                counterLoop++;
+                                if (loop != counterLoop)
+                                {
+                                    hasData = true;
+                                }
+
+                                var e = 0;
+                                var totalCollection = sessionCollection.Visits.Count;
+                                foreach (var item in sessionCollection.Visits)
+                                {
+                                    e++;
+
+                                    <div class="row @((counterLoop > 1) ? "earlierVisitor earlierVisitor_" + dynamicNumber + "" : string.Empty) @((e > 2) || (needToHide) ? "hideCollection hideCollection_" + dynamicNumber + "" : string.Empty)" style="margin-bottom: 5px;">
+                                        <div class="col-md-2 col-xs-2 col-lg-2">
+                                            @if (e == 1 && item.sessionDatetime.HasValue)
+                                            {
+                                                if (e == 1)
+                                                {
+                                                    <span class="commonSize13"><b>Session Start</b></span>
+                                                    <br />
+                                                    <span class="commonSize12" style="color: #ffa937;font-weight:bold">@item.sessionDatetime.Value.ToString("hh:mm tt")</span>
+                                                    <span class="sessionStartTime" style="display: none">@item.sessionDatetime.Value.ToString("HH:mm")</span>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (totalCollection == e)
+                                                {
+                                                    <span class="commonSize12">Session End</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>&nbsp;</span>
+                                                }
+                                            }
+                                        </div>
+                                        <div class="col-md-7 col-xs-7 col-lg-7">
+                                            <div class="col-md-1 col-xs-1 col-lg-1">
+                                                <span class="countColor dot_2" cust-data="ii_@item_counter"></span>
+                                            </div>
+                                            <div class="col-md-11 col-xs-11 col-lg-11">
+                                                <div class="target row" style="margin: 0px;">@item.title</div>
+                                                <div style="margin: 0%; color: #ffa937;font-weight:bold" class="pathText target row">
+                                                    @{
+                                                        var splitURL = item.url.Split('/');
+                                                        var totallength = splitURL.Length;
+                                                        var urlToDisplay = "Home Page";
+                                                        if (totallength == 4)
+                                                        {
+                                                            if (!string.IsNullOrEmpty(splitURL[totallength - 1]))
+                                                            {
+                                                                urlToDisplay = splitURL[totallength - 1];
+                                                            }
+                                                        }
+                                                        else if (totallength > 4)
+                                                        {
+                                                            if (!string.IsNullOrEmpty(splitURL[totallength - 1]))
+                                                            {
+                                                                urlToDisplay = splitURL[totallength - 1];
+                                                            }
+                                                            else
+                                                            {
+                                                                urlToDisplay = splitURL[totallength - 2];
+                                                            }
+                                                        }
+                                                    }
+                                                    @if (urlToDisplay.Length > 29)
+                                                    {
+                                                        urlToDisplay = string.Concat("/", urlToDisplay.Substring(0, 30));
+                                                    }
+                                                    else
+                                                    {
+                                                        urlToDisplay = string.Concat("/", urlToDisplay);
+                                                    }
+                                                    @urlToDisplay
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1 col-xs-1 col-lg-1">
+                                            <a class="cshare" style="font-size: x-small;" target="_blank" href="@item.url"><span class="glyphicon glyphicon-share"></span></a>
+                                        </div>
+                                        <div class="col-md-2 col-xs-2 col-lg-1">
+                                            <div style="width: 100%">
+                                                <div class="target" style="margin-left: -32px;">
+                                                    @{
+                                                        var convertedSpan = new TimeSpan(0, 0, (int)item.durationTime);
+                                                        var durationString = string.Empty;
+                                                        if (convertedSpan.Minutes > 0)
+                                                        {
+                                                            if (convertedSpan.Seconds > 0)
+                                                            {
+                                                                durationString = convertedSpan.Minutes + " min " + convertedSpan.Seconds + " sec";
+                                                            }
+                                                            else
+                                                            {
+                                                                durationString = convertedSpan.Minutes + " min ";
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            if (convertedSpan.Seconds > 0)
+                                                            {
+                                                                durationString = convertedSpan.Seconds + " sec";
+                                                            }
+                                                        }
+                                                    }
+                                                    @durationString
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    if (totalCollection == e)
+                                    {
+
+                                        <div class="row @(counterLoop > 1 ? "earlierVisitor earlierVisitor_" + dynamicNumber + "" : string.Empty)" style="margin-top: 10px; margin-bottom: 10px;">
+                                            <div class="col-md-2 col-xs-2 col-lg-2">
+                                                &nbsp;
+                                            </div>
+                                            <div class="col-md-10 col-xs-10 col-lg-10">
+                                                @if (totalCollection > 2)
+                                                {
+                                                    <button type="button" class="btn btn-xs btn_css_footer btn_c_load_more btnLoad" onclick="LoadMore(@dynamicNumber, this)">Load More</button>
+                                                }
+                                                @if (hasData)
+                                                {
+                                                    var newDynamic = dynamicNumber + 2;
+                                                    <button onclick="EarlierVisits(@newDynamic, this)" type="button" class="btn btn-xs btn_css_footer btn_c_load_more btnEarlier">More sessions: Show</button>
+                                                }
+                                            </div>
+                                        </div>
+
+                                        dynamicNumber++;
+                                    }
+
+                                    if (e > 2)
+                                    {
+                                        if (loop != counterLoop)
+                                        {
+                                            hasData = true;
+                                        }
+                                        else
+                                        {
+                                            needToHide = false;
+                                        }
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="right-col">
+                    <div class="panel col shadow">
+                        <div style="padding-top: 10px; padding-right: 15px; padding-left: 15px;">
+                            @if (string.IsNullOrEmpty(user.mobile) || user.mobile == "False")
+                            {
+                                <div class="row">
+                                    <div class="col-md-12 col-xs-12 col-lg-12" style="padding-top: 12px;">
+                                        <div>
+                                            @if (user.source.Contains("google"))
+                                            {
+                                                <img src="~/Content/google.png" alt="" title="" />
+                                            }
+                                            else if (user.source.Contains("facebook"))
+                                            {
+                                                <img src="~/Content/facebook.png" alt="" title="" />
+                                            }
+                                            else if (user.source.Contains("bing"))
+                                            {
+                                                <img src="~/Content/bing.png" alt="" title="" />
+                                            }
+                                            else if (user.source.Contains("instagram"))
+                                            {
+                                                <img src="~/Content/instagram.png" alt="" title="" />
+                                            }
+                                            else if (user.source.Contains("yahoo"))
+                                            {
+                                                <img src="~/Content/yahoo.png" alt="" title="" />
+
+                                            }
+                                            else if (@user.source.Contains("https://t.co") || @user.source.Contains("l.t.co/"))
+                                            {
+                                                <img src="~/Content/twitter.png" alt="" title="" />
+                                            }
+                                        </div>
+                                        <br>
+
+
+                                        <div class="target" style="color: #FFF; padding-left: 3px;">
+                                            @if (!string.IsNullOrEmpty(user.source))
+                                            {
+                                                if (user.source.Contains("google"))
+                                                {
+                                                    <label class="commonSize12 txtSource">Google</label>
+                                                }
+                                                else if (@user.source.Contains("m.facebook.com") || @user.source.Contains("l.facebook.com") || @user.source.Contains("facebook.com"))
+                                                {
+                                                    <label class="commonSize12 txtSource">FaceBook</label>
+                                                }
+                                                else if (@user.source.Contains(Model.domainName))
+                                                {
+                                                    <label class="commonSize12 txtSource">Direct</label>
+                                                }
+                                                else if (@user.source.Contains("http://www.phileasfoggs.co.uk/") || @user.source.Contains("https://www.phileasfoggsworldofadventures.co.uk/"))
+                                                {
+                                                    <label class="commonSize12 txtSource">Direct</label>
+                                                }
+                                                else if (@user.source.Contains("bing"))
+                                                {
+                                                    <label class="commonSize12 txtSource">Bing</label>
+                                                }
+                                                else if (@user.source.Contains("l.instagram.com"))
+                                                {
+                                                    <label class="commonSize12 txtSource">Instagram</label>
+                                                }
+                                                else if (@user.source.Contains("yahoo"))
+                                                {
+                                                    <label class="commonSize12 txtSource">Yahoo</label>
+                                                }
+                                                else if (@user.source.Contains("https://t.co") || @user.source.Contains("l.t.co/"))
+                                                {
+                                                    <label class="commonSize12 txtSource">Twitter</label>
+                                                }
+                                                else
+                                                {
+                                                    if (user.source.Length > 41)
+                                                    {
+                                                        <label class="commonSize12 txtSource">@user.source.Substring(0, 40)</label>
+                                                    }
+                                                    else
+                                                    {
+                                                        <label class="commonSize12 txtSource">@user.source</label>
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <label class="commonSize12 txtSource">Direct</label>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12 col-lg-12" style="padding-top: 12px;">
+
+
+                                        @{
+                                            var countryStr = string.Empty;
+                                            var locationArray = user.location.Split(',').Select(p => p.Trim()).ToArray();
+                                            if (locationArray.Length > 0)
+                                            {
+                                                countryStr = locationArray[0].Trim();
+                                            }
+                                        }
+                                        <div class="target txtCountry" style="color: #FFF; padding-left: 3px;">@countryStr</div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12 col-lg-12" style="padding-top: 12px;">
+
+                                        @{
+                                            var cityStr = string.Empty;
+                                            if (locationArray.Length > 1)
+                                            {
+                                                cityStr = locationArray[1].Trim();
+                                            }
+                                        }
+                                        <div class="target txtRegion" style="color: #FFF; padding-left: 3px;"> @cityStr</div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12 col-lg-12" style="padding-top: 12px;">
+
+                                        @{
+                                            var city1 = string.Empty;
+                                            if (locationArray.Length > 2)
+                                            {
+                                                city1 = locationArray[2].Trim();
+                                            }
+                                        }
+                                        <div class="target txtCity" style="color: #FFF; padding-left: 3px;"> @city1</div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="row">
+                                    <div class="col-md-12 col-xs-12 col-lg-12" style="padding-top: 12px;">
+                                        <div>
+                                            @if (user.source.Contains("google"))
+                                            {
+                                                <img src="~/Content/google.png" alt="" title="" />
+                                            }
+                                            else if (user.source.Contains("facebook"))
+                                            {
+                                                <img src="~/Content/facebook.png" alt="" title="" />
+                                            }
+                                            else if (user.source.Contains("bing"))
+                                            {
+                                                <img src="~/Content/bing.png" alt="" title="" />
+                                            }
+                                            else if (user.source.Contains("instagram"))
+                                            {
+                                                <img src="~/Content/instagram.png" alt="" title="" />
+                                            }
+                                            else if (user.source.Contains("yahoo"))
+                                            {
+                                                <img src="~/Content/yahoo.png" alt="" title="" />
+                                            }
+                                            else if (@user.source.Contains("https://t.co") || @user.source.Contains("l.t.co/"))
+                                            {
+                                                <img src="~/Content/twitter.png" alt="" title="" />
+                                            }
+
+                                        </div>
+                                        <br>
+
+                                        <div class="target" style="color: #FFF; padding-left: 3px;">
+                                            @if (!string.IsNullOrEmpty(user.source))
+                                            {
+                                                if (user.source.Contains("google"))
+                                                {
+                                                    <label class="commonSize12 txtSource">Google</label>
+                                                }
+                                                else if (@user.source.Contains("m.facebook.com") || @user.source.Contains("l.facebook.com") || @user.source.Contains("facebook.com"))
+                                                {
+                                                    <label class="commonSize12 txtSource">FaceBook</label>
+                                                }
+                                                else if (@user.source.Contains("http://www.phileasfoggs.co.uk/") || @user.source.Contains("https://www.phileasfoggsworldofadventures.co.uk/"))
+                                                {
+                                                    <label class="commonSize12 txtSource">Direct</label>
+                                                }
+                                                else if (@user.source.Contains("bing"))
+                                                {
+                                                    <label class="commonSize12 txtSource">Bing</label>
+                                                }
+                                                else if (@user.source.Contains("l.instagram.com"))
+                                                {
+                                                    <label class="commonSize12 txtSource">Instagram</label>
+                                                }
+                                                else if (@user.source.Contains("yahoo"))
+                                                {
+                                                    <label class="commonSize12 txtSource">Yahoo</label>
+                                                }
+                                                else if (@user.source.Contains("https://t.co") || @user.source.Contains("l.t.co/"))
+                                                {
+                                                    <label class="commonSize12 txtSource">Twitter</label>
+                                                }
+                                                else
+                                                {
+                                                    if (user.source.Length > 40)
+                                                    {
+                                                        <label class="commonSize12 txtSource">@user.source.Substring(0, 40)</label>
+                                                    }
+                                                    else
+                                                    {
+                                                        <label class="commonSize12 txtSource">@user.source</label>
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <label class="commonSize12 txtSource">Direct</label>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<div class="modal fade" id="myModalRed" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><b>Enter a keyword from a pages URL to create a Red highlight</b><br /><p style="font-size:12px;">Highlights display the number of visitors who view these pages</p></h4><br />
+                <label class="badge badge-danger">example.html</label>
+            </div>
+            <div class="modal-body">
+                <div class="form-group ">
+                    <table>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <input type="text" name="searchRed" id="searchRed" placeholder="Enter a keyword" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary" id="btnRed" type="button"> ADD</button>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <ul id="redList" class="">
+
+                        <li></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="myModalBlue" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><b>Enter a keyword from a pages URL to create a Blue highlight</b><br /><p style="font-size:12px;">Highlights display the number of visitors who view these pages</p></h4><br />
+                <label class="badge badge-primary">example.html</label>
+            </div>
+            <div class="modal-body">
+                <div class="form-group ">
+                    <table>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <input type="text" name="searchBlue" id="searchBlue" placeholder="Enter a keyword" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary" id="btnBlue" type="button"> ADD</button>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <ul id="blueList" class="">
+
+                        <li></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="myModalGreen" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><b>Enter a keyword from a pages URL to create a Green highlight</b><br /><p style="font-size:12px;">Highlights display the number of visitors who view these pages</p></h4><br />
+                <label class="badge badge-success">example.html</label>
+            </div>
+            <div class="modal-body">
+                <div class="form-group ">
+                    <table>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <input type="text" name="searchGreen" id="searchGreen" placeholder="Enter a keyword" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary" id="btnGreen" type="button"> ADD</button>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <ul id="greenList" class="">
+
+                        <li></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
+
+
+<script>
+
+
+
+    var GetAllKeywords = function () {
+        $(".filterKeywords").removeClass("activated").removeClass("all").removeClass("all2").removeClass("all3");
+        $($(".filterKeywords")[0]).addClass("activated").removeClass("all").removeClass("all2").removeClass("all3");
+        if ($("#Search").val().length === 0) {
+            $(".panelVisitors").show();
+            $("#c_counted1").text($(".panelVisitors").length);
+
+        } else {
+            var i = 0;
+            var keyWords = $("#Search").val().split(",");
+            if (currentCollection.length === 0) {
+                $(".panelVisitors").each(function (e, element) {
+                    var sourceTxt = $.trim($(element).find(".txtSource").text().toLowerCase());
+                    var countryTxt = $.trim($(element).find(".txtCountry").text().toLowerCase());
+                    var regionTxt = $.trim($(element).find(".txtRegion").text().toLowerCase());
+                    var cityTxt = $.trim($(element).find(".txtCity").text().toLowerCase());
+                    var mobileTxt = $.trim($(element).find(".txtmobile").text().toLowerCase());
+
+                    var hasValue = false;
+                    $(element).find(".pathText").each(function (s, selement) {
+                        var urlText = $.trim($(selement).text().toLowerCase());
+                        var urlTitle = $.trim($(selement).prev().text().toLowerCase());
+                        $.each(keyWords,
+                            function (p, pelement) {
+                                if (urlText.indexOf(pelement.toLowerCase()) !== -1 ||
+                                    urlTitle.indexOf(pelement.toLowerCase()) !== -1 ||
+                                    sourceTxt.indexOf(pelement.toLowerCase()) !== -1 ||
+                                    countryTxt.indexOf(pelement.toLowerCase()) !== -1 ||
+                                    regionTxt.indexOf(pelement.toLowerCase()) !== -1 ||
+                                    mobileTxt.indexOf(pelement.toLowerCase()) !== -1 ||
+                                    cityTxt.indexOf(pelement.toLowerCase()) !== -1) {
+                                    hasValue = true;
+                                }
+                            });
+                    });
+                    if (hasValue) {
+                        $(element).show();
+                        i = i + 1;
+                    } else {
+                        $(element).hide();
+                    }
+                });
+                $("#c_counted1").text(i);
+
+            } else {
+                $(currentCollection).each(function (e, element) {
+                    var sourceTxt = $.trim($(element).find(".txtSource").text().toLowerCase());
+                    var countryTxt = $.trim($(element).find(".txtCountry").text().toLowerCase());
+                    var regionTxt = $.trim($(element).find(".txtRegion").text().toLowerCase());
+                    var cityTxt = $.trim($(element).find(".txtCity").text().toLowerCase());
+                    var mobileTxt = $.trim($(element).find(".txtmobile").text().toLowerCase());
+
+                    var hasValue = false;
+                    $(element).find(".pathText").each(function (s, selement) {
+                        var urlText = $.trim($(selement).text().toLowerCase());
+                        var urlTitle = $.trim($(selement).prev().text().toLowerCase());
+                        $.each(keyWords,
+                            function (p, pelement) {
+                                if (urlText.indexOf(pelement.toLowerCase()) !== -1 ||
+                                    urlTitle.indexOf(pelement.toLowerCase()) !== -1 ||
+                                    sourceTxt.indexOf(pelement.toLowerCase()) !== -1 ||
+                                    countryTxt.indexOf(pelement.toLowerCase()) !== -1 ||
+                                    regionTxt.indexOf(pelement.toLowerCase()) !== -1 ||
+                                    mobileTxt.indexOf(pelement.toLowerCase()) !== -1 ||
+                                    cityTxt.indexOf(pelement.toLowerCase()) !== -1) {
+                                    hasValue = true;
+                                }
+                            });
+                    });
+                    if (hasValue) {
+                        $(element).show();
+                        i = i + 1;
+                    } else {
+                        $(element).hide();
+                    }
+                });
+                $("#c_counted1").text(i);
+            }
+        }
+    }
+
+    var GetAllKeywordStatus = function (currentClass) {
+        $(".filterKeywords").removeClass("activated").removeClass("all").removeClass("all2").removeClass("all3");
+
+        if (currentClass === "img.vistorblue" ) {
+            $($(".filterKeywords")[1]).addClass("all").removeClass("activated").removeClass("all2").removeClass("all3");
+
+
+        } else if (currentClass === "img.vistorred") {
+            $($(".filterKeywords")[2]).addClass("all2").removeClass("activated").removeClass("all3").removeClass("all");
+
+        } else {
+            $($(".filterKeywords")[3]).addClass("all3").removeClass("activated").removeClass("all2").removeClass("all");
+
+        }
+        if (currentCollection.length === 0) {
+            if ($("#Search").val().length === 0) {
+                var i = 0;
+                $(".panelVisitors").each(function() {
+                    var classAvailable = $(this).find(".visitorcollection");
+                    var avaibility = $(classAvailable).find(currentClass).length;
+                    if (avaibility > 0) {
+                        $(this).show();
+                        i = i + 1;
+                    } else {
+                        $(this).hide();
+                    }
+                });
+                $("#c_counted1").text(i);
+            } else {
+                var i = 0;
+                var keyWords = $("#Search").val().split(",");
+                $(".panelVisitors").each(function(e, element) {
+                    var classAvailable = $(this).find(".visitorcollection");
+                    var avaibility = $(classAvailable).find(currentClass).length;
+                    if (avaibility > 0) {
+                        var sourceTxt = $.trim($(element).find(".txtSource").text().toLowerCase());
+                        var countryTxt = $.trim($(element).find(".txtCountry").text().toLowerCase());
+                        var regionTxt = $.trim($(element).find(".txtRegion").text().toLowerCase());
+                        var cityTxt = $.trim($(element).find(".txtCity").text().toLowerCase());
+                        var mobileTxt = $.trim($(element).find(".txtmobile").text().toLowerCase());
+                        var hasValue = false;
+                        $(element).find(".pathText").each(function(s, selement) {
+                            var urlText = $.trim($(selement).text().toLowerCase());
+                            var urlTitle = $.trim($(selement).prev().text().toLowerCase());
+                            $.each(keyWords,
+                                function(p, pelement) {
+                                    if (urlText.indexOf(pelement.toLowerCase()) !== -1 ||
+                                        urlTitle.indexOf(pelement.toLowerCase()) !== -1 ||
+                                        sourceTxt.indexOf(pelement.toLowerCase()) !== -1 ||
+                                        countryTxt.indexOf(pelement.toLowerCase()) !== -1 ||
+                                        regionTxt.indexOf(pelement.toLowerCase()) !== -1 ||
+                                        mobileTxt.indexOf(pelement.toLowerCase()) !== -1 ||
+                                        cityTxt.indexOf(pelement.toLowerCase()) !== -1) {
+                                        hasValue = true;
+                                    }
+                                });
+                        });
+                        if (hasValue) {
+                            $(element).show();
+                            i = i + 1;
+                        } else {
+                            $(element).hide();
+                        }
+                    } else {
+                        $(element).hide();
+                    }
+                });
+                $("#c_counted1").text(i);
+            }
+        } else {
+            if ($("#Search").val().length === 0) {
+                var i = 0;
+                $(currentCollection).each(function () {
+                    var classAvailable = $(this).find(".visitorcollection");
+                    var avaibility = $(classAvailable).find(currentClass).length;
+                    if (avaibility > 0) {
+                        $(this).show();
+                        i = i + 1;
+                    } else {
+                        $(this).hide();
+                    }
+                });
+                $("#c_counted1").text(i);
+            } else {
+                var i = 0;
+                var keyWords = $("#Search").val().split(",");
+                $(currentCollection).each(function (e, element) {
+                    var classAvailable = $(this).find(".visitorcollection");
+                    var avaibility = $(classAvailable).find(currentClass).length;
+                    if (avaibility > 0) {
+                        var sourceTxt = $.trim($(element).find(".txtSource").text().toLowerCase());
+                        var countryTxt = $.trim($(element).find(".txtCountry").text().toLowerCase());
+                        var regionTxt = $.trim($(element).find(".txtRegion").text().toLowerCase());
+                        var cityTxt = $.trim($(element).find(".txtCity").text().toLowerCase());
+                        var mobileTxt = $.trim($(element).find(".txtmobile").text().toLowerCase());
+                        var hasValue = false;
+                        $(element).find(".pathText").each(function (s, selement) {
+                            var urlText = $.trim($(selement).text().toLowerCase());
+                            var urlTitle = $.trim($(selement).prev().text().toLowerCase());
+                            $.each(keyWords,
+                                function (p, pelement) {
+                                    if (urlText.indexOf(pelement.toLowerCase()) !== -1 ||
+                                        urlTitle.indexOf(pelement.toLowerCase()) !== -1 ||
+                                        sourceTxt.indexOf(pelement.toLowerCase()) !== -1 ||
+                                        countryTxt.indexOf(pelement.toLowerCase()) !== -1 ||
+                                        regionTxt.indexOf(pelement.toLowerCase()) !== -1 ||
+                                        mobileTxt.indexOf(pelement.toLowerCase()) !== -1 ||
+                                        cityTxt.indexOf(pelement.toLowerCase()) !== -1) {
+                                        hasValue = true;
+                                    }
+                                });
+                        });
+                        if (hasValue) {
+                            $(element).show();
+                            i = i + 1;
+                        } else {
+                            $(element).hide();
+                        }
+                    } else {
+                        $(element).hide();
+                    }
+                });
+                $("#c_counted1").text(i);
+            }
+        }
+
+    }
+
+    $('#myModalGreen').on('hidden.bs.modal',
+        function(e) {
+            $(this)
+                .find("#searchGreen")
+                .val('')
+                .end();
+        });
+
+    $('#myModalBlue').on('hidden.bs.modal',
+        function(e) {
+            $(this)
+                .find("#searchBlue")
+                .val('')
+                .end();
+        });
+
+    $('#myModalRed').on('hidden.bs.modal',
+        function(e) {
+            $(this)
+                .find("#searchRed")
+                .val('')
+                .end();
+        });
+
+    $("#btnRed").click(function() {
+        $("div#divLoading").addClass('show');
+        var tableRow = $("#searchHere tr");
+
+        var text = $("#searchRed").val();
+        if (text.length > 0) {
+            var tr = $(".pathText:contains(" + text + ")").parent("div").children(".countColor");
+            //alert(tr.text());
+            var image = tr.parents(".filter-search").find('.visitor_image');
+            if (!tr.hasClass("redBack") && !tr.hasClass("greenBack") && !tr.hasClass("blueBack")) {
+                tr.addClass("redBack");
+                tr.css("background-color", "red");
+                tr.css("color", "red");
+            }
+            var src = image.attr("src");
+            if (src != "" && src != null) {
+                if ((src.indexOf("user_green.png") == -1) && (src.indexOf("user_blue.png") == -1)) {
+                    //image.attr("src", "/Content/visitor_comparison/user_red.png");
+                }
+            }
+            $.ajax({
+                url: "@Url.Action("RedListSearchExists", "ExtraUser")",
+                method: "POST",
+                data: { v: "@Model.domainName", searchText: text },
+                success: function(res) {
+                    if (res == 1) {
+                        alert("You have already enter this keyword. Please enter the new keyword.");
+                        $("#searchRed").val("");
+                    } else {
+                        $.ajax({
+                            url: "@Url.Action("AddRed", "ExtraUser")",
+                            method: "POST",
+                            data: { st: text, v: "@Model.domainName" },
+                            success: function(res) {
+                                //alert(res);
+                                $("#searchRed").val("");
+                                loadColorList();
+                            },
+                            error: function(err) {
+                                //alert(err);
+                            }
+                        });
+                    }
+                },
+                error: function(err) {
+                    //alert(err);
+                }
+            });
+        }
+    });
+
+    $("#btnGreen").click(function() {
+        $("div#divLoading").addClass('show');
+        var tableRow = $("#searchHere tr");
+        var text = $("#searchGreen").val();
+        if (text.length > 0) {
+
+            var tr = $(".pathText:contains(" + text + ")").parent("div").children(".countColor");
+            //alert(tr.text());
+            var image = tr.parents(".filter-search").find('.visitor_image');
+            if (!tr.hasClass("redBack") && !tr.hasClass("greenBack") && !tr.hasClass("blueBack")) {
+                tr.addClass("greenBack");
+                tr.css("background-color", "green");
+                tr.css("color", "green");
+                //image.attr("src", "/Content/visitor_comparison/user_green.png");
+            }
+
+
+            $.ajax({
+                url: "@Url.Action("GreenListSearchExists", "ExtraUser")",
+                method: "POST",
+                data: { v: "@Model.domainName", searchText: text },
+                success: function(res) {
+                    if (res == 1) {
+                        alert("You have already enter this keyword. Please enter the new keyword.");
+                        $("#searchGreen").val("");
+                    } else {
+                        $.ajax({
+                            url: "@Url.Action("AddGreen", "ExtraUser")",
+                            method: "POST",
+                            data: { st: text, v: "@Model.domainName" },
+                            success: function(res) {
+                                //alert(res);
+                                $("#searchGreen").val("");
+                                loadColorList();
+                            },
+                            error: function(err) { /* alert(err.statusText);*/ }
+                        });
+                    }
+                },
+                error: function(err) { /*alert(err.statusText);*/ }
+            });
+        }
+    });
+
+    $("#btnBlue").click(function () {
+        $("div#divLoading").addClass('show');
+        var tableRow = $("#searchHere tr");
+        var text = $("#searchBlue").val();
+
+        if (text.length > 0) {
+            var tr = $(".pathText:contains(" + text + ")").parent("div").children(".countColor");
+            //alert(tr.text());
+            var image = tr.parents(".filter-search").find('.visitor_image');
+            if (!tr.hasClass("blueBack") && !tr.hasClass("greenBack") && !tr.hasClass("redBack")) {
+                tr.addClass("redBack");
+                tr.css("background-color", "red");
+                tr.css("color", "red");
+            }
+            var src = image.attr("src");
+            if (src != "" && src != null) {
+                if (src.indexOf("user_green.png") == -1) {
+                    //image.attr("src", "/Content/visitor_comparison/user_blue.png");
+                }
+            }
+            $.ajax({
+                url: "@Url.Action("BlueListSearchExists", "ExtraUser")",
+                method: "POST",
+                data: { v: "@Model.domainName", searchText: text },
+                success: function(res) {
+                    if (res == 1) {
+                        alert("You have already enter this keyword. Please enter the new keyword.");
+                        $("#searchBlue").val("");
+                    } else {
+
+                        $.ajax({
+                            url: "@Url.Action("AddBlue", "ExtraUser")",
+                            method: "POST",
+                            data: { st: text, v: "@Model.domainName" },
+                            success: function (res) {
+                                //alert(res);
+                                $("#searchBlue").val("");
+                                loadColorList();
+                            },
+                            error: function (err) { /*alert(err.statusText);*/ }
+                        });
+                    }
+                },
+                error: function (err) { /*alert(err.statusText);*/ }
+            });
+        }
+    });
+
+    $('#Search').on('itemAdded', function (event) {
+        $(".filterKeywords").removeClass("activated").removeClass("all").removeClass("all2").removeClass("all3");
+        search();
+
+    });
+
+    $('#Search').on('itemRemoved', function (event) {
+        $(".filterKeywords").removeClass("activated").removeClass("all").removeClass("all2").removeClass("all3");
+        search();
+
+    });
+
+    var currentCollection = [];
+
+    function search() {
+        currentCollection = [];
+        var nodes = document.getElementsByClassName('target');
+        var $tagWord = $("#Search").siblings(".bootstrap-tagsinput").children(".tag");
+        var tags = [];
+        for (var i = $tagWord.length; i--;) {
+            tags.push($($tagWord[i]).text().trim().toLowerCase());
+        }
+        if (tags.length > 0) {
+            $(".filter-search").hide();
+            $(".filter-search").each(function (i, v) {
+                for (var cnt = 0, found = 0; cnt < tags.length; cnt++) {
+                    found += $(".target", this).get().some(function (x) { return x.innerText.toLowerCase().includes(tags[cnt]); }) ? 1 : 0;
+                }
+                if (found == tags.length) {
+                    $(v).show();
+                    currentCollection.push($(this));
+                }
+            });
+        }
+        else {
+            $(".filter-search").show();
+        }
+        if ($("#Search").val().length === 0) {
+            $($(".filterKeywords")[0]).addClass("activated").removeClass("all").removeClass("all2").removeClass("all3");
+        }
+        $("#c_counted1").html('').html($(".filter-search:visible").length);
+    }
+</script>
+
+<script type="text/javascript">
+
+    var visitorJson = [];
+    var productPageJson = [];
+    var checkoutPageJson = [];
+    var paymentConfirmationJson = [];
+    var lineGraphObj;
+
+    $(document).ready(function () {
+        $("div#divLoading").addClass('show');
+        lineGraph();
+
+        loadColorList();
+    });
+
+    function lineGraph()
+    {
+        lineGraphObj = Highcharts.chart('lineGraph',
+            {
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    tickInterval: 2,
+                    categories: [
+                        '00:00', '01:00', '02:00', '03:00', '04:00', '05:00',
+                        '06:00', '07:00', '08:00', '09:00', '10:00', '11:00',
+                        '12:00', '13:00', '14:00', '15:00', '16:00', '17:00',
+                        '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'
+                    ]
+                },
+                yAxis: {
+                    title: {
+                        text: null
+                    },
+                    plotLines: [
+                        {
+                            value: 0,
+                            width: 1,
+                            color: '#808080'
+                        }
+                    ]
+                },
+                tooltip: {
+                    formatter: function () {
+                        return '' +
+                            ' <b>' +
+                            Highcharts.dateFormat('%A, %e %b %Y', new Date($('#StartDate').val())) +
+                            ' ' +
+                            Highcharts.dateFormat('%H:%M', this.x) +
+                            '</b> <br/>' +
+                            this.series.name +
+                            ': <b>' +
+                            this.y +
+                            '<br/>'
+                    }
+                },
+                legend: {
+                    verticalAlign: 'bottom',
+                    borderWidth: 0
+                },
+                series: [
+                    {
+                        color: '#3c3c3c',
+                        name: 'Multi-page visitors',
+                        data: visitorJson,
+                        marker: {
+                            symbol: 'circle'
+                        }
+                    },
+                    {
+                        color: '#00b7ee',
+                        name: 'Blue visitors',
+                        data: productPageJson,
+                        marker: {
+                            symbol: 'circle'
+                        }
+                    },
+                    {
+                        color: '#df0044',
+                        name: 'Red visitors',
+                        data: checkoutPageJson,
+                        marker: {
+                            symbol: 'circle'
+                        }
+                    },
+                    {
+                        color: '#b3cd01',
+                        name: 'Green visitors',
+                        data: paymentConfirmationJson,
+                        marker: {
+                            symbol: 'circle'
+                        }
+                    }
+                ]
+            });
+
+        $('.highcharts-xaxis-labels').children().find("tspan").html("0:00");
+        $('.highcharts-contextbutton').remove();
+        $('.highcharts-credits').remove();
+        $('.highcharts-button-box').remove();
+        $('.highcharts-label').find("text").html("");
+    }
+
+    function monthGraph()
+    {
+        $.ajax({
+            url: "@Url.Action("GetMonthlyVisitors", "ExtraUser")",
+            method: "POST",
+            async: false,
+            data: { 'date': $("#currentStringDate").val() , 'domain' : '@Model.domainName' },
+            success: function (data) {
+                var xAxisJson = [];
+                $.each(data,
+                    function () {
+                        xAxisJson.push(this.x);
+                    });
+
+                var yAxisJson = [];
+                $.each(data,
+                    function() {
+                        yAxisJson.push(parseInt(this.y));
+                    });
+                var title = {
+                    text: 'Monthly Visitors'
+                };
+                var xAxis = {
+                    tickInterval: 2,
+                    categories: xAxisJson
+                };
+                var yAxis = {
+                    title: {
+                        text: null
+                    },
+                    plotLines: [{
+                        value: 0,
+                        width: 1,
+                        color: '#808080'
+                    }]
+                };
+                var tooltip = {
+                    formatter: function() {
+                        return ''+
+                            ' <b>' + this.x + " " + new Date().getFullYear()+'</b> <br/>'
+                            + this.series.name +': <b>' + this.y + '<br/>'
+                    }
+                }
+                var legend = {
+                    verticalAlign: 'bottom',
+                    borderWidth: 0
+                };
+                var series = [{
+                    color: '#cc7a00',
+                    name: 'Visitor',
+                    data: yAxisJson
+                }];
+
+                var json = {};
+                json.title = title;
+                json.xAxis = xAxis;
+                json.yAxis = yAxis;
+                json.tooltip = tooltip;
+                json.legend = legend;
+                json.series = series;
+                $('#monthlyGraph').highcharts(json);
+                $('.highcharts-label').find("text").html("");
+            },
+            error: function (err) { alert(err.statusText); }
+        });
+    }
+</script>
+
+<script>
+    function loadColorList() {
+        var url = "@Url.Action("GetColorList", "ExtraUser")";
+        $.ajax({
+            url: url + "?v=@Model.domainName",
+            success: function (data) {
+
+                $("#blueList").html("");
+                $("#redList").html("");
+                $("#greenList").html("");
+
+                var visitorPJson = [];
+                var productPJson = [];
+                var checkoutPJson = [];
+                var paymentConfirmationPJson = [];
+                var i = 0;
+
+                var totalgreen = 0;
+                var totalred = 0;
+                var totalblue = 0;
+                var isFirsttimegreen = true;
+                var isFirsttimered= true;
+                var 
+    
+    
+    = true;
+
+                $(".panelVisitors").each(function (e, element) {
+
+                    isFirsttimegreen = true;
+                    isFirsttimered = true;
+                    isFirsttimeblue = true;
+
+                    i = i + 1;
+                    $(this).find(".visitor-total").text("Visitor " + i);
+                    $(this).attr("data-userid", i);
+                    var statusColors = [];
+                    var priorColor = "";
+                    var currentTime = "";
+                    if ($(this).find(".sessionStartTime").length > 1) {
+                        currentTime = $.trim($($(this).find(".sessionStartTime")[1]).text());
+                    } else {
+                        currentTime = $.trim($(this).find(".sessionStartTime").text());
+                    }
+
+                    $(this).find(".pathText").each(function () {
+                        var colorChange = false;
+                        var tr = $(this).parent("div").parent("div").find(".countColor");
+                        tr.removeClass("dot_2");
+                        tr.removeClass("dot_red");
+                        tr.removeClass("dot_green");
+                        tr.removeClass("dot_blue");
+                        var currentURL = $.trim($(this).text());
+                        if (data.greenList.length > 0) {
+                            var greenStr = "";
+                            $.each(data.greenList,
+                                function () {
+                                    greenStr += "<li class='badge badge-success'> <button class='btn btn-sm btn-primary btn_popup_close' onClick='deleteId(" + this.searchid + ")'>X</button><span>" + this.searchtext + "</span></li>";
+                                    var isExists = (currentURL.indexOf(this.searchtext) > -1);
+                                    if (isExists) {
+                                        colorChange = true;
+
+                                        if ($.inArray('dot_green', statusColors) === -1)
+                                        {
+                                            statusColors.push("dot_green");
+                                        }
+
+                                        priorColor = "green";
+
+                                        if (isFirsttimegreen) {
+                                            totalgreen++;
+                                            isFirsttimegreen = false;
+                                        }
+
+                                        tr.addClass("dot_green");
+
+                                        var splitTime = currentTime.split(':');
+                                        if (splitTime.length > 0) {
+                                            var isObjExist = paymentConfirmationPJson.filter(m => m.userid === i && m.time === parseInt(splitTime[0]));
+                                            if (isObjExist.length === 0) {
+                                                paymentConfirmationPJson.push({ "userid": i, "time": parseInt(splitTime[0]) });
+                                            }
+                                        }
+                                    }
+                                });
+                            $("#btngreenvisitor").text(totalgreen);
+                            $("#greenList").html(greenStr);
+                        }
+
+                        if (data.redList.length > 0) {
+                            var redStr = "";
+                            $.each(data.redList,
+                                function () {
+                                    redStr  += "<li class='badge badge-danger'> <button class='btn btn-sm btn-primary btn_popup_close' onClick='deleteId(" + this.searchid + ")'>X</button><span>" + this.searchtext + "</span></li>";
+                                        var isExists = (currentURL.indexOf(this.searchtext) > -1);
+                                    if (isExists) {
+
+                                            if (isFirsttimered) {
+                                                totalred++;
+                                                isFirsttimered = false;
+                                            }
+
+                                            if ($.inArray('dot_red', statusColors) === -1)
+                                            {
+                                                statusColors.push("dot_red");
+                                            }
+
+                                            if (priorColor !== "green") {
+                                                priorColor = "red";
+                                            }
+
+                                            if (!colorChange) {
+                                                tr.addClass("dot_red");
+                                                colorChange = true;
+                                            }
+
+                                            var splitTime = currentTime.split(':');
+                                        if (splitTime.length > 0) {
+                                            var isObjExist = checkoutPJson.filter(m => m.userid === i && m.time === parseInt(splitTime[0]));
+                                            if (isObjExist.length === 0) {
+                                                checkoutPJson.push({ "userid": i, "time": parseInt(splitTime[0]) });
+                                            }
+                                        }
+                                    }
+                                });
+                            $("#btnredvisitor").text(totalred);
+                            $("#redList").html(redStr);
+                        }
+
+                        if (data.blueList.length > 0) {
+                            var blueStr = "";
+                            $.each(data.blueList,
+                                function () {
+                                    blueStr += "<li class='badge badge-primary'> <button class='btn btn-sm btn-primary btn_popup_close' onClick='deleteId(" + this.searchid + ")'>X</button><span>" + this.searchtext + "</span></li>";
+                                        var isExists = (currentURL.indexOf(this.searchtext) > -1);
+                                    if (isExists) {
+
+                                            if (isFirsttimeblue) {
+                                                totalblue++;
+                                                isFirsttimeblue = false;
+                                            }
+
+                                            if ($.inArray('dot_blue', statusColors) === -1) {
+                                                statusColors.push("dot_blue");
+                                            }
+
+                                            if (priorColor !== "green" || priorColor !== "red") {
+                                                priorColor = "blue";
+                                            }
+
+                                            if (!colorChange) {
+                                                tr.addClass("dot_blue");
+                                                colorChange = true;
+                                            }
+
+                                            var splitTime = currentTime.split(':');
+                                        if (splitTime.length > 0) {
+                                            var isObjExist = productPJson.filter(m => m.userid === i && m.time === parseInt(splitTime[0]));
+                                            if (isObjExist.length === 0) {
+                                                productPJson.push({ "userid": i, "time": parseInt(splitTime[0]) });
+                                            }
+                                        }
+                                    }
+                                });
+                            $("#btnbluevisitor").text(totalblue);
+                            $("#blueList").html(blueStr);
+                        }
+                        var splitTime = currentTime.split(':');
+                        if (splitTime.length > 0) {
+                            var isObjExist = visitorPJson.filter(m => m.userid === i && m.time === parseInt(splitTime[0]));
+                            if (isObjExist.length === 0) {
+                                visitorPJson.push({ "userid": i, "time": parseInt(splitTime[0]) });
+                            }
+                        }
+
+                        if (!colorChange) {
+
+
+                            if ($.inArray('dot_2', statusColors) === -1) {
+                                statusColors.push("dot_2");
+                            }
+                            tr.addClass("dot_2");
+                        }
+
+                    });
+
+                    //if (priorColor.length > 0) {
+                    //    $(element).find(".visitor_image").attr("src",
+                    //        "/Content/visitor_comparison/user_" + priorColor +".png");
+                    //} else {
+                    //    $(element).find(".visitor_image").attr("src",
+                    //        "/Content/visitor_comparison/user.png");
+                    //}
+
+                    $(element).find(".visitorcollection").html("");
+
+                    if ($.inArray('dot_blue', statusColors) !== -1) {
+                        $(element).find(".visitorcollection").append('<img class="user_image visitor_image vistorblue" style="width: 20px;margin-right: 5px;border-radius: 2px;" src="/Content/visitor_comparison/user_blue.png" alt="" title="">');
+                    };
+
+                    if ($.inArray('dot_red', statusColors) !== -1) {
+                        $(element).find(".visitorcollection").append('<img class="user_image visitor_image vistorred" style="width: 20px;margin-right: 5px;border-radius: 2px;" src="/Content/visitor_comparison/user_red.png" alt="" title="">');
+                    };
+
+                    if ($.inArray('dot_green', statusColors) !== -1) {
+                        $(element).find(".visitorcollection").append('<img class="user_image visitor_image vistorgreen" style="width: 20px;margin-right: 5px;border-radius: 2px;" src="/Content/visitor_comparison/user_green.png" alt="" title="">');
+                    };
+                });
+
+                visitorJson = [];
+                productPageJson = [];
+                checkoutPageJson = [];
+                paymentConfirmationJson = [];
+
+                for (var i = 0; i < 24; i++) {
+
+                    var totalNormalUser = visitorPJson.filter(m => m.time === i);
+                    visitorJson.push(totalNormalUser.length);
+
+                    var totalBlueUser = productPJson.filter(m => m.time === i);
+                    productPageJson.push(totalBlueUser.length);
+
+                    var totalRedUser = checkoutPJson.filter(m => m.time === i);
+                    checkoutPageJson.push(totalRedUser.length);
+
+                    var totalGreenUser = paymentConfirmationPJson.filter(m => m.time === i);
+                    paymentConfirmationJson.push(totalGreenUser.length);
+
+                }
+
+                lineGraphObj.series[0].update({
+                    data: visitorJson
+                }, true);
+
+                lineGraphObj.series[1].update({
+                    data: productPageJson
+                }, true);
+
+                lineGraphObj.series[2].update({
+                    data: checkoutPageJson
+                }, true);
+
+                lineGraphObj.series[3].update({
+                    data: paymentConfirmationJson
+                }, true);
+
+                $("div#divLoading").removeClass('show');
+
+            },
+            error: function (xhr) {
+                //Do Something to handle error
+            }
+        });
+    }
+
+    function deleteId(id) {
+        $.get("@Url.Action("DeleteIt", "ExtraUser")" + "?sid=" + id, function (res) {
+            loadColorList();
+        });
+    }
+
+</script>
+
+<script>
+    function ApplyFilter() {
+        var query = '';
+        $("div#divLoading").addClass('show');
+        var startDate = document.getElementById("StartDate").value;
+        if (startDate != null) {
+            query += "date=" + startDate;
+        }
+
+        if (query !== '') {
+            var currentUrl = document.URL.split('#')[0];
+            document.location = currentUrl.split('&')[0] + "&" + query;
+        }
+    }
+</script>
+
+<script>
+    function EarlierVisits(id, obj) {
+        var textValue = $(obj).text();
+        if (textValue === "More sessions: Show") {
+            $.each($(".earlierVisitor_" + id),
+                function () {
+                    if (!$(this).hasClass("hideCollection")) {
+                        $(this).addClass("active");
+                    }
+                });
+            $(obj).text("More sessions: Hide");
+        } else {
+            //btnEarlier//btnLoad
+            $(".earlierVisitor_" + id).nextAll().each(function () {
+                $(this).find(".btnEarlier").text("More sessions: Show");
+                $(this).find(".btnLoad").text("Load More");
+            });
+            $(".earlierVisitor_" + id).nextAll(".hideCollection").removeClass("active");
+            $(".earlierVisitor_" + id).nextAll().removeClass("active");
+            $(".earlierVisitor_" + id).removeClass("active");
+            $(obj).text("More sessions: Show");
+        }
+    }
+
+    function LoadMore(id, obj) {
+        var textValue = $(obj).text();
+        if (textValue === "Load More") {
+            $(".hideCollection_" + id).addClass("active");
+            $(obj).text("Show Less");
+        } else {
+            $(".hideCollection_" + id).removeClass("active");
+            $(obj).text("Load More");
+        }
+    }
+</script>

@@ -1,0 +1,19 @@
+﻿@using IntegrateGoogleSignIn.Helpers
+@{
+    ViewBag.Title = "Test";
+    var timezones = new string[]
+    {
+"Eastern Standard Time", "Central America Standard Time", "Mountain Standard Time", "Pacific Standard Time", "W. Australia Standard Time", "Cen. Australia Standard Time", "AUS Central Standard Time", "E. Australia Standard Time", "AUS Eastern Standard Time",
+"Eastern Standard Time","Central Standard Time","Mountain Standard Time","Pacific Standard Time","Atlantic Standard Time"
+    };
+
+    
+}
+<h2>TimeZones</h2>
+ 
+@foreach (var timezone in timezones)
+{
+    <p>@timezone - @CommonFunctions.ConvertTimeZone("GMT Standard Time", timezone,  CommonFunctions.GetCurrentUkTime())</p>
+}
+
+

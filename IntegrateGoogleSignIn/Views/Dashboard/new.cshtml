@@ -1,0 +1,1509 @@
+﻿<link href="~/Content/visitor_comparison/style.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/bootstrap-tagsinput.css" rel="stylesheet" type="text/css" />
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<style>
+    .target {
+        display: inline;
+    }
+
+    .bootstrap-tagsinput {
+        width: 60%;
+        text-align: left;
+    }
+
+    .main-wrap ul li a {
+        display: contents;
+    }
+
+    ul {
+        list-style: none;
+    }
+
+    .btn_popup_close {
+        margin-right: 7px;
+        padding: 2px;
+        background-color: white;
+        color: black;
+    }
+
+    #blueList li, #redList li, #greenList li {
+        margin-right: 1%;
+    }
+</style>
+
+
+<script>
+
+
+    function LoadMore(value) {
+        if ($(value).val() == "Load More") {
+            $("." + value.id.split('lmi_')[1] + "-item-main").show();
+            $("#sess_end_" + value.id.split('lmi_')[1]).show();
+            $(value).val("Load Less");
+        } else if ($(value).val() == "Load Less") {
+            $("." + value.id.split('lmi_')[1] + "-item-main").hide().filter(':lt(2)').show();
+            $("#sess_end_" + value.id.split('lmi_')[1]).hide();
+            $(value).val("Load More");
+        }
+    }
+    function EarlierVisits(value) {
+        if ($(value).val() == "Earlier Visits Show") {
+            $("." + value.id.split('evi_')[1] + "-item-other").show();
+            $("#lan_page_2_" + value.id.split('evi_')[1]).show();
+
+            //var panel_height = $("#" + value.id.split('evi_')[1]).outerHeight(true);
+            //$(value).css({ top: bottom, position: 'relative' });
+
+            $(value).val("Earlier Visits Hide");
+        } else if ($(value).val() == "Earlier Visits Hide") {
+            $("." + value.id.split('evi_')[1] + "-item-other").hide();
+            $("#lan_page_2_" + value.id.split('evi_')[1]).hide();
+            $(value).val("Earlier Visits Show");
+        }
+    }
+
+    $(document).ready(function () {
+        $('.disp_item').hide();
+        $(".sess_com_cls").hide();
+        $(".lan_page_com_cls").hide();
+        $('.ulData').each(function () {
+            $("." + this.id.trim() + "-item-main").hide().filter(':lt(2)').show();
+            if ($("." + this.id.trim() + "-item-main").length > 1) {
+                $("#lmi_" + this.id.trim()).show();
+            } else {
+                $("#lmi_" + this.id.trim()).hide();
+            }
+            if ($("." + this.id.trim() + "-item-other").length > 0) {
+                $("#evi_" + this.id.trim()).show();
+            } else {
+                $("#evi_" + this.id.trim()).hide();
+            }
+        });
+    });
+
+</script>
+<script>
+
+    function deleteId(id) {
+
+        $.get("@Url.Action("DeleteIt","SearchBar")" + "?sid=" + id, function (res) {
+            loadGreenList();
+        });
+    }
+</script>
+
+<!--
+Button Red
+-->
+<!-- Modal -->
+<div class="modal fade" id="myModalRed" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Enter Keyword</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group ">
+                    <table>
+                        <tr>
+                            <td>
+                                <input type="text" name="searchRed" id="searchRed" placeholder="Enter a keyword from your checkout pages URL"
+                                       class="form-control" />
+                            </td>
+                            <td class="text-right">
+                                &nbsp;&nbsp;&nbsp;
+                                <button class="btn btn-primary" id="btnRed">
+                                    <span class="glyphicon glyphicon-play-circle" style="font-size: x-large;"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <ul id="redList" class="">
+
+                        <li></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!--
+Button Red
+-->
+<!--
+Button Blue
+-->
+<!-- Modal -->
+<div class="modal fade" id="myModalBlue" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Enter Search Text</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group ">
+                    <table>
+                        <tr>
+                            <td>
+                                <input type="text" name="searchBlue" id="searchBlue" placeholder="Enter Search Text here!"
+                                       class="form-control" />
+                            </td>
+                            <td class="text-right">
+                                &nbsp;&nbsp;&nbsp;
+                                <button class="btn btn-primary" id="btnBlue">
+                                    <span class="glyphicon glyphicon-play-circle" style="
+    font-size: x-large;
+"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                    <ul id="blueList" class="">
+
+                        <li></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!--
+Button Red
+-->
+<!--
+Button Green
+-->
+<!-- Modal -->
+<div class="modal fade" id="myModalGreen" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Enter Search Text</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group ">
+                    <table>
+                        <tr>
+                            <td>
+                                <input type="text" name="searchGreen" id="searchGreen" placeholder="Enter Search Text here!"
+                                       class="form-control" />
+                            </td>
+                            <td class="text-right">
+                                &nbsp;&nbsp;&nbsp;
+                                <button class="btn btn-primary" id="btnGreen">
+                                    <span class="glyphicon glyphicon-play-circle" style="
+    font-size: x-large;
+"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                    <ul id="greenList" class="">
+
+                        <li></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!--
+Button Red
+-->
+
+<script>
+    var greenListOfPath = [];
+    var blueListOfPath = [];
+    var redListOfPath = [];
+    function loadGreenList() {
+        var url = "@Url.Action("GreenList","SearchBar")";
+        $.ajax({
+            url: url+"?v="+@ViewBag.OrgViewId,
+            success: function (data) {
+                //
+                var str = "";
+                greenListOfPath = [];
+                $.each(data, function (i, v) {
+                    str += "<li class='badge badge-success'> <button class='btn btn-sm btn-primary btn_popup_close' onClick='deleteId(" + v.searchid + ")'>X</button>" + v.searchtext + "</li>";
+                    var tr = $(".pathText:contains(" + v.searchtext + ")").parent("div").parent("div").find(".countColor");
+                    //var tr = $(".pathText").match(v.searchtext).parent("div").children(".countColor");
+                    //var image = tr.parents(".panel-heading").find('.visitor_image');
+                    //match
+                    tr.removeClass("dot_2");
+                    tr.removeClass("dot_red");
+                    tr.removeClass("dot_green");
+                    tr.removeClass("dot_blue");
+                    tr.addClass("dot_green");
+
+                    $.each(tr, function (ke, val) {
+                        $("#" + $(val).attr("cust-data")).attr("src", "/Content/visitor_comparison/user_green.png");
+                    });
+
+                    if ($.inArray(v.searchtext, greenListOfPath) == -1) {
+                        greenListOfPath.push(v.searchtext);
+                    }
+                });
+                if (greenListOfPath.length > 0) {
+                    GetListOfCount(greenListOfPath, '3');
+                } else {
+                    $("#_selected3").html("0");
+                }
+                $("#greenList").html(str);
+                //
+            },
+            error: function (xhr) {
+                //Do Something to handle error
+            }
+        });
+    }
+
+    function loadBlueList() {
+         var url = "@Url.Action("BlueList","SearchBar")";
+        $.ajax({
+            url: url+"?v="+@ViewBag.OrgViewId,
+            success: function (data) {
+                //
+                var str = "";
+                blueListOfPath = [];
+                $.each(data, function (i, v) {
+                    str += "<li class='badge badge-primary'> <button class='btn btn-sm btn-primary btn_popup_close' onClick='deleteId(" + v.searchid + ")'>X</button>" + v.searchtext + "</li>";
+
+                    var tr = $(".pathText:contains(" + v.searchtext + ")").parent("div").parent("div").find(".countColor");
+                    //var image = tr.parents(".panel-heading").find('.visitor_image');
+
+                    tr.removeClass("dot_2");
+                    tr.removeClass("dot_red");
+                    tr.removeClass("dot_green");
+                    tr.removeClass("dot_blue");
+                    tr.addClass("dot_blue");
+
+                    $.each(tr, function (ke, val) {
+                        $("#" + $(val).attr("cust-data")).attr("src", "/Content/visitor_comparison/user_blue.png");
+                    });
+                    //var src = image.attr("src");
+                    //if (src != "" && src != null) {
+                    //    if (src.indexOf("user_green.png") == -1) {
+                    //        $("#" + $(tr).attr("cust-data")).attr("src", "/Content/visitor_comparison/user_blue.png");
+                    //    }
+                    //}
+                    //if (!tr.hasClass("redBack") && !tr.hasClass("greenBack") && !tr.hasClass("blueBack")) {
+                    //    tr.addClass("blueBack");
+                    //    tr.css("background-color", "blue");
+                    //    tr.css("color", "blue");
+                    //}
+
+                    if ($.inArray(v.searchtext, blueListOfPath) == -1) {
+                        blueListOfPath.push(v.searchtext);
+                    }
+                });
+                if (blueListOfPath.length > 0) {
+                    GetListOfCount(blueListOfPath, '2');
+                } else {
+                    $("#_selected2").html("0");
+                }
+                $("#blueList").html(str);
+
+                loadRedList();
+                //
+            },
+            error: function (xhr) {
+                //Do Something to handle error
+            }
+        });
+    }
+
+    function loadRedList() {
+         var url = "@Url.Action("RedList", "SearchBar")";
+        $.ajax({
+            url: url+"?v="+@ViewBag.OrgViewId,
+            success: function (data) {
+                //
+
+                var str = "";
+                redListOfPath = [];
+                $.each(data, function (i, v) {
+                    str += "<li class='badge badge-danger'> <button class='btn btn-sm btn-primary btn_popup_close' onClick='deleteId(" + v.searchid + ")'>X</button>" + v.searchtext + "</li>";
+                    var tr = $(".pathText:contains(" + v.searchtext + ")").parent("div").parent("div").find(".countColor");
+                    //var image = tr.parents(".panel-heading").find('.visitor_image');
+                    //debugger;
+
+                    tr.removeClass("dot_2");
+                    tr.removeClass("dot_red");
+                    tr.removeClass("dot_green");
+                    tr.removeClass("dot_blue");
+                    tr.addClass("dot_red");
+
+                    $.each(tr, function (ke, val) {
+                        $("#" + $(val).attr("cust-data")).attr("src", "/Content/visitor_comparison/user_red.png");
+                    });
+
+
+                    //var src = image.attr("src");
+                    //if (src != "" && src != null) {
+                    //    if ((src.indexOf("user_green.png") == -1) && (src.indexOf("user_blue.png") == -1)) {
+                    //        image.attr("src", "/Content/visitor_comparison/user_red.png");
+                    //    }
+                    //}
+                    if ($.inArray(v.searchtext, redListOfPath) == -1) {
+                        redListOfPath.push(v.searchtext);
+                    }
+                });
+                if (redListOfPath.length > 0) {
+                    GetListOfCount(redListOfPath, '1');
+                    adjustVisitorColors();
+                } else {
+                    $("#_selected1").html("0");
+                    adjustVisitorColors();
+                }
+                $("#redList").html(str);
+                loadGreenList();
+                //
+            },
+            error: function (xhr) {
+                //Do Something to handle error
+            }
+        });
+	}
+    $(function () {
+        loadBlueList();
+	})
+	function adjustVisitorColors() {
+		var srt = function (a, b) { var arr = ["red", "blue", "green"]; return arr.indexOf(a) - arr.indexOf(b); }
+		$(".filter-search").
+			get().
+			map(function (x) {
+				return {
+					id: x.id,
+					color: $(".countColor", x).
+						get().
+						map(function (y) { return y.className.replace(/countColor|Back/g, "").trim().split(" ").sort(srt).pop(); }).sort(srt).pop()
+				};
+			}).
+			forEach(function (x) {
+				$(".visitor_image[data-id='" + x.id + "']").attr("src", "/Content/visitor_comparison/user" + (x.color ? "_" + x.color : "") + ".png");
+			});
+		adjustVisitorNumber();
+    }
+    var t_counter_visitor = 0
+    function adjustVisitorNumber() {
+        var visible = $(".visitor-total:visible").length;
+        $(".visitor-total:visible").each(function (i, v) {
+            t_counter_visitor++;
+            $(this).html("Visitor " + (t_counter_visitor));
+        });
+    }
+</script>
+
+<script>
+    function ApplyFilter() {
+        var query = '';
+
+        var startDate = document.getElementById("StartDate").value;
+        if (startDate != null) {
+            query += "startDate=" + startDate + "&";
+        }
+
+        // var endDate = document.getElementById("EndDate").value;
+        if (startDate != null) {
+            query += "endDate=" + startDate + "&";
+        }
+
+        //var city = document.getElementById('CityControl').value;
+
+        //if (city != null && city != "") {
+        //    query += "city=" + city + "&";
+        //}
+
+        //var path = document.getElementById('PathControl').value;
+
+        //if (path != null && path != "") {
+        //    query += "path=" + encodeURIComponent(path);
+        //}
+
+        if (query != '') {
+            document.location = document.URL.split('&')[0] + "&" + query;
+        }
+        lineGraph();
+    }
+</script>
+@{
+    var i = 1;
+    string isChecked(string v, string con)
+
+
+    {
+        string chkeced = "";
+        if (con.Equals("city"))
+        {
+            if (!string.IsNullOrEmpty(ViewBag.selectedCity) && ViewBag.selectedCity == v)
+            {
+                chkeced = "Selected";
+            }
+        }
+
+        if (con.Equals("path"))
+        {
+            if (!string.IsNullOrEmpty(ViewBag.selectedPath) && ViewBag.selectedPath == v)
+            {
+                chkeced = "Selected";
+            }
+        }
+
+        return chkeced;
+    }
+
+
+
+    string ConvertToMinutes(string sec)
+    {
+        if (double.TryParse(sec, out double secodns))
+        {
+            TimeSpan t = TimeSpan.FromSeconds(secodns);
+
+            return t.Minutes > 0 ? string.Format("{0:D2} min {1:D2} sec",
+            t.Minutes,
+            t.Seconds) : string.Format("{0} sec", t.TotalSeconds);
+        }
+
+        return string.Empty;
+    }
+}
+
+<div class="filter-selector navbar-inverse" style="height:174px; background:linear-gradient(0deg, rgba(232,164,24,1) 0%, rgba(240,189,20,1) 100%);
+    border-bottom: 1px solid #eee;">
+    <div class="container">
+        <ul style="justify-content:flex-start;width: 70%;display: inline-block;margin-top: 30px;">
+            <li style="display: inline;"><span>Select Day</span>&nbsp;<input style="height: 25px; color:white ;border-radius: 12px; border:0px; padding-left: 15px; background-color:black;" onchange="ApplyFilter()" id="StartDate" type="date" value="@ViewBag.StartDate"></li>
+
+        </ul>
+        <div style="float:right;color: black;display: inline;margin-top: 30px;">@ViewBag.hostname</div>
+    </div>
+</div>
+<div class="highlights" style="height:230px;">
+
+    <h3>Your Highlights</h3>
+    <p>Highlight the number of visitors who click onto at least one product, checkout or payment confirmation page.</p>
+    <hr />
+
+    <div class="row visitor_comp_row" style="padding-bottom:146px;padding-top:20px;">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="col-md-4">
+                <span><img src="~/Content/visitor_comparison/user_blue.png" style="height:30px;" /></span>
+                <span class="badge badge-pill badge-primary vi_comp_badge_center" id="_selected2">0</span>
+                <span class="badge badge-pill badge-primary vi_comp_badge dot" data-toggle="modal" data-target="#myModalBlue">+</span>
+                <p class="text-primary">Product pages</p>
+
+            </div>
+            <div class="col-md-4">
+                <span><img src="~/Content/visitor_comparison/user_red.png" style="height:30px;" /></span>
+                <span class="badge badge-pill badge-danger vi_comp_badge_center" id="_selected1">0</span>
+                <span class="badge badge-pill badge-danger vi_comp_badge dot1" data-toggle="modal" data-target="#myModalRed">+</span>
+                <p class="text" style="color:#9A0130;">Checkout pages</p>
+
+            </div>
+            <div class="col-md-4">
+                <span><img src="~/Content/visitor_comparison/user_green.png" style="height:30px;" /></span>
+                <span class="badge badge-pill badge-success vi_comp_badge_center" id="_selected3">0</span>
+                <span class="badge badge-pill badge-success vi_comp_badge dot2" data-toggle="modal" data-target="#myModalGreen">+</span>
+                <p class="text-success">Payment confirmation pages</p>
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+<div class="vi_com_title" style="height:152px; background-color:#E9E9E9;">
+    <div style="font-size:32pt;margin-top:30px;">Visitor Comparision</div>
+    <p>Compare each person and how they explore your website</p>
+</div>
+<div class="container body-content">
+    <div class="main-wrap ">
+        <div class="header-top text-center">
+            <style>
+                #search ul li, #search ul {
+                    border: 0px none red;
+                    float: none;
+                    padding: 0px;
+                    margin: 0px;
+                    display: block;
+                    background-color: none;
+                }
+            </style>
+
+            <script>
+                $("#img1").hide();
+                $("#img2").hide();
+                $("#img3").hide();
+
+                function GetCount(str, c_counted) {
+                    $("#img" + c_counted).show();
+
+
+                    var query = '';
+
+                    var startDate = document.getElementById("StartDate").value;
+                    if (startDate != null) {
+                        query += "startDate=" + startDate + "&";
+                    }
+
+
+                    if (startDate != null) {
+                        query += "endDate=" + startDate + "&";
+                    }
+
+                    var city = document.getElementById('CityControl').value;
+
+                    if (city != null && city != "") {
+                        query += "city=" + city;
+                    }
+
+                    var path = str;//document.getElementById(str).innerText;
+
+                    //if (path != null && path != "") {
+                    //    query += "path=" + path;
+                    //}
+
+                    var tempUrlWithViewId = document.URL.split('&')[0] + "&" + query;
+                    var urlis = tempUrlWithViewId.replace("GetReports", "GetCountReports");
+                    //alert(urlis);
+                    if (query != '') {
+
+
+                        $.post(urlis, { path: path }, function (data) {
+                            $("#loadergif").hide();
+
+
+                            $("#_selected" + c_counted).html(data);
+                        });
+                    }
+                }
+
+                var count = 0;
+
+            </script>
+            <div style="padding-top:20px;">
+                <label>Hourly Visitors</label>
+                <div id="lineGraph">
+
+                </div>
+            </div>
+            <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+            <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+
+            <div class="row">
+                <div class="col-md-12 text-left">
+                    <div class="form-group" style="padding-top:60px;font-size:14px; ">
+                        <label for="Search">Filter Multi-Page Visitors:</label><br />
+                        <input data-role="tagsinput" type="text" class="text-left" id="Search" placeholder="Add keywords">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="total-search">
+            <span style="background-color:black;">Multi Page Visitors: <p id="c_counted" style="display:inline">@ViewBag.CountData</p></span> @*<span>Active Users: @ViewBag.ActiveUsers</span>*@
+        </div>
+
+        @if (ViewBag.UserKeys != null && ViewBag.UserKeys.Count > 0)
+        {
+            i = ViewBag.UserKeys.Count;
+            int item_counter = 0;
+            foreach (var key in ViewBag.UserKeys)
+            {
+                string id = "div" + (i);
+                <div class="filter-search" id="@id">
+                    <div class="left-col ">
+                        <div class="">
+
+                            <div class="">
+                                @{
+                                    bool changed = false;
+                                    int timeSpent = 0;
+                                    var data = ((List<Dictionary<string, string>>)ViewBag.ViewId[key]).GroupBy(k => new { userBucket = k["ga:userBucket"], latitude = k["ga:latitude"], longitude = k["ga:longitude"], pageTitle = k["ga:pageTitle"], dateHourMinute = k["ga:dateHourMinute"], pagePath = k["ga:pagePath"], source = k["ga:source"], city = k["ga:city"], sessionCount = k["ga:sessionCount"] }).Select(k => k.FirstOrDefault()).ToList();
+                                    foreach (var k in data)
+                                    {
+                                        if (int.TryParse(k["timeOnPage"], out int s))
+                                        {
+                                            timeSpent += s;
+                                        }
+                                        else
+                                        {
+                                            string ss = k["timeOnPage"];
+                                            if (!string.IsNullOrEmpty(ss))
+                                            {
+                                                if (ss.Contains("min"))
+                                                {
+                                                    timeSpent += int.Parse(ss.Substring(0, 2)) * 60;
+                                                    timeSpent += int.Parse(ss.Substring(7, 2));
+                                                }
+                                                else
+                                                {
+                                                    timeSpent += int.Parse(ss.Substring(0, 2));
+                                                }
+
+                                            }
+                                        }
+                                    }
+
+                                    string className = timeSpent < 60 ? "under 1 min" :
+                                        timeSpent < 120 ? "over 1 min" :
+                                        timeSpent < 180 ? "over 2 min" :
+                                        timeSpent < 240 ? "over 3 min" :
+                                        timeSpent < 300 ? "over 4 min" :
+                                         "over 5 min";
+
+                                }
+                            </div>
+                        </div>
+                        @{
+                            int pathCount = 0;
+                            int totalCount = ViewBag.ViewId[key].Count;
+                            int total_iterator = 0;
+                            string lasttime = "";
+                            string lastPage = "";
+                            string lastPageTitle = "";
+                            string lastPagePath = "";
+                            string lastDuration = "";
+                            string lastPageFullPath = "";
+                            int isEndPage = 0;
+                            int isRecordFirst = 0;
+                            string lastSession = "";
+
+                            bool flage = false;
+
+                            bool is_seprator_div = false;
+                            int session_count = 0;
+                            string temp = "";
+                            string item_panel_name = "item-main";
+                            string temp2 = "";
+                            string temp3 = "";
+
+                            item_counter++;
+                        }
+                        <div class="panel col ulData shadow" id="@id">
+                            <div class="panel-heading pnl_heading">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="visitor">
+                                            <img id="ii_@item_counter" class="user_image visitor_image" src="~/Content/visitor_comparison/user.png" alt="" title="" style="margin-left: 16px;" /> <span class="visitor-total"> Visitor @i </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @*<span style="color: black;">Visit time </span><span data-id="@i" class="text-danger" id="divVisitTime">@ViewBag.ViewId[key][0]["ga:dateHourMinute"]</span>*@
+                                    </div>
+                                    <div class="col-md-4" style="float: right;text-align: right;">
+                                        <span style="color: black;">Duration </span> <span data-id="@i" class="text-danger">@className</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel-body">
+                                @foreach (var k in data)
+                                {
+                                    total_iterator++;
+                                    foreach (var ky in k.Keys)
+                                    {
+                                        if (ky.Contains("Path"))
+                                        {
+                                            if (k["timeOnPage"] == "0 sec" && k["ga:dateHourMinute"] != lasttime)
+                                            {
+
+                                                lasttime = k["ga:dateHourMinute"];
+                                                lastPage = k["ga:pagePath"];
+                                                lastPageTitle = k["ga:pageTitle"];
+                                                lastPagePath = k[ky];
+                                                lastPageFullPath = "http://" + ViewBag.hostname + k[ky];
+                                                lastDuration = k["timeOnPage"];
+                                                flage = true;
+
+                                                if (pathCount == 0 && k["ga:dateHourMinute"] != lasttime)
+                                                {
+                                                    lasttime = "";
+                                                    lastPage = "";
+                                                    lastPageTitle = "";
+                                                    lastPagePath = "";
+                                                    lastPageFullPath = "";
+                                                    lastDuration = "";
+                                                }
+
+
+                                                continue;
+                                            }
+                                            if (pathCount == 0)
+                                            {
+                                                var time = TimeSpan.Parse(k["ga:dateHourMinute"]);
+                                                DateTime date = DateTime.Today.Add(time);
+                                                string displayTime = date.ToString("hh:mm tt");
+
+                                                <span class="" style="position: absolute;">
+                                                    Session Start<br />
+                                                    <span>@displayTime.ToString()</span>
+                                                    <script>
+                                                            $('#divVisitTime[data-id="'+@i+'"]').html("@displayTime.ToString()")
+
+                                                    </script>
+                                                    <span class="target" data-id="@i">
+                                                    </span>
+                                                </span>
+                                                isRecordFirst = 1;
+                                            }
+
+                                            if (flage == true && lastSession != "" && lastSession != k["ga:sessionCount"])
+                                            {
+                                                if (pathCount > 0 && k["ga:dateHourMinute"] != lasttime)
+                                                {
+                                                    <div class="row sess_com_cls" id="sess_end_@id">
+                                                        <div class="col-md-12">
+                                                            Session End <div class="target" data-id="@i">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    temp = "item-" + id + "-" + session_count;
+                                                    temp2 = id + "-" + item_panel_name;
+                                                    temp3 = id + "-item-other";
+                                                    <div class="row disp_item @temp2" id="@temp" style="margin-bottom: 5px;">
+                                                        <div class="col-md-2"></div>
+                                                        <div class="col-md-7">
+                                                            <div class="col-md-1">
+                                                                <span class="" style="background: #1d2538 !important"></span>
+                                                            </div>
+                                                            <div class="col-md-11">
+                                                                <div data-id="@i" class="target row" style="margin: 0px;"> @lastPageTitle</div>
+                                                                <div style="margin: 0%;color: gray;font-size: 12px;" data-id="@i" class="pathText target row">
+                                                                    @lastPagePath
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            @*<button style="color: white;margin-left: 5px;padding-left: 5px;margin-right: 5px;padding-right: 5px;" class="btn btn-primary"><a style="color:white" target="_blank" href="@lastPageFullPath">Click</a></button>*@
+                                                            <a style="font-size:x-small;" target="_blank" href="@lastPageFullPath"><span class="glyphicon glyphicon-share" style="color:black;"></span></a>
+                                                        </div>
+                                                        <div class="col-md-2"></div>
+
+                                                    </div>
+                                                    if (!is_seprator_div)
+                                                    {
+                                                        is_seprator_div = true;
+                                                        <div class="div_item_foo_button">
+                                                            <input type="button" class="btn btn_css_footer btn_c_load_more" style="font-size: 14px;" value=" More" id="lmi_@id" onclick="LoadMore(this);" />
+                                                            <input type="button" class="btn btn_css_footer btn_c_ear_visi_show" value="Earlier Visits Show" id="evi_@id" onclick="EarlierVisits(this);" />
+                                                        </div>
+                                                    }
+                                                    isEndPage = 1;
+                                                    isRecordFirst = 0;
+                                                }
+                                                if (isRecordFirst == 0)
+                                                {
+                                                    session_count++;
+                                                    if (session_count > 0)
+                                                    {
+                                                        item_panel_name = "item-other";
+                                                    }
+                                                    var time = TimeSpan.Parse(k["ga:dateHourMinute"]);
+                                                    DateTime date = DateTime.Today.Add(time);
+                                                    string displayTime = date.ToString("hh:mm tt");
+                                                    <span class=" lan_page_com_cls" id="lan_page_2_@id" style="position: absolute;">
+                                                        Session Start<br />
+                                                        <span>@displayTime.ToString()</span>
+                                                    </span>
+                                                }
+                                                lasttime = "";
+                                                flage = false;
+                                            }
+                                            else if (flage == true)
+                                            {
+                                            }
+                                            temp = "item-" + id + "-" + session_count;
+                                            temp2 = id + "-" + item_panel_name;
+                                            <div class="row disp_item @temp2" id="@temp" style="margin-bottom: 5px;">
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-7">
+                                                    <div class="col-md-1">
+                                                        @if (pathCount > 0)
+                                                        {
+                                                            <span class="countColor  dot_2" cust-data="ii_@item_counter">@*@pathCount.ToString()*@</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="countColor dot_2" cust-data="ii_@item_counter">@*@pathCount.ToString()*@</span>
+                                                        }
+                                                    </div>
+                                                    <div class="col-md-11">
+                                                        <div data-id="@i" class="target row" style="margin: 0px;"> @k["ga:pageTitle"]</div>
+                                                        <div style="margin: 0%;color: gray;font-size: 12px;" data-id="@i" class="pathText target row">
+                                                            @k[ky]
+                                                        </div>
+                                                    </div>
+
+                                                    @{
+                                                        var fullpath = "http://" + ViewBag.hostname + k[ky];
+                                                    }
+                                                </div>
+                                                <div class="col-md-1">
+                                                    @*<div style="width:10%"><button style="color: white;margin-left: 5px;padding-left: 5px;margin-right: 5px;padding-right: 5px;" class="btn btn-primary"><a style="color:white" target="_blank" href="@fullpath">Click</a></button></div>*@
+                                                    <a style="font-size: x-small;" target="_blank" href="@fullpath"><span class="glyphicon glyphicon-share"></span></a>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div style="width:100%">
+                                                        <div data-id="@i" class="target" style="display:none;">@k["ga:dateHourMinute"]</div> @{
+                                                            string secDisplay = k["timeOnPage"].ToString() == "0 sec" ? "" : @k["timeOnPage"].ToString();
+                                                        }
+                                                        <div data-id="@i" class="target" style="margin-left: -14px;">
+                                                            @secDisplay
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            if (total_iterator == totalCount && lasttime != "" && pathCount > 0)
+                                            {
+                                                <div class="row sess_com_cls " id="sess_end_@id">
+                                                    <div class="col-md-12">
+                                                        Session End<div class="target" data-id="@i">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                isEndPage = 1;
+                                                temp = "item-" + id + "-" + session_count;
+                                                temp2 = id + "-" + item_panel_name;
+                                                <div class="row disp_item @temp2" id="@temp" style="margin-bottom: 5px;">
+                                                    <div class="col-md-2"></div>
+                                                    <div class="col-md-7">
+                                                        <div class="col-md-1">
+                                                            <span class="" style="background: #1d2538 !important"></span>
+                                                        </div>
+                                                        <div class="col-md-11">
+                                                            <div data-id="@i" class="target row" style="margin: 0px;"> @lastPageTitle</div>
+                                                            <div style="margin: 0%;color: gray;font-size: 12px;" data-id="@i" class="pathText target row">
+                                                                @lastPagePath
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        @*<button style="color: white;margin-left: 5px;padding-left: 5px;margin-right: 5px;padding-right: 5px;" class="btn btn-primary"><a style="color:white" target="_blank" href="@lastPageFullPath">Click</a></button>*@
+                                                        <a style="font-size:x-small;" target="_blank" href="@lastPageFullPath"><span class="glyphicon glyphicon-share"></span></a>
+                                                    </div>
+                                                    <div class="col-md-2"></div>
+
+                                                </div>
+                                                if (!is_seprator_div)
+                                                {
+                                                    is_seprator_div = true;
+                                                    <div class="div_item_foo_button">
+                                                        <input type="button" class="btn btn_css_footer btn_c_load_more" value="Load More" id="lmi_@id" onclick="LoadMore(this);" />
+                                                        <input type="button" class="btn btn_css_footer btn_c_ear_visi_show" value="Earlier Visits Show" id="evi_@id" onclick="EarlierVisits(this);" />
+                                                    </div>
+                                                }
+                                            }
+                                            lastSession = k["ga:sessionCount"];
+                                            pathCount++;
+
+                                        }
+                                    }
+                                    lastPage = "";
+                                }
+                                @{
+                                    if (lastPage == "" && isEndPage == 0)
+                                    {
+                                        <div class="row sess_com_cls " id="sess_end_@id">
+                                            <div class="col-md-12">
+                                                Session End <div class="target" data-id="@i">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        if (!is_seprator_div)
+                                        {
+                                            is_seprator_div = true;
+                                            <div class="div_item_foo_button">
+                                                <input type="button" class="btn btn_css_footer btn_c_load_more" value="Load More" id="lmi_@id" onclick="LoadMore(this);" />
+                                                <input type="button" class="btn btn_css_footer btn_c_ear_visi_show" value="Earlier Visits Show" id="evi_@id" onclick="EarlierVisits(this);" />
+                                            </div>
+                                        }
+                                    }
+                                }
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="right-col">
+                        <div class="panel col shadow">
+                            <div class="panel-heading pnl_heading">
+                                <div class="row">
+                                    <div class="col-md-12" style="padding-top:12px;">
+                                        <span>Source</span>
+                                        <div style="float:right;padding-right: 11px;">
+                                            @if (ViewBag.ViewId[key][0]["ga:source"] == "google")
+                                            {
+                                                <img src="~/Content/google.png" alt="" title="" />
+                                            }
+                                            else if (ViewBag.ViewId[key][0]["ga:source"] == "m.facebook.com" || ViewBag.ViewId[key][0]["ga:source"] == "l.facebook.com" || ViewBag.ViewId[key][0]["ga:source"] == "facebook.com")
+                                            {
+                                                <img src="~/Content/facebook.png" alt="" title="" />
+                                            }
+                                            else if (ViewBag.ViewId[key][0]["ga:source"] == "bing")
+                                            {
+                                                <img src="~/Content/bing.png" alt="" title="" />
+                                            }
+                                            else if (ViewBag.ViewId[key][0]["ga:source"] == "l.instagram.com")
+                                            {
+                                                <img src="~/Content/instagram.png" alt="" title="" />
+                                            }
+                                            else if (ViewBag.ViewId[key][0]["ga:source"] == "yahoo")
+                                            {
+                                                <img src="~/Content/yahoo.png" alt="" title="" />
+                                            }
+
+                                        </div>
+                                        <br />
+                                        <div class="target" data-id="@i" style="color:#DA741F;">
+                                            @if (ViewBag.ViewId[key][0]["ga:source"] == "google")
+                                            {
+                                                <label style="font-weight:100 !important">Google</label>
+                                            }
+                                            else if (ViewBag.ViewId[key][0]["ga:source"] == "m.facebook.com" || ViewBag.ViewId[key][0]["ga:source"] == "l.facebook.com" || ViewBag.ViewId[key][0]["ga:source"] == "facebook.com")
+                                            {
+                                                <label style="font-weight:100 !important">FaceBook</label>
+                                            }
+                                            else if (ViewBag.ViewId[key][0]["ga:source"] == "bing")
+                                            {
+                                                <label style="font-weight:100 !important">Bing</label>
+                                            }
+                                            else if (ViewBag.ViewId[key][0]["ga:source"] == "l.instagram.com")
+                                            {
+                                                <label style="font-weight:100 !important">Instagram</label>
+                                            }
+                                            else if (ViewBag.ViewId[key][0]["ga:source"] == "yahoo")
+                                            {
+                                                <label style="font-weight:100 !important">Yahoo</label>
+                                            }
+                                            else
+                                            {
+                                                <div>@ViewBag.ViewId[key][0]["ga:source"]</div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <span>Location</span><br />
+                                        <div class="target" data-id="@i" style="color:#DA741F;">@ViewBag.ViewId[key][0]["ga:city"]</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                i--;
+            }
+        }
+
+    </div>
+</div>
+<script src="~/Scripts/bootstrap-tagsinput.js"></script>
+<style>
+    .redBack {
+        background-color: red;
+        color: white;
+        font-weight: bolder;
+    }
+
+    .blueBack {
+        background-color: blue;
+        color: white;
+        font-weight: bolder;
+    }
+
+    .greenBack {
+        background-color: green;
+        color: white;
+        font-weight: bolder;
+    }
+</style>
+
+<script>
+    $('#myModalGreen').on('hidden.bs.modal', function (e) {
+        $(this)
+          .find("#searchGreen")
+             .val('')
+             .end();
+    })
+    $('#myModalBlue').on('hidden.bs.modal', function (e) {
+        $(this)
+          .find("#searchBlue")
+             .val('')
+             .end();
+    })
+    $('#myModalRed').on('hidden.bs.modal', function (e) {
+        $(this)
+          .find("#searchRed")
+             .val('')
+             .end();
+    })
+    $("#btnRed").click(function () {
+
+        var tableRow = $("#searchHere tr");
+
+        var text = $("#searchRed").val();
+
+        var tr = $(".pathText:contains(" + text + ")").parent("div").children(".countColor");
+        //alert(tr.text());
+        var image = tr.parents(".filter-search").find('.visitor_image');
+        if (!tr.hasClass("redBack") && !tr.hasClass("greenBack") && !tr.hasClass("blueBack")) {
+            tr.addClass("redBack");
+            tr.css("background-color", "red");
+            tr.css("color", "red");
+        }
+        var src = image.attr("src");
+        if (src != "" && src != null) {
+            if ((src.indexOf("user_green.png") == -1) && (src.indexOf("user_blue.png") == -1)) {
+                image.attr("src", "/Content/visitor_comparison/user_red.png");
+            }
+        }
+        $.ajax({
+            url: "@Url.Action("RedListSearchExists","SearchBar")",
+            method: "POST",
+            data: {  v: "@ViewBag.OrgViewId", searchText: text },
+            success: function (res) {
+                if(res == 1)
+{
+alert("You have already enter this keyword. Please enter the new keyword.");
+            	$("#searchRed").val("");
+}
+else
+{
+ $.ajax({
+            url: "@Url.Action("AddRed","SearchBar")",
+            method: "POST",
+            data: { st: text, v: "@ViewBag.OrgViewId" },
+            success: function (res) {
+                //alert(res);
+            	$("#searchRed").val("");
+            	loadRedList();
+            },
+            error: function (err) {
+                //alert(err);
+            }
+        });
+}
+            },
+            error: function (err) {
+                //alert(err);
+            }
+        });
+
+    });
+
+    $("#btnGreen").click(function () {
+
+        var tableRow = $("#searchHere tr");
+
+        var text = $("#searchGreen").val();
+
+
+
+        var tr = $(".pathText:contains(" + text + ")").parent("div").children(".countColor");
+        //alert(tr.text());
+        var image = tr.parents(".filter-search").find('.visitor_image');
+        if (!tr.hasClass("redBack") && !tr.hasClass("greenBack") && !tr.hasClass("blueBack")) {
+            tr.addClass("greenBack");
+            tr.css("background-color", "green");
+            tr.css("color", "green");
+            image.attr("src", "/Content/visitor_comparison/user_green.png");
+        }
+
+
+        $.ajax({
+            url: "@Url.Action("GreenListSearchExists","SearchBar")",
+            method: "POST",
+            data: {  v: "@ViewBag.OrgViewId", searchText:text },
+            success: function (res) {
+                if(res == 1)
+                {
+                alert("You have already enter this keyword. Please enter the new keyword.");
+            	$("#searchGreen").val("");
+                }
+                else
+                {
+                $.ajax({
+                    url: "@Url.Action("AddGreen","SearchBar")",
+                    method: "POST",
+                    data: { st: text, v: "@ViewBag.OrgViewId" },
+                    success: function (res) {
+                        //alert(res);
+            	        $("#searchGreen").val("");
+                        loadGreenList();
+                    },
+                    error: function (err) { alert(err.statusText); }
+                });
+                }
+            },
+            error: function (err) { alert(err.statusText); }
+        });
+    });
+
+    $("#btnBlue").click(function () {
+        var tableRow = $("#searchHere tr");
+
+        var text = $("#searchBlue").val();
+
+
+
+        var tr = $(".pathText:contains(" + text + ")").parent("div").children(".countColor");
+        //alert(tr.text());
+        var image = tr.parents(".filter-search").find('.visitor_image');
+        if (!tr.hasClass("blueBack") && !tr.hasClass("greenBack") && !tr.hasClass("redBack")) {
+            tr.addClass("redBack");
+            tr.css("background-color", "red");
+            tr.css("color", "red");
+        }
+        var src = image.attr("src");
+        if (src != "" && src != null) {
+            if (src.indexOf("user_green.png") == -1) {
+                image.attr("src", "/Content/visitor_comparison/user_blue.png");
+            }
+        }
+        $.ajax({
+            url: "@Url.Action("BlueListSearchExists","SearchBar")",
+            method: "POST",
+            data: { v: "@ViewBag.OrgViewId", searchText: text },
+            success: function (res) {
+                if(res == 1)
+                {
+                    alert("You have already enter this keyword. Please enter the new keyword.");
+            	   $("#searchBlue").val("");
+                }
+                else
+                {
+
+                $.ajax({
+                            url: "@Url.Action("AddBlue","SearchBar")",
+                            method: "POST",
+                            data: { st: text, v: "@ViewBag.OrgViewId" },
+                            success: function (res) {
+                                //alert(res);
+            	                $("#searchBlue").val("");
+                                loadBlueList();
+                            },
+                            error: function (err) { alert(err.statusText); }
+                        });
+                }
+            },
+            error: function (err) { alert(err.statusText); }
+        });
+    });
+    $('#Search').on('itemAdded', function (event) {
+        search()
+    });
+    $('#Search').on('itemRemoved', function (event) {
+        search()
+    });
+    function search_old() {
+        var nodes = document.getElementsByClassName('target');
+        var $tagWord = $("#Search").siblings(".bootstrap-tagsinput").children(".tag");
+        var tags = [];
+        for (var i = $tagWord.length; i--;) {
+            tags.push($($tagWord[i]).text().trim());
+        }
+        if (tags.length > 0) {
+            $(".filter-search").hide();
+
+            for (i = 0; i < nodes.length; i++) {
+                var id = "div" + nodes[i].getAttribute('data-id');
+                for (j = 0 ; j < tags.length; j++) {
+                    if (nodes[i].innerText.toLowerCase().includes(tags[j].toLowerCase()) && !$("#" + id).is(":visible")) {
+                        $("#" + id).show();
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            $(".filter-search").show();
+        }
+        $("#c_counted").html('').html($(".filter-search:visible").length);
+    }
+
+    function GetListOfCount_Old(str, c_counted) {
+        $("#img" + c_counted).show();
+
+
+        var query = '';
+
+        var startDate = document.getElementById("StartDate").value;
+        if (startDate != null) {
+            query += "startDate=" + startDate + "&";
+        }
+
+
+        if (startDate != null) {
+            query += "endDate=" + startDate + "&";
+        }
+
+        var city = document.getElementById('CityControl').value;
+
+        if (city != null && city != "") {
+            query += "city=" + city + "&";
+        }
+
+        var path = "";//document.getElementById(str).innerText;
+        var showPath = "";
+        $.each(str, function (i, v) {
+            showPath = (showPath == "" ? v : showPath + ", " + v);
+            if (c_counted == 3) {
+                path = (path == "" ? v : path + "," + v);
+            }
+            if (c_counted == 2) {
+                if ($.inArray(v, greenListOfPath) == -1) {
+                    path = (path == "" ? v : path + "," + v);
+                }
+            }
+            if (c_counted == 1) {
+                if ($.inArray(v, greenListOfPath) == -1 && $.inArray(v, blueListOfPath) == -1) {
+                    path = (path == "" ? v : path + "," + v);
+                }
+            }
+        });
+        if (path != null && path != "") {
+            query += "path=" + path;
+        }
+
+        var tempUrlWithViewId = document.URL.split('&')[0] + "&" + query;
+        var urlis = tempUrlWithViewId.replace("GetReports", "GetListOfCountReports");
+        //alert(urlis);
+        if (query != '') {
+
+
+            $.post(urlis, { path: path }, function (data) {
+                //alert(data);
+                $("#loadergif").hide();
+
+                //$("#img" + c_counted).hide();
+                //count += parseInt(data);//
+
+                //$("#selected" + c_counted).html(showPath);
+                $("#_selected" + c_counted).html(data);
+            });
+        }
+	}
+
+	function search() {
+		var nodes = document.getElementsByClassName('target');
+		var $tagWord = $("#Search").siblings(".bootstrap-tagsinput").children(".tag");
+		var tags = [];
+		for (var i = $tagWord.length; i--;) {
+			tags.push($($tagWord[i]).text().trim().toLowerCase());
+		}
+		if (tags.length > 0) {
+			$(".filter-search").hide();
+			$(".filter-search").each(function (i, v) {
+				for (var cnt = 0, found = 0; cnt < tags.length; cnt++) {
+					found += $(".target", this).get().some(function (x) { return x.innerText.toLowerCase().includes(tags[cnt]); }) ? 1 : 0;
+				}
+				if (found == tags.length) {
+					$(v).show();
+				}
+			});
+
+			//for (i = 0; i < nodes.length; i++) {
+			//    var id = "div" + nodes[i].getAttribute('data-id');
+			//    for (j = 0 ; j < tags.length; j++) {
+			//        if (nodes[i].innerText.toLowerCase().includes(tags[j].toLowerCase()) && !$("#" + id).is(":visible")) {
+			//            $("#" + id).show();
+			//            break;
+			//        }
+			//    }
+			//}
+		}
+		else {
+			$(".filter-search").show();
+		}
+		$("#c_counted").html('').html($(".filter-search:visible").length);
+
+		adjustVisitorNumber();
+	}
+
+	function GetListOfCount(str, c_counted) {
+		var cnt = 0;
+		if (str && str.length > 0) {
+			var tags = str;
+			cnt = $(".filter-search").get().filter(function (v) {
+				var found = 0;
+				for (var i = 0; i < tags.length; i++) {
+					found += $(".target.pathText", v).get().some(function (x) { return x.innerText.toLowerCase().includes(tags[i]); }) ? 1 : 0;
+				}
+				return found > 0;
+			}).length;
+		}
+		if (cnt > 0) $("#img" + c_counted).show();
+		$("#_selected" + c_counted).html(cnt);
+		return;
+	}
+
+$(document).ready(function()
+{
+lineGraph();
+})
+
+function lineGraph()
+{
+ $.ajax({
+                    url: "@Url.Action("GetHourlyUsers","Dashboard")",
+                    method: "POST",
+                    data: { viewId: "@ViewBag.OrgViewId", startDate: $('#StartDate').val(), endDate: $('#StartDate').val() },
+                    success: function (res) {
+var seriesUsers=[];
+var seriesData=[];
+var seriesHours=[];
+$.each(res, function(i,item){
+seriesHours.push(parseInt(item.DateHour.substr(0,2)));
+  });
+
+$.each(res, function(i,item){
+seriesUsers.push(item.users);
+  });
+
+var i;
+for (i = 0; i < 24; i++) {
+var a = seriesHours.indexOf(i);
+if(a >-1)
+{
+var theRemovedElement = seriesUsers.splice(0, 1);
+seriesData.push(parseInt(theRemovedElement));
+}else
+{
+seriesData.push(0);
+}
+}
+
+Highcharts.chart('lineGraph', {
+
+    title: {
+        text: ''
+    },
+chart: {
+        height: 200,
+        type: 'line',
+backgroundColor:'transparent'
+    },
+
+    subtitle: {
+        text: ''
+    },
+ xAxis: {
+        type: 'datetime',
+    },
+
+    yAxis: {
+ allowDecimals: false,
+        title: {
+            text: ''
+        },
+
+    },
+    legend: {
+        layout: 'vertical',
+        align: '',
+        verticalAlign: 'middle'
+    },
+
+    plotOptions: {
+        series: {
+            label: {
+                connectorAllowed: false,
+            },
+
+        }
+    },
+tooltip: {
+    formatter: function() {
+        return ''+
+
+                ' <b>'+ Highcharts.dateFormat('%A, %e %b %Y', new Date($('#StartDate').val())) + ' ' + Highcharts.dateFormat('%H:%M', this.x) +'</b> <br/>'
+ + this.series.name +': <b>' + this.y + '<br/>'
+    }
+},
+legend: {
+                layout: 'vertical',
+                align: 'left',
+                x: 120,
+                verticalAlign: 'top',
+                y: 100,
+                floating: true,
+                backgroundColor: '#FFFFFF'
+            },
+    series: [{
+name: 'Visitors',
+ color: '#CC7A00',
+data:seriesData,
+        pointStart:0,
+        pointInterval: 1 * 3600 * 1000 // one day
+    }],
+    responsive: {
+        rules: [{
+            condition: {
+                minWidth: 500
+            },
+            chartOptions: {
+                legend: {
+                    layout: 'horizontal',
+                    align: '',
+                    verticalAlign: 'bottom'
+                }
+            }
+        }]
+    }
+
+});
+$('.highcharts-xaxis-labels').children().find("tspan").html("0:00");
+$('.highcharts-contextbutton').remove();
+$('.highcharts-credits').remove();
+$('.highcharts-button-box').remove();
+$('.highcharts-label').find("text").html("");
+                    },
+                    error: function (err) { alert(err.statusText); }
+                });
+
+
+}
+</script>
+
+
+
+
