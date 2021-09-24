@@ -1,0 +1,726 @@
+﻿<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.Net.Compilers.3.0.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.3.0.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5D0969A3-C408-4144-BA37-B9ED90BA0763}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>IntegrateGoogleSignIn</RootNamespace>
+    <AssemblyName>IntegrateGoogleSignIn</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DatabaseMiddleware.Core">
+      <HintPath>library\DatabaseMiddleware.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DatabaseMiddleware.Implementation">
+      <HintPath>library\DatabaseMiddleware.Implementation.dll</HintPath>
+    </Reference>
+    <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentScheduler, Version=5.3.0.0, Culture=neutral, PublicKeyToken=b76503528a14ebd1, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentScheduler.5.3.0\lib\net40\FluentScheduler.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis, Version=1.38.2.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.38.2\lib\net45\Google.Apis.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Analytics.v3, Version=1.38.2.1306, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Analytics.v3.1.38.2.1306\lib\net45\Google.Apis.Analytics.v3.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.AnalyticsReporting.v4, Version=1.38.2.1551, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.AnalyticsReporting.v4.1.38.2.1551\lib\net45\Google.Apis.AnalyticsReporting.v4.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth, Version=1.38.2.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.38.2\lib\net45\Google.Apis.Auth.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth.Mvc, Version=1.38.2.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.Mvc.1.38.2\lib\net45\Google.Apis.Auth.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth.PlatformServices, Version=1.38.2.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.38.2\lib\net45\Google.Apis.Auth.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Core, Version=1.38.2.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Core.1.38.2\lib\net45\Google.Apis.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Dataproc.v1, Version=1.38.2.1532, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Dataproc.v1.1.38.2.1532\lib\net45\Google.Apis.Dataproc.v1.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Gmail.v1, Version=1.38.2.1543, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Gmail.v1.1.38.2.1543\lib\net45\Google.Apis.Gmail.v1.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.PlatformServices, Version=1.38.2.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.38.2\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Plus.v1, Version=1.38.2.1547, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Plus.v1.1.38.2.1547\lib\net45\Google.Apis.Plus.v1.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Storage.v1, Version=1.38.2.1545, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Storage.v1.1.38.2.1545\lib\net45\Google.Apis.Storage.v1.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PayPal, Version=1.9.1.0, Culture=neutral, PublicKeyToken=5b4afc1ccaef40fb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PayPal.1.9.1\lib\net451\PayPal.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=106.6.9.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.106.6.9\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration.ConfigurationManager, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Configuration.ConfigurationManager.4.5.0\lib\net461\System.Configuration.ConfigurationManager.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.OracleClient" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives, Version=4.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Security.AccessControl, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.AccessControl.4.5.0\lib\net461\System.Security.AccessControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Permissions, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Permissions.4.5.0\lib\net461\System.Security.Permissions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Principal.Windows, Version=4.1.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Principal.Windows.4.5.1\lib\net461\System.Security.Principal.Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.7\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Unity.Abstractions, Version=4.1.3.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.10.3\lib\net46\Unity.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Container, Version=5.10.3.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.10.3\lib\net46\Unity.Container.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Web.Infrastructure">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Readme\Elmah.txt" />
+    <Content Include="Content\3.gif" />
+    <Content Include="Content\bing.png" />
+    <Content Include="Content\blacklogo.png" />
+    <Content Include="Content\blogger.png" />
+    <Content Include="Content\bootstrap-tagsinput.css" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\circle.png" />
+    <Content Include="Content\close.svg" />
+    <Content Include="Content\dc.css" />
+    <Content Include="Content\direct.png" />
+    <Content Include="Content\error\css\style.css" />
+    <Content Include="Content\error\img\bg.jpg" />
+    <Content Include="Content\facebook.png" />
+    <Content Include="Content\google.png" />
+    <Content Include="Content\groupon.png" />
+    <Content Include="Content\IMG_1557%281%29_4.mp4" />
+    <Content Include="Content\instagram.png" />
+    <Content Include="Content\linkedin.png" />
+    <Content Include="Content\loader.gif" />
+    <Content Include="Content\login.css" />
+    <Content Include="Content\logo-black.png" />
+    <Content Include="Content\logo.png" />
+    <Content Include="Content\Orange_check.svg" />
+    <Content Include="Content\paypal-logo.png" />
+    <Content Include="Content\pinterest.png" />
+    <Content Include="Content\pleaserotate.min.js" />
+    <Content Include="Content\roboto.css" />
+    <Content Include="Content\rotate.css" />
+    <Content Include="Content\rotate1.css" />
+    <Content Include="Content\screen01.jpg" />
+    <Content Include="Content\screen02.jpg" />
+    <Content Include="Content\screen03.jpg" />
+    <Content Include="Content\screen04.jpg" />
+    <Content Include="Content\screen05.jpg" />
+    <Content Include="Content\screen06.jpg" />
+    <Content Include="Content\screen07.jpg" />
+    <Content Include="Content\screen08.jpg" />
+    <Content Include="Content\screen09.jpg" />
+    <Content Include="Content\screen10.jpg" />
+    <Content Include="Content\screen11.jpg" />
+    <Content Include="Content\screen12.jpg" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Content\snapchat.png" />
+    <Content Include="Content\stumbleupon.png" />
+    <Content Include="Content\success.png" />
+    <Content Include="Content\sweetalert.min.css" />
+    <Content Include="Content\sweetalert.min.js" />
+    <Content Include="Content\tripadvisor.png" />
+    <Content Include="Content\trustpilot.png" />
+    <Content Include="Content\tumbler.png" />
+    <Content Include="Content\twitter.png" />
+    <Content Include="Content\vimeo.png" />
+    <Content Include="Content\visitor_comparison\arrow-down.png" />
+    <Content Include="Content\visitor_comparison\blue-icon.png" />
+    <Content Include="Content\visitor_comparison\green-icon.png" />
+    <Content Include="Content\visitor_comparison\orange-icon.png" />
+    <Content Include="Content\visitor_comparison\red-icon.png" />
+    <Content Include="Content\visitor_comparison\right-arrow.png" />
+    <Content Include="Content\visitor_comparison\style.css" />
+    <Content Include="Content\visitor_comparison\user.png" />
+    <Content Include="Content\visitor_comparison\user1.png" />
+    <Content Include="Content\visitor_comparison\user_badge-warning.png" />
+    <Content Include="Content\visitor_comparison\user_badge-warning1.png" />
+    <Content Include="Content\visitor_comparison\user_blue.png" />
+    <Content Include="Content\visitor_comparison\user_blue1.png" />
+    <Content Include="Content\visitor_comparison\user_dblue - Copy.jpg" />
+    <Content Include="Content\visitor_comparison\user_dblue.jpg" />
+    <Content Include="Content\visitor_comparison\user_dot_2.png" />
+    <Content Include="Content\visitor_comparison\user_dot_21.png" />
+    <Content Include="Content\visitor_comparison\user_green1.png" />
+    <Content Include="Content\visitor_comparison\user_lblue - Copy.jpg" />
+    <Content Include="Content\visitor_comparison\user_lblue.jpg" />
+    <Content Include="Content\visitor_comparison\user_pink - Copy.png" />
+    <Content Include="Content\visitor_comparison\user_pink.png" />
+    <Content Include="Content\visitor_comparison\user_red.png" />
+    <Content Include="Content\visitor_comparison\user_red1.png" />
+    <Content Include="Content\visitor_comparison\user_green.png" />
+    <Content Include="Content\whatsapp.png" />
+    <Content Include="Content\yahoo.png" />
+    <Content Include="Content\youtube.png" />
+    <Content Include="Global.asax" />
+    <Content Include="library\DatabaseMiddleware.Core.dll" />
+    <Content Include="library\DatabaseMiddleware.Implementation.dll" />
+    <Content Include="Models\DBEntity.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DBEntity.edmx</DependentUpon>
+      <LastGenOutput>DBEntity.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\DBEntity.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DBEntity.edmx</DependentUpon>
+      <LastGenOutput>DBEntity.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\dbsripts\data.sql" />
+    <Content Include="Models\dbsripts\schema.sql" />
+    <Content Include="Resources\css\Login.css" />
+    <Content Include="Resources\login-google.png" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <EntityDeploy Include="Models\DBEntity.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>DBEntity.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\DBEntity.edmx.diagram">
+      <DependentUpon>DBEntity.edmx</DependentUpon>
+    </Content>
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-06a2c811-1f42-46d9-b539-fff6ebcaf48d" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-09068cbd-19e8-40bd-9188-c51bcfe3b05b" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-0d215943-845b-4684-8002-1d98c9ad218c" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-12cc8507-5ef9-4b11-8472-b852c5e223e5" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-1a774858-4b03-486a-a247-e8e0809b84ea" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-1b0cffba-6601-4d7b-9a3a-579a51ead369" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-1b8a6d2e-2830-4ce8-9da3-a9f309fb54aa" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-1c5c91ed-ed89-4065-a146-e1417f478f3a" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-26f2508d-cd14-4bb9-8c78-5516854655f7" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-29bb985a-f051-4dd5-9b50-46b4da6412dd" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-2d6af7b2-373e-48e2-a63f-a089fe4fcca0" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-31a02df1-6f9c-4970-91e5-7185f8d232ff" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-3972efd5-5885-4486-adbf-93e21c9eb619" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-3db9e5c0-c7c8-4208-87bc-161431037bfe" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-4738f461-5ac3-4969-a742-3aa2e73545b9" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-49cd2bab-ee4b-4721-8423-acc1a2df00c9" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-4f0feaea-08db-4d9d-bb29-c723fd4b258f" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-55064b99-ac0f-4c30-ac4f-4bdb49a82123" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-55321afa-cfce-4a98-9146-553cd79501ea" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-5975da1d-9355-4760-9e36-59bdb86134c2" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-762f3593-b86a-4767-83f7-217b3fea961d" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-786b0edb-9b7c-42aa-ab23-2b433cc1cb34" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-795bb2cd-962b-42c1-b4c1-d693771bea7c" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-7a417129-7617-4067-a407-56e84ef88e1d" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-7c5f05ea-3fc0-48e6-9847-7dbf23d3fb87" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-81e27e9c-67f2-4c2d-9b80-603d241761e3" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-85bb6a94-f115-42b5-96cd-2053c5ba568a" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-8c4ab81c-1e10-48e2-aa75-7f883502edfa" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-8fd59555-b62f-4acc-93c4-740286c0bc13" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-98f4aa60-0363-42f9-a983-761c9687f077" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-a5f6d562-e86e-4540-a506-faa8f9c93fb0" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-b3e27d01-9c98-40a4-8cca-dbc7efaa908a" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-c4431bf7-8021-49f3-95cc-16ae20a53538" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-c514a093-5c24-4d63-b59a-58c88dd2bf36" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-c5fca549-9f17-48b7-851a-2ffd5545e92f" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-ca217e5c-33df-41f4-a640-c37991cdc0ec" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-cb8a969f-9874-4dc5-ba29-86c7ac340893" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-cd2e4925-f65e-4736-9289-b5294c1afd48" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-d2b021b9-145f-4883-826f-ee21187ca778" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-d81fe4b9-3c27-4c81-9977-15bceface322" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-dc4281f4-f42f-4d83-a3b6-5551e13b0253" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-e6503f3b-6746-4b09-a468-4ae59ef6b93f" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-e6b37f57-cabe-4c40-9bc6-82bd6b142288" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-e71a1928-91a7-4739-9e5b-f6dbb703be16" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-f88f3384-c395-4ada-b911-4d52cb87141b" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-f8faeed1-64af-4f97-acab-ad5520ea6fc4" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\Google.Apis.Auth.OAuth2.Responses.TokenResponse-fa203be0-6a33-4904-8ec5-948794361a3b" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_025a3868-1a74-4940-b659-901a8a7b44ba" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_05f1c7fd-8f4f-4f18-9f8d-dfc0ef855cd2" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_06a2c811-1f42-46d9-b539-fff6ebcaf48d" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_06dc544b-c54d-4d57-9aa5-8ae7ccb1b570" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_08a51b52-6e4a-4c30-9982-acdfa67090e4" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_10c46ecc-a3b3-4cdd-b1d4-7870bb60ae08" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_2c23bf2c-0ab2-4f07-9231-7481a42d8bd6" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_2cc5b967-7204-4887-aedf-032495d6cf8b" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_35306584-8a6c-4cfd-9572-76275758ce08" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_42cb2590-576f-4f84-a1d9-75732de6649b" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_4c1b5fff-84b7-4cc8-9286-1bddb749c9ab" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_4d1c77e9-f48c-4aa7-a6e6-e30170c13a32" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_5019e12c-99d0-42dc-91e5-269c4d7118fa" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_5a442369-a693-4921-a120-9a47e0696c13" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_5cad1494-fe49-47f9-823a-2b6efe48e046" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_5f5b0602-dd14-4048-9cfc-4237ed4e5802" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_660294b1-8cc7-4562-84c9-64ece9ca761a" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_74d21138-4eb0-4589-ac5d-89a3d702fc79" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_766b3de7-c5ba-44fe-9556-1d0502545b1d" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_7aa95b17-5645-4059-8fe2-46cb3511b4b6" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_820ba43a-c02b-4998-8e1e-59a2d7a4dd24" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_8819fc27-0e6b-4052-a1de-b5cfd25b9d85" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_8c4ab81c-1e10-48e2-aa75-7f883502edfa" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_8d12f869-f7fc-4f03-8808-4569d60a2aa7" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_9294a8bd-232f-4c19-b003-c711405dff4f" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_9c218871-3aa1-40a9-9946-0e8751169f00" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_a495b2ef-52f4-4861-a84c-8bd8d252a895" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_b24b5c33-a61f-42dc-858d-bd3c5ea7b4c5" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_b652c14e-4f68-4da1-84a8-b1e46141b04f" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_b6f2a1b4-4826-4e4b-ab27-4c1c25b40d49" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_b90b00c5-719d-4085-9bb2-a45c798c2b76" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_bf662829-a114-4b4d-8a79-73eced956351" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_cb4c14c4-c2dd-4e73-8a3b-da697aaed3c2" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_d3e1a965-c3a7-4f96-a1bf-23413f6dde02" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_d48e3254-41d3-4119-8ad5-81a33381fc8a" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_d6b5fa8d-d833-42f7-b99a-127c77539107" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_d7147042-3248-45e4-83db-249ce1999a21" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_dcfc3ae6-5393-4686-a702-3c637bf7c08c" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_e6b37f57-cabe-4c40-9bc6-82bd6b142288" />
+    <Content Include="App_Data\Drive.Api.Auth.Store\System.String-oauth_f9412018-a79f-46dd-a88f-37bcf9e9db12" />
+    <Content Include="fonts\Roboto-Bold.eot" />
+    <Content Include="fonts\Roboto-Bold.ttf" />
+    <Content Include="fonts\Roboto-Bold.woff" />
+    <Content Include="fonts\Roboto-Bold.woff2" />
+    <Content Include="fonts\Roboto-Light.eot" />
+    <Content Include="fonts\Roboto-Light.ttf" />
+    <Content Include="fonts\Roboto-Light.woff" />
+    <Content Include="fonts\Roboto-Light.woff2" />
+    <Content Include="fonts\Roboto-Regular.eot" />
+    <Content Include="fonts\Roboto-Regular.ttf" />
+    <Content Include="fonts\Roboto-Regular.woff" />
+    <Content Include="fonts\Roboto-Regular.woff2" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile2.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile3.pubxml" />
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\bootstrap-tagsinput.min.js" />
+    <Content Include="Scripts\export-data.js" />
+    <Content Include="Scripts\exporting.js" />
+    <Content Include="Scripts\highcharts.js" />
+    <Content Include="Scripts\jquery-3.3.1.js" />
+    <Content Include="Scripts\jquery-3.3.1.min.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\series-label.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AuthCallbackController.cs" />
+    <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\CreatePayPalSubscribeController.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
+    <Compile Include="Controllers\ErrorController .cs" />
+    <Compile Include="Controllers\ExtraUserController.cs" />
+    <Compile Include="Controllers\GooglepackageController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PaypalController.cs" />
+    <Compile Include="Controllers\PropackageController.cs" />
+    <Compile Include="Controllers\SearchBarController.cs" />
+    <Compile Include="Controllers\SpecialUserController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="GoogleApi\AppFlowMetadata.cs" />
+    <Compile Include="GoogleApi\ReportManager.cs" />
+    <Compile Include="Helpers\CommonFunctions.cs" />
+    <Compile Include="Helpers\CookieHelper.cs" />
+    <Compile Include="Helpers\PayPalVm.cs" />
+    <Compile Include="Helpers\StaticValues.cs" />
+    <Compile Include="Models\Account.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AdminDomain.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AdminUser.cs" />
+    <Compile Include="Models\AnalyticalData.cs" />
+    <Compile Include="Models\AuditLog.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Dailycollection_source.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\dailycolourcollection.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\dashboard_Result.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DBEntity.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DBEntity.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DBEntity.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DBEntity.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DBEntity.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ExtraUser.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ExtraUserAgreementCollection.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ExtraUserSubscriptionPlan.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GmailToken.cs" />
+    <Compile Include="Models\GoogleAgreementCollection.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GoogleSubscribePlan.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GoogleUser.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\loginhistory.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\paymentdetail.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\PaypalConfiguration.cs" />
+    <Compile Include="Helpers\PayPalFunction.cs" />
+    <Compile Include="Models\ProAgreementCollection.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Profile.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\propackageuser.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PropackageVm.cs" />
+    <Compile Include="Models\ProSubscriptionPlan.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ReportVm.cs" />
+    <Compile Include="Models\SchedulerVm.cs" />
+    <Compile Include="Models\searchdomainMaster.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\searchMaster.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sourceReportData.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\specialuser.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\spuserdetiles_Result.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TagReportData.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\User.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UserDailyAnalytic.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UserDetail.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UserSession.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UserTable.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\VisitorData.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\WebProperty.cs">
+      <DependentUpon>DBEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AnalyticJob.cs" />
+    <Compile Include="Services\JobFunctions.cs" />
+    <Compile Include="Services\JobScheduler.cs" />
+    <Compile Include="Services\TestJobFunctions.cs" />
+    <Compile Include="UnityFactory.cs" />
+    <Compile Include="UserAuthenticationFilter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\web.config" />
+    <None Include="packages.config" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\UserProfile.cshtml" />
+    <Content Include="Views\Home\Error.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Dashboard\Index.cshtml" />
+    <Content Include="Views\CreatePayPalSubscribe\ErrorAction.cshtml" />
+    <Content Include="Views\Dashboard\PriceCard.cshtml" />
+    <Content Include="Views\Dashboard\working.cshtml" />
+    <Content Include="Views\Dashboard\new.cshtml" />
+    <Content Include="Views\Dashboard\change.cshtml" />
+    <Content Include="Views\Dashboard\GetReports.cshtml" />
+    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.3.1.min.map" />
+    <Content Include="Views\Paypal\Subscriptions.cshtml" />
+    <Content Include="Views\Error\HttpError500.cshtml" />
+    <Content Include="Views\Error\HttpError404.cshtml" />
+    <Content Include="Views\Error\Index.cshtml" />
+    <Content Include="Views\Home\FAQs.cshtml" />
+    <Content Include="Views\Home\Pricing.cshtml" />
+    <Content Include="Views\Dashboard\AddDomain.cshtml" />
+    <Content Include="Views\Propackage\Dcscript.cshtml" />
+    <Content Include="Views\Propackage\Subscription.cshtml" />
+    <Content Include="Views\Shared\_LayoutProPackage.cshtml" />
+    <Content Include="Views\Paypal\Index.cshtml" />
+    <Content Include="Views\Googlepackage\PackageUsers.cshtml" />
+    <Content Include="Views\Googlepackage\GoogleScript.cshtml" />
+    <Content Include="Views\Googlepackage\SuccessPaypal.cshtml" />
+    <Content Include="Views\Propackage\SuccessPaypal.cshtml" />
+    <Content Include="Views\Home\TermsAndCondition.cshtml" />
+    <Content Include="Views\Home\PrivacyPolicy.cshtml" />
+    <Content Include="Views\Propackage\Temp.cshtml" />
+    <Content Include="Views\Shared\_LayoutOrange.cshtml" />
+    <Content Include="Views\Shared\_LayoutOrangeFooter.cshtml" />
+    <Content Include="Views\Home\ContectUs.cshtml" />
+    <Content Include="Views\Home\ContactUs.cshtml" />
+    <Content Include="Views\Paypal\UserInformation.cshtml" />
+    <Content Include="Views\Dashboard\DomainList.cshtml" />
+    <Content Include="Views\Propackage\ChangePassword.cshtml" />
+    <Content Include="Views\Propackage\AddSpecialUsers.cshtml" />
+    <Content Include="Views\Propackage\SpecialUsers.cshtml" />
+    <Content Include="Views\Propackage\UpdateSpecialUsers.cshtml" />
+    <Content Include="Views\SpecialUser\Dashboard.cshtml" />
+    <Content Include="Views\SpecialUser\ForgotPassword.cshtml" />
+    <Content Include="Views\SpecialUser\Login.cshtml" />
+    <Content Include="Views\Auth\ForgotPassword.cshtml" />
+    <Content Include="Views\Auth\GoogleSignIn.cshtml" />
+    <Content Include="Views\Auth\GoogleSignUp.cshtml" />
+    <Content Include="Views\Auth\crumbs80.cshtml" />
+    <Content Include="Views\Auth\ProLogin.cshtml" />
+    <Content Include="Views\Auth\ProSignUp.cshtml" />
+    <Content Include="Views\Auth\Test.cshtml" />
+    <Content Include="Views\Propackage\Index.cshtml" />
+    <Content Include="Views\Auth\ExtraUserForgotPassword.cshtml" />
+    <Content Include="Views\Auth\ExtraUserLogin.cshtml" />
+    <Content Include="Views\Auth\ExtraUserSignUp.cshtml" />
+    <Content Include="Views\ExtraUser\AddSpecialUsers.cshtml" />
+    <Content Include="Views\ExtraUser\ChangePassword.cshtml" />
+    <Content Include="Views\ExtraUser\Index.cshtml" />
+    <Content Include="Views\ExtraUser\Report.cshtml" />
+    <Content Include="Views\ExtraUser\SpecialUsers.cshtml" />
+    <Content Include="Views\ExtraUser\Subscription.cshtml" />
+    <Content Include="Views\ExtraUser\SuccessPaypal.cshtml" />
+    <Content Include="Views\ExtraUser\Temp.cshtml" />
+    <Content Include="Views\ExtraUser\UpdateSpecialUsers.cshtml" />
+    <Content Include="Views\Shared\_LayoutExtraUser.cshtml" />
+    <Content Include="Views\ExtraUser\Dcscript.cshtml" />
+    <Content Include="Views\Propackage\usertotalsession.cshtml" />
+    <Content Include="Views\Propackage\History.cshtml" />
+    <Content Include="Views\Auth\Checkuser.cshtml" />
+    <Content Include="Views\Propackage\Report.cshtml" />
+    <Content Include="Views\Propackage\ReportAll.cshtml" />
+    <Content Include="Views\Propackage\ReportSpecific.cshtml" />
+    <Content Include="Views\Home\Crumbs80.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\AuthCallbackController\" />
+    <Folder Include="Views\CustomeError\" />
+    <Folder Include="Views\SearchBar\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ClassLibrary1\IntegrateGoogle.Core.csproj">
+      <Project>{d4ed79a2-8e2e-46b1-9c29-dc0eeec709d6}</Project>
+      <Name>IntegrateGoogle.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>55023</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:52987/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.3.0.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.3.0.0\build\Microsoft.Net.Compilers.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
