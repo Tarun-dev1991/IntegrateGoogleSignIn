@@ -1,0 +1,11 @@
+﻿
+body{
+    }
+
+@media screen and (orientation: landscape) {
+    #toolbar {
+        position: fixed;
+        width: 2.65em;
+        height: 100%;
+    }
+}

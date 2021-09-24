@@ -1,0 +1,258 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.navbar-inverse {
+    background-color: #da741f;
+    border: none;
+    border-color: #da741f;
+}
+
+.logo img {
+    width: 30%;
+}
+
+.a_link_header_right, .a_link_header_right a, .a_link_header_right a:hover {
+    color: #fff;
+    font-weight: 400;
+}
+
+.highlights {
+    background: #141414;
+    text-align: center;
+    color: #fff;
+    margin: 0;
+    padding: 1px;
+}
+
+    .highlights h3 {
+        font-weight: 700;
+    }
+
+.vi_comp_badge {
+    cursor: pointer;
+}
+
+.badge {
+    display: inline-block;
+    padding: .25em .4em;
+    font-size: 100%;
+    font-weight: 900;
+    line-height: 2;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25rem;
+}
+
+.badge-pill {
+    padding-right: .6em;
+    padding-left: .6em;
+    border-radius: 10rem;
+}
+
+.badge-primary {
+    color: #fff;
+    background-color: #0093be;
+}
+
+.text-primary {
+    color: #0093be;
+}
+
+.badge-danger {
+    color: #fff;
+    background-color: #9a0130;
+}
+
+.text-danger {
+    color: #DA741F;
+}
+
+.badge-success {
+    color: #fff;
+    background-color: #b9ca00;
+}
+
+.text-success {
+    color: #b9ca00;
+}
+
+.badge-info {
+    color: #fff;
+    background-color: #17a2b8;
+}
+
+.badge-dark {
+    color: #fff;
+    background-color: #343a40;
+}
+
+.badge-warning {
+    color: #212529;
+    background-color: #ffc107;
+}
+
+.badge-secondary {
+    color: #fff;
+    background-color: #6c757d;
+}
+
+.vi_comp_badge_center {
+    width: 40%;
+}
+
+.vi_comp_badge_icon {
+    font-size: 2.5em;
+    top: 12px;
+}
+
+.vi_com_title {
+    background: #eaeaea;
+    text-align: center;
+    color: #141414;
+    margin: 0;
+    padding: 1px;
+}
+
+    .vi_com_title h3 {
+        font-weight: 700;
+    }
+
+.bootstrap-tagsinput {
+    width: 100% !important;
+    text-align: left;
+}
+
+.target {
+    color: black;
+}
+
+.bootstrap-tagsinput {
+    width: 60%;
+    text-align: left;
+    height: 35px;
+    font-size: 16px;
+}
+
+.filter-head {
+    border-bottom: 1px solid #090d19;
+    padding: 20px 40px;
+    display: flex;
+    width: 100% !important;
+}
+
+.badge-warning {
+    color: white;
+    background-color: #ffc107;
+}
+
+.panel-default > .panel-heading {
+    color: #333;
+    background-color: #f5f5f5;
+    border-color: #ddd;
+    height: 70px;
+    padding-top: 3%;
+}
+
+.filter-search {
+    margin-top: 25px;
+    display: flex;
+    margin-bottom: 0px;
+    width: 100%;
+}
+.label-info {
+    background-color: #ffa937 !important;
+    color: white !important;
+}
+.glyphicon-share:before {
+    color: #000;
+}
+.pnl_heading {
+    border-bottom: 1px solid #f0f0f0 !important;
+}
+.dot_2 {
+    height: 20px;
+    width: 20px;
+    background-color: #da741f;
+    border-radius: 50%;
+    display: inline-block;
+    padding-top: 6px;
+}
+.dot_pink {
+    height: 20px;
+    width: 20px;
+    background-color: #a20029;
+    border-radius: 50%;
+    display: inline-block;
+    padding-top: 6px;
+}
+.dot_red {
+    height: 20px;
+    width: 20px;
+    background-color: #9a0130;
+    border-radius: 50%;
+    display: inline-block;
+    padding-top: 6px;
+}
+.dot_green {
+    height: 20px;
+    width: 20px;
+    background-color: #b9ca00;
+    border-radius: 50%;
+    display: inline-block;
+    padding-top: 6px;
+}
+.dot_blue {
+    height: 20px;
+    width: 20px;
+    background-color: #0094bd;
+    border-radius: 50%;
+    display: inline-block;
+    padding-top: 6px;
+}
+.dot {
+    height: 32px;
+    width: 32px;
+    background-color: #0094bd;
+    border-radius: 50%;
+    display: inline-block;
+    
+}
+.dot1 {
+    height: 32px;
+    width: 32px;
+    background-color: #9a0130;
+    border-radius: 50%;
+    display: inline-block;
+   
+}
+.dot2 {
+    height: 32px;
+    width: 32px;
+    background-color: #b9ca00;
+    border-radius: 50%;
+    display: inline-block;
+   
+}
